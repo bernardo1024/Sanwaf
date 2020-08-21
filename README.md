@@ -102,73 +102,73 @@ Each item can contain single or multiple entries separated by three colons (":::
 
 ###Custom Datatypes Guide
 	(Character)
-		c		DESCRIPTION:	Any single character
-				FORMAT: 	key=c
-				EXAMPLE: 	parameterName=c
-				VALID: 		any single character
+	c		DESCRIPTION:	Any single character
+			FORMAT: 	key=c
+			EXAMPLE: 	parameterName=c
+			VALID: 		any single character
 	
 	(Number) 		
-		n		DESCRIPTION:	Any positive or negative numeric value 
-						('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-				FORMAT:		key=n  
-				EXAMPLE:	parameterName=n
-				VALID: 		-321.123		INVALID: +12
+	n		DESCRIPTION:	Any positive or negative numeric value 
+					('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+			FORMAT:		key=n  
+			EXAMPLE:	parameterName=n
+			VALID: 		-321.123		INVALID: +12
 												   0.000			      12.34.56
 								
 	(Delimited list of Numbers)
-		n{}	    DESCRIPTION:	A character separated list of numbers
-				FORMAT:		key=n{<separator char>}
-						Note: the (min,max) settings applies per delimted value  
-				EXAMPLE:	parameterName=n{,}
-				VALID:		-321.123,0.000,123,45
+	n{}	    DESCRIPTION:	A character separated list of numbers
+			FORMAT:		key=n{<separator char>}
+					Note: the (min,max) settings applies per delimted value  
+			EXAMPLE:	parameterName=n{,}
+			VALID:		-321.123,0.000,123,45
 												  
 	(Alphanumeric)
-		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT 		key=a
-				EXAMPLE:	parameterName=a
-				VALID:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ 
+	a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
+			FORMAT 		key=a
+			EXAMPLE:	parameterName=a
+			VALID:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ 
 	
 	(Alphanumeric and stated additional characters)						
-		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
-				FORMAT: 	key=a{<characters to allow>}
-						  For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:	parameterName=a{+\s,}
-				VALID:		abcdefghijklm nopqrstuvwxyz+,
+	a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
+			FORMAT: 	key=a{<characters to allow>}
+					  For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+			EXAMPLE:	parameterName=a{+\s,}
+			VALID:		abcdefghijklm nopqrstuvwxyz+,
 	
 	(String) 
-		s 		DESCRIPTION:	Any string.  
-						All regex's in the autoRunPatterns are executed against the string				
-				FORMAT: 	key=s
-				EXAMPLE:	parameterName=s
-				VALID:		"Hello this string does not contain a XSS payload"
+	s 		DESCRIPTION:	Any string.  
+					All regex's in the autoRunPatterns are executed against the string				
+			FORMAT: 	key=s
+			EXAMPLE:	parameterName=s
+			VALID:		"Hello this string does not contain a XSS payload"
 
 	(Constant)
-		k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
-				FORMAT: 	key=k{<comma separated list of strings>}
-				EXAMPLE: 	unitTestString=k{FOO,BAR,FAR}
-				VALID: 		FOO, BAR, FAR	
+	k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
+			FORMAT: 	key=k{<comma separated list of strings>}
+			EXAMPLE: 	unitTestString=k{FOO,BAR,FAR}
+			VALID: 		FOO, BAR, FAR	
 
 	(Custom Regex)
-		r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
-						Custom Regex's are specified in the Shield's customPatterns section
-						Regex must not include the '/' markers nor any flags.  
-						For example, only provide the value for <regex>:
-							/<regex>/gimsuy  
-				FORMAT: 	key=r{CustomRegexName}
-				EXAMPLE: 	unitTestString=R{date}
-				VALID: 		**depends on regex specified**	
+	r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
+					Custom Regex's are specified in the Shield's customPatterns section
+					Regex must not include the '/' markers nor any flags.  
+					For example, only provide the value for <regex>:
+						/<regex>/gimsuy  
+			FORMAT: 	key=r{CustomRegexName}
+			EXAMPLE: 	unitTestString=R{date}
+			VALID: 		**depends on regex specified**	
 	
 	(Java)
-		j{}		DESCRIPTION: 	Java, call java class for processing
-						-The key value and the ServletRequest object is passed to the method
-						-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-						For example:
-							public static boolean methodName(String s, ServletRequest request)
-								return true for threat found, else false;
+	j{}		DESCRIPTION: 	Java, call java class for processing
+					-The key value and the ServletRequest object is passed to the method
+					-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+					For example:
+						public static boolean methodName(String s, ServletRequest request)
+							return true for threat found, else false;
 						for example: public static boolean sanwafMethod(String s){return true;} 
-				FORMAT: 	key=j{fully_qualified_className.methodName()}
-				EXAMPLE: 	unitTestJava=j{com.foo.bar.SomeClass.someMethod()}
-				VALID: 		**depends on class processing**
+			FORMAT: 	key=j{fully_qualified_className.methodName()}
+			EXAMPLE: 	unitTestJava=j{com.foo.bar.SomeClass.someMethod()}
+			VALID: 		**depends on class processing**
 	
 
 
