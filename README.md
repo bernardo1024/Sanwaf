@@ -232,5 +232,5 @@ limitations under the License.
 
 
 ### Sanwaf sample App:
-Go to https://github.com/bernardo1024/Sanwaf down download Sanwaf.
+Go to https://github.com/bernardo1024/SanwafSample for the sample app.
 
