@@ -52,23 +52,23 @@ In order to improve the performance of scanning submitted data as fast as possib
 Use these data types whenever possible (instead of simply assigning all to the string data type that uses regex's).
   
 	Notation	Description 
-		c		- Character
-		n 		- Number
-		n{} 	- Delimited list of Numbers
-		a		- Alphanumeric
-		a{}		- Alphanumeric and stated additional characters
-		s		- String (uses regex's - most expensive - try to use sparingly)
-		k{}		- Must be equal to the of if the Constant values provided
-		r{}		- Custom regex expression (reusable per field regex capabilities)
-		j{}		- Java Class.method - returns true/false for pass/fail
+	c		- Character
+	n 		- Number
+	n{} 		- Delimited list of Numbers
+	a		- Alphanumeric
+	a{}		- Alphanumeric and stated additional characters
+	s		- String (uses regex's - most expensive - try to use sparingly)
+	k{}		- Must be equal to the of if the Constant values provided
+	r{}		- Custom regex expression (reusable per field regex capabilities)
+	j{}		- Java Class.method - returns true/false for pass/fail
 
 	(min,max)	- Specify max & min length limits for the submitted data; specify -1 to use max range supported (Integer.MAX_VALUE)
-				- Suffix a data type with : (min,max)
-					For Example: 
-						n(7,7)			- 7 digit number
-						n{,}(0,5)		- each delimited number must be between 0 and 5 chars in length
-						a(0,10)			- 0-10 characters of alphanumeric text
-						r{ssn}(0,10)	- 0-10 characters that also match a regex called ssn
+			- Suffix a data type with : (min,max)
+				For Example: 
+				n(7,7)		- 7 digit number
+				n{,}(0,5)	- each delimited number must be between 0 and 5 chars in length
+				a(0,10)		- 0-10 characters of alphanumeric text
+				r{ssn}(0,10)	- 0-10 characters that also match a regex called ssn
 
 ###Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
@@ -103,72 +103,72 @@ Each item can contain single or multiple entries separated by three colons (":::
 ###Custom Datatypes Guide
 	(Character)
 		c		DESCRIPTION:	Any single character
-				FORMAT: 		key=c
-				EXAMPLE: 		parameterName=c
-								VALID: 			any single character
+				FORMAT: 	key=c
+				EXAMPLE: 	parameterName=c
+				VALID: 		any single character
 	
 	(Number) 		
 		n		DESCRIPTION:	Any positive or negative numeric value 
-								('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-				FORMAT:			key=n  
-				EXAMPLE:		parameterName=n
-								VALID: 			-321.123		INVALID: +12
+						('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+				FORMAT:		key=n  
+				EXAMPLE:	parameterName=n
+				VALID: 		-321.123		INVALID: +12
 												   0.000			      12.34.56
 								
 	(Delimited list of Numbers)
 		n{}	    DESCRIPTION:	A character separated list of numbers
-				FORMAT:			key=n{<separator char>}
-								Note: the (min,max) settings applies per delimted value  
-				EXAMPLE:		parameterName=n{,}
-								VALID: 			-321.123,0.000,123,45
+				FORMAT:		key=n{<separator char>}
+						Note: the (min,max) settings applies per delimted value  
+				EXAMPLE:	parameterName=n{,}
+				VALID:		-321.123,0.000,123,45
 												  
 	(Alphanumeric)
 		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT: 		key=a
-				EXAMPLE: 		parameterName=a
-								VALID:			abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ 
+				FORMAT 		key=a
+				EXAMPLE:	parameterName=a
+				VALID:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ 
 	
 	(Alphanumeric and stated additional characters)						
 		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
-				FORMAT: 		key=a{<characters to allow>}
-								  For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:		parameterName=a{+\s,}
-								VALID: 			abcdefghijklm nopqrstuvwxyz+,
+				FORMAT: 	key=a{<characters to allow>}
+						  For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+				EXAMPLE:	parameterName=a{+\s,}
+				VALID:		abcdefghijklm nopqrstuvwxyz+,
 	
 	(String) 
 		s 		DESCRIPTION:	Any string.  
-								All regex's in the autoRunPatterns are executed against the string				
-				FORMAT: 		key=s
-				EXAMPLE:		parameterName=s
-								VALID: 			"Hello this string does not contain a XSS payload"
+						All regex's in the autoRunPatterns are executed against the string				
+				FORMAT: 	key=s
+				EXAMPLE:	parameterName=s
+				VALID:		"Hello this string does not contain a XSS payload"
 
 	(Constant)
 		k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
-					FORMAT: 	key=k{<comma separated list of strings>}
-					EXAMPLE: 	unitTestString=k{FOO,BAR,FAR}
-								VALID: 			FOO, BAR, FAR	
+				FORMAT: 	key=k{<comma separated list of strings>}
+				EXAMPLE: 	unitTestString=k{FOO,BAR,FAR}
+				VALID: 		FOO, BAR, FAR	
 
 	(Custom Regex)
 		r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
-								Custom Regex's are specified in the Shield's customPatterns section
-								Regex must not include the '/' markers nor any flags.  
-								For example, only provide the value for <regex>:
-									/<regex>/gimsuy  
-					FORMAT: 	key=r{CustomRegexName}
-					EXAMPLE: 	unitTestString=R{date}
-								VALID: 			**depends on regex specified**	
+						Custom Regex's are specified in the Shield's customPatterns section
+						Regex must not include the '/' markers nor any flags.  
+						For example, only provide the value for <regex>:
+							/<regex>/gimsuy  
+				FORMAT: 	key=r{CustomRegexName}
+				EXAMPLE: 	unitTestString=R{date}
+				VALID: 		**depends on regex specified**	
 	
 	(Java)
 		j{}		DESCRIPTION: 	Java, call java class for processing
-								-The key value and the ServletRequest object is passed to the method
-								-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-								For example:
-									public static boolean methodName(String s, ServletRequest request)
-										return true for threat found, else false;
-								for example: public static boolean sanwafMethod(String s){return true;} 
-					FORMAT: 	key=j{fully_qualified_className.methodName()}
-					EXAMPLE: 	unitTestJava=j{com.foo.bar.SomeClass.someMethod()}
-								VALID: 			**depends on class processing**
+						-The key value and the ServletRequest object is passed to the method
+						-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+						For example:
+							public static boolean methodName(String s, ServletRequest request)
+								return true for threat found, else false;
+						for example: public static boolean sanwafMethod(String s){return true;} 
+				FORMAT: 	key=j{fully_qualified_className.methodName()}
+				EXAMPLE: 	unitTestJava=j{com.foo.bar.SomeClass.someMethod()}
+				VALID: 		**depends on class processing**
 	
 
 
@@ -231,6 +231,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-### Download
+### Sanwaf sample App:
 Go to https://github.com/bernardo1024/Sanwaf down download Sanwaf.
 
