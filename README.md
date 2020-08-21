@@ -64,7 +64,7 @@ Use these data types whenever possible (instead of simply assigning all to the s
 
 	(min,max)	- Specify max & min length limits for the submitted data; specify -1 to use max range supported (Integer.MAX_VALUE)
 			- Suffix a data type with : (min,max)
-				For Example: 
+			- For Example: 
 				n(7,7)		- 7 digit number
 				n{,}(0,5)	- each delimited number must be between 0 and 5 chars in length
 				a(0,10)		- 0-10 characters of alphanumeric text
