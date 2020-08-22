@@ -43,11 +43,11 @@ Then in your unhandled exception handler, you can pull the error values with the
 	String sanwafTrackId = Sanwaf.getTrackId(request);
 	String parmsInErrorJson = Sanwaf.getParmErrors(request);
 
-##Sanwaf Quick Guide
+## Sanwaf Quick Guide
 Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 
 
-###Custom Datatypes
+### Custom Datatypes
 In order to improve the performance of scanning submitted data as fast as possible, custom data types were built and are designed to fail fast. 
 Use these data types whenever possible (instead of simply assigning all to the string data type that uses regex's).
   
@@ -70,11 +70,11 @@ Use these data types whenever possible (instead of simply assigning all to the s
 				a(0,10)		- 0-10 characters of alphanumeric text
 				r{ssn}(0,10)	- 0-10 characters that also match a regex called ssn
 
-###Configuration
+### Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
 The secured section contains the following groups: parameters, headers, cookies. 
 						
-###Group Format
+### Group Format
 
 Groups (parameters|headers|cookies) contain a list of items to be protected by the WAF.
 Each item can contain single or multiple entries separated by three colons (":::"). For example:
@@ -100,7 +100,7 @@ Each item can contain single or multiple entries separated by three colons (":::
 
 
 
-###Custom Datatypes Guide
+### Custom Datatypes Guide
 	(Character)
 	c		DESCRIPTION:	Any single character
 			FORMAT: 	key=c
@@ -174,7 +174,7 @@ Each item can contain single or multiple entries separated by three colons (":::
 
 
 
-##Sample code
+## Sample code
 The following code is used for demonstration purposes.  Not all imports or code is provided.  
 Add Sanwaf as a dependency to your code:
 
