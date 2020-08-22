@@ -60,8 +60,8 @@ Use these data types whenever possible (instead of simply assigning all to the s
 	s		- String (uses regex's - most expensive - try to use sparingly)
 	k{}		- Must be equal to the of if the Constant values provided
 	r{}		- Custom regex expression (reusable per field regex capabilities)
-	j{}		- Java Class.method - returns true/false for pass/fail
-
+	j{}		- Java Class.method - returns true(error detected)/false(no error detected)
+	
 	(min,max)	- Specify max & min length limits for the submitted data; specify -1 to use max range supported (Integer.MAX_VALUE)
 			- Suffix a data type with : (min,max)
 			- For Example: 
@@ -112,8 +112,8 @@ Each item can contain single or multiple entries separated by three colons (":::
 					('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
 			FORMAT:		key=n  
 			EXAMPLE:	parameterName=n
-			VALID: 		-321.123		INVALID: +12
-												   0.000			      12.34.56
+			VALID: 		-321.123	0.000
+			INVALID: 	+12	12.34.56
 								
 	(Delimited list of Numbers)
 	n{}	    DESCRIPTION:	A character separated list of numbers
@@ -126,21 +126,21 @@ Each item can contain single or multiple entries separated by three colons (":::
 	a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
 			FORMAT 		key=a
 			EXAMPLE:	parameterName=a
-			VALID:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ 
+			VALID:		abc123
 	
 	(Alphanumeric and stated additional characters)						
 	a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
 			FORMAT: 	key=a{<characters to allow>}
 					  For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
 			EXAMPLE:	parameterName=a{+\s,}
-			VALID:		abcdefghijklm nopqrstuvwxyz+,
+			VALID:		abc123 ,+
 	
 	(String) 
 	s 		DESCRIPTION:	Any string.  
 					All regex's in the autoRunPatterns are executed against the string				
 			FORMAT: 	key=s
 			EXAMPLE:	parameterName=s
-			VALID:		"Hello this string does not contain a XSS payload"
+			VALID:		"Hello this string does not contain a payload caught by autorun regex patterns configured"
 
 	(Constant)
 	k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
@@ -149,7 +149,7 @@ Each item can contain single or multiple entries separated by three colons (":::
 			VALID: 		FOO, BAR, FAR	
 
 	(Custom Regex)
-	r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
+	r{}		DESCRIPTION: 	Custom Regex Expression in this file 
 					Custom Regex's are specified in the Shield's customPatterns section
 					Regex must not include the '/' markers nor any flags.  
 					For example, only provide the value for <regex>:
@@ -162,10 +162,10 @@ Each item can contain single or multiple entries separated by three colons (":::
 	j{}		DESCRIPTION: 	Java, call java class for processing
 					-The key value and the ServletRequest object is passed to the method
 					-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+					-Return true (threat detected), else false (no threat detected);
 					For example:
 						public static boolean methodName(String s, ServletRequest request)
-							return true for threat found, else false;
-						for example: public static boolean sanwafMethod(String s){return true;} 
+							
 			FORMAT: 	key=j{fully_qualified_className.methodName()}
 			EXAMPLE: 	unitTestJava=j{com.foo.bar.SomeClass.someMethod()}
 			VALID: 		**depends on class processing**
@@ -185,7 +185,7 @@ Add Sanwaf as a dependency to your code:
 		<scope>compile</scope>
 	</dependency>
 
-Sample Filter Code:
+### Sample Filter Code:
 	
 	package com.sanwaf.sample;
 	
