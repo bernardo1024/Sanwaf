@@ -311,7 +311,7 @@
 						<item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><path></path></item>
 						<item><name>parms:::use:::the:::same:::settings</name><type>n{,}</type><max></max><min></min><msg></msg><path></path></item>
 						<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>alphanumericandmore</name><type>a{'</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>alphanumericandmore</name><type>a{'}</type><max></max><min></min><msg></msg><path></path></item>
 						<item><name>string</name><type>s</type><max></max><min></min><msg></msg><path></path></item>
 						<item><name>regex</name><type>r{date}</type><max></max><min></min><msg></msg><path></path></item>
 						<!--item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><path></path></item-->
