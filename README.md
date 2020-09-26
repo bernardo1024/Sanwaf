@@ -45,7 +45,7 @@ Then in your unhandled exception handler, you can pull the error values with the
 	String sanwafTrackId = Sanwaf.getTrackId(request);
 	String parmsInErrorJson = Sanwaf.getParmErrors(request);
 
-##Sanwaf Quick Guide
+## Sanwaf Quick Guide
 Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 
 ###Sanwaf Structure
@@ -68,7 +68,7 @@ where
 	[metadata settings]	- the shields metadata settings (discussed in more detail below)
 
 
-###Custom Datatypes
+### Custom Datatypes
 In order to improve the performance of scanning submitted data as fast as possible, custom data types were built and are designed to fail fast. 
 Use these data types whenever possible (instead of simply assigning all to the string data type that uses regex's).
   
@@ -83,7 +83,7 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		r{}	- Custom regex expression (reusable per field regex capabilities)
 		j{}	- Java Class.method - returns true/false for pass/fail
 
-###Configuration
+### Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section of this XML file.  
 
 Note the **enabled** and **caseSensitive** sections that control if the specific section will be enabled and how they will handle the caseSensitivy of parameters/headers/cookies.
@@ -117,7 +117,7 @@ Also note the **secured section** contains the following groups: parameters, hea
 		</secured>
 
 	</metadata>						
-###Item Format of the Secured Section
+### Item Format of the Secured Section
 
 	<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
 	
@@ -134,14 +134,14 @@ where
 	<msg></msg>	- the error message for the parameter(s) (uses the shield or global error message is not specified)
 	<path></path>	- the path that must exist for the parameter evaluation to occur 
 
-####Example
+#### Example
 
 	<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><path>/put/accounts</path></item>
 	<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
 	<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
 	<item><name>count</name><type>n</type><max>0</max><min>1</min></item>
 
-###Custom Datatypes Guide
+### Custom Datatypes Guide
 
 	(Character)
 		c		DESCRIPTION:	Any single character
@@ -200,7 +200,7 @@ where
 				FORMAT: 	j{fully_qualified_className.methodName()}
 
 
-##Sample code
+## Sample code
 
 #### For the sample app, go to https://github.com/bernardo1024/SanwafSample
 
