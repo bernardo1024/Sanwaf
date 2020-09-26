@@ -144,60 +144,60 @@ where
 ### Custom Datatypes Guide
 
 	(Character)
-		c		DESCRIPTION:	Any single character
-				FORMAT: 	c
+	c		DESCRIPTION:	Any single character
+			FORMAT: 	c
 	
 	(Number) 		
-		n		DESCRIPTION:	Any positive or negative numeric value 
-						('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-				FORMAT:		n  
-				EXAMPLE:	-321.123, 0.0001 - are valid
-						+12, 12.34.56	- are invalid
+	n		DESCRIPTION:	Any positive or negative numeric value 
+					('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+			FORMAT:		n  
+			EXAMPLE:	-321.123, 0.0001 - are valid
+					+12, 12.34.56	- are invalid
 								
 	(Delimited list of Numbers)
-		n{}	    DESCRIPTION:	A character separated list of numbers
-				FORMAT:		n{<separator char>}
-						Note: the min & max settings applies per delimted value  
-				EXAMPLE: 	using n{,}, -321.123,0.000,123,45 is valid
+	n{}		DESCRIPTION:	A character separated list of numbers
+			FORMAT:		n{<separator char>}
+					Note: the min & max settings applies per delimted value  
+			EXAMPLE: 	using n{,}, -321.123,0.000,123,45 is valid
 												  
 	(Alphanumeric)
-		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT: 	a
-				EXAMPLE:	abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
+	a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
+			FORMAT: 	a
+			EXAMPLE:	abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
 	
 	(Alphanumeric and stated additional characters)						
-		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
-				FORMAT: 	a{<characters to allow>}
-						- For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:	using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
+	a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
+			FORMAT: 	a{<characters to allow>}
+					- For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+			EXAMPLE:	using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
 	
 	(String) 
-		s 		DESCRIPTION:	Any string.  
-						All regex's in the autoRunPatterns are executed against the string				
-				FORMAT: 	s
-				EXAMPLE:	"Hello this string does not contain a XSS payload"
+	s 		DESCRIPTION:	Any string.  
+					All regex's in the autoRunPatterns are executed against the string				
+			FORMAT: 	s
+			EXAMPLE:	"Hello this string does not contain a XSS payload"
 
 	(Constant)
-		k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
-				FORMAT: 	k{<comma separated list of strings>}
-				EXAMPLE: 	using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
+	k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
+			FORMAT: 	k{<comma separated list of strings>}
+			EXAMPLE: 	using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
 
 	(Custom Regex)
-		r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
-						Custom Regex's are specified in the Shield's customPatterns section
-						Regex must not include the '/' markers nor any flags.  
-						For example, only provide the value for <regex>:
-							/<regex>/gimsuy  
-				FORMAT: 	r{CustomRegexName}
+	r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
+					Custom Regex's are specified in the Shield's customPatterns section
+					Regex must not include the '/' markers nor any flags.  
+					For example, only provide the value for <regex>:
+						/<regex>/gimsuy  
+			FORMAT: 	r{CustomRegexName}
 	
 	(Java)
-		j{}		DESCRIPTION: 	Java, call java class for processing
-						-The key value and the ServletRequest object is passed to the method
-						-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-							For example:
-								public static boolean methodName(String s, ServletRequest request)
-									return true for threat found, else false
-				FORMAT: 	j{fully_qualified_className.methodName()}
+	j{}		DESCRIPTION: 	Java, call java class for processing
+					-The key value and the ServletRequest object is passed to the method
+					-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+						For example:
+							public static boolean methodName(String s, ServletRequest request)
+								return true for threat found, else false
+			FORMAT: 	j{fully_qualified_className.methodName()}
 
 
 ## Sample code
