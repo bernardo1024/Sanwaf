@@ -3,7 +3,9 @@ package com.sanwaf.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.IllegalFormatException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +53,8 @@ public final class Sanwaf {
    * </pre>
    * 
    * @param logger
-   *          A logger of your choice that implements the com.sanwaf.log.Logger interface
+   *          A logger of your choice that implements the com.sanwaf.log.Logger
+   *          interface
    * 
    * @return void
    */
@@ -67,7 +70,8 @@ public final class Sanwaf {
    * </pre>
    * 
    * @param logger
-   *          A logger of your choice that implements the com.sanwaf.log.Logger interface
+   *          A logger of your choice that implements the com.sanwaf.log.Logger
+   *          interface
    * @param filename
    *          Fully qualified path to a valid Sanwaf XML file
    * @return void
@@ -104,7 +108,7 @@ public final class Sanwaf {
     }
     for (Shield shield : shields) {
       if (shield.threatDetected(req)) {
-        addErrorAttributes(req, Util.getSortOfRandomNumber(), getErrorList(req));
+        addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(req));
         return true;
       }
     }
@@ -149,15 +153,17 @@ public final class Sanwaf {
   }
 
   /**
-   * Get the Sanwaf Tracking ID 
+   * Get the Sanwaf Tracking ID
    * 
    * <pre>
    * useful for displaying to your users in case they call support. this allows
    * you to pull the exact exception from the log file
+   * 
    * <pre>
    * 
    * @param req
-   *          HttpServletRequest the request object where Sanwaf.isThreatDetected() returned true.
+   *          HttpServletRequest the request object where
+   *          Sanwaf.isThreatDetected() returned true.
    * @return String returns the Sanwaf Tracking ID
    */
   public static String getTrackingId(HttpServletRequest req) {
@@ -228,6 +234,15 @@ public final class Sanwaf {
     }
   }
 
+  static String getSortOfRandomNumber() {
+    try {
+      java.security.SecureRandom srandom = new java.security.SecureRandom();
+      return String.format("%03d", srandom.nextInt(99999)) + "-" + String.format("%03d", srandom.nextInt(9999));
+    } catch (IllegalFormatException e) {
+      return String.valueOf(UUID.randomUUID());
+    }
+  }
+
   // XML LOAD CODE
   private static final String XML_GLOBAL_SETTINGS = "global-settings";
   private static final String XML_ENABLED = "enabled";
@@ -259,7 +274,7 @@ public final class Sanwaf {
     onErrorAddTrackId = Boolean.parseBoolean(errorBlockXml.get(XML_ERR_SET_ATT_TRACK_ID));
     onErrorAddParmErrors = Boolean.parseBoolean(errorBlockXml.get(XML_SET_ATT_PARM_ERR));
 
-    Datatype.setDefaultErrorMessages(xml);
+    Error.setDefaultErrorMessages(xml);
 
     String[] xmls = xml.getAll(XML_SHIELD);
     for (String item : xmls) {

@@ -3,16 +3,13 @@ package com.sanwaf.core;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.sanwaf.core.Shield;
-import com.sanwaf.core.Datatype;
 import com.sanwaf.core.Sanwaf;
 
 public class DatatypeTest {
@@ -32,7 +29,7 @@ public class DatatypeTest {
   @Test
   public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    
+
     assertEquals(false, shield.threat(req, shield.parameters, "lengthN_0_5", "12345"));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestNumeric", "0123456789"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumeric", "foo.12"));
@@ -41,56 +38,16 @@ public class DatatypeTest {
   }
 
   @Test
-  public void testNumericType() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    Datatype dt = Datatype.NUMERIC;
-    assertEquals(false, dt.inError(req, shield, "lengthN_0_5", "", 0));
-    assertEquals(false, dt.inError(req, shield, "lengthN_0_5", null, 0));
-  }
-
-  @Test
-  public void testNumericType2() {
-    Datatype.defaultErrorMessages.put(Datatype.NUMERIC, "default num err msg");
-    List<Point> temp = Datatype.NUMERIC.getErrorHighlightPoints(shield, "unitTestNumber", "1a2b3c4d5efg");
-    System.out.println("unitTestNumber=" + temp);
-    temp = Datatype.NUMERIC.getErrorHighlightPoints(shield, "unitTestNumber", "-1a2b3c4d5efg");
-    System.out.println("unitTestNumber=" + temp);
-    temp = Datatype.NUMERIC.getErrorHighlightPoints(shield, "unitTestNumber", "-1a2b3c4d5efg.01.02");
-    System.out.println("unitTestNumber=" + temp);
-
-  }
-
-  @Test
-  public void testNumericDelimitedType2() {
-    Datatype.defaultErrorMessages.put(Datatype.NUMERIC_DELIMITED, "default num delim err msg");
-    List<Point> temp = Datatype.NUMERIC_DELIMITED.getErrorHighlightPoints(shield, "unitTestNumbersDelimited", "-12345abc,123abc,abc124");
-    System.out.println("unitTestNumbersDelimited=" + temp);
-  }
-  
-  @Test
-  public void testNumericDelimited() {
-    Map<String, String> m = new HashMap<String, String>();
-    m.put("unitTestNumericDelimited", ",");
-    Datatype.numericDelimiters.put(shield.name, m);
-
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "unitTestNumericDelimited", "-12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "unitTestNumericDelimited", "121,23"));
-    assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumericDelimited", "+foobar"));
-    assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumericDelimited", "123bar"));
-  }
-
-  @Test
   public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    Datatype dt = Datatype.NUMERIC_DELIMITED;
-    assertEquals(true, dt.inError(req, shield, "unitTestNumericDelimitedNoDelimSet", "12,34,56", 8));
+    ParameterNumericDelimited p = new ParameterNumericDelimited("", "n{}", Integer.MAX_VALUE, 0, "", "");
+    assertEquals(true, p.inError(req, shield, "12,34,56"));
 
-    List<Point> list = dt.getErrorHighlightPoints(shield, "unitTestNumericDelimited", "");
+    List<Point> list = p.getErrorHighlightPoints(shield, "");
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestNumericDelimited", null);
+    list = p.getErrorHighlightPoints(shield, null);
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestNumericDelimitedNoDelimSet", null);
+    list = p.getErrorHighlightPoints(shield, null);
     assertEquals(true, list.size() == 0);
   }
 
@@ -101,17 +58,6 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestAlphanumeric", "1239.a"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestAlphanumeric", "1239.a...."));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestAlphanumeric", "1239.abc"));
-  }
-
-  @Test
-  public void testAlphanumericType() {
-    Datatype dt = Datatype.ALPHANUMERIC;
-    List<Point> list = dt.getErrorHighlightPoints(shield, "unitTestNumericDelimited", "");
-    assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestNumericDelimitedNoDelimSet", null);
-    assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestNumericDelimited", "1239.xyz");
-    assertEquals(true, list.size() > 0);
   }
 
   @Test
@@ -143,19 +89,19 @@ public class DatatypeTest {
   @Test
   public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    Datatype dt = Datatype.ALPHANUMERIC_AND_MORE;
-    assertEquals(false, dt.inError(req, shield, "unitTestAlphanumericAndMoreNoDelimSet", "", 0));
-    assertEquals(false, dt.inError(req, shield, "unitTestAlphanumericAndMoreNoDelimSet", null, 0));
-    assertEquals(false, dt.inError(req, shield, "unitTestAlphanumericAndMoreNoDelimSet", "abcde", 5));
-    assertEquals(true, dt.inError(req, shield, "unitTestAlphanumericAndMoreNoDelimSet", "abcde?fg", 8));
+    ParameterAlphanumericAndMore p = new ParameterAlphanumericAndMore("", "a{,}", Integer.MAX_VALUE, 0, "", "");
+    assertEquals(false, p.inError(req, shield, ""));
+    assertEquals(false, p.inError(req, shield, null));
+    assertEquals(false, p.inError(req, shield, "abcde"));
+    assertEquals(true, p.inError(req, shield, "abcde?fg"));
 
-    List<Point> list = dt.getErrorHighlightPoints(shield, "unitTestAlphanumericAndMoreNoDelimSet", "abcde?fg");
+    List<Point> list = p.getErrorHighlightPoints(shield, "abcde?fg");
     assertEquals(true, list.size() == 1);
-    list = dt.getErrorHighlightPoints(shield, "unitTestAlphanumericAndMoreNoDelimSet", "");
+    list = p.getErrorHighlightPoints(shield, "");
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestAlphanumericAndMoreNoDelimSet", null);
+    list = p.getErrorHighlightPoints(shield, null);
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestAlphanumericAndMore", "1239.xyz");
+    list = p.getErrorHighlightPoints(shield, "1239.xyz");
     assertEquals(true, list.size() == 1);
   }
 
@@ -177,13 +123,13 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericAndMoreSpecialChars", "a b\tc\nd\re"));
   }
-  
+
   @Test
   public void testAlphanumericAndMoreTypeCurlyBraces() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericAndMoreCurlyBraces", "{a}"));
   }
-  
+
   @Test
   public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -196,22 +142,13 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestChar", "<asdffff."));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestChar", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestChar", null));
-  }
 
-  @Test
-  public void testCharType() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    Datatype dt = Datatype.CHAR;
-    assertEquals(false, dt.inError(req, shield, "unitTestChar", "", 0));
-    assertEquals(false, dt.inError(req, shield, "unitTestChar", "", 1));
-    assertEquals(true, dt.inError(req, shield, "unitTestChar", "12345", 5));
+    ParameterChar p = new ParameterChar("", 1, 0, "", "");
+    assertTrue(p.inError(req, shield, "12345"));
+    assertFalse(p.inError(req, shield, "1"));
+    assertFalse(p.inError(req, shield, ""));
+    assertFalse(p.inError(req, shield, null));
 
-    List<Point> list = dt.getErrorHighlightPoints(shield, "unitTestChar", "");
-    assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestChar", null);
-    assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestChar", "abcdefg");
-    assertEquals(true, list.size() == 1);
   }
 
   @Test
@@ -221,18 +158,6 @@ public class DatatypeTest {
     for (Error error : errors) {
       System.out.println("unitTestChar=" + error.toJson());
     }
-  }
-  
-  @Test
-  public void testStringType() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    Datatype dt = Datatype.STRING;
-    assertEquals(false, dt.inError(req, shield, "unitTestString", "", 0));
-
-    List<Point> list = dt.getErrorHighlightPoints(shield, "unitTestChar", "");
-    assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestChar", null);
-    assertEquals(true, list.size() == 0);
   }
 
   @Test
@@ -260,20 +185,29 @@ public class DatatypeTest {
   @Test
   public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    Datatype dt = Datatype.REGEX;
-    assertEquals(false, dt.inError(req, shield, "unitTestCustomTel", "416-555-5555", 12));
-    assertEquals(true, dt.inError(req, shield, "unitTestCustomTel", "abc-def-ghij", 12));
-    assertEquals(true, dt.inError(req, shield, "unitTestCustomTel", "a", 1));
-    assertEquals(true, dt.inError(req, shield, "unitTestCustomTel", "abc-def-ghij-klmn", 17));
+    ParameterRegex p = new ParameterRegex("", "r{telephone}", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.patternName != null && p.patternName.length() > 0);
 
-    List<Point> list = dt.getErrorHighlightPoints(shield, "unitTestCustomTel", "");
+    assertEquals(false, p.inError(req, shield, "416-555-5555"));
+    assertEquals(true, p.inError(req, shield, "abc-def-ghij"));
+    assertEquals(true, p.inError(req, shield, "a"));
+    assertEquals(true, p.inError(req, shield, "abc-def-ghij-klmn"));
+
+    List<Point> list = p.getErrorHighlightPoints(shield, "");
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestCustomTel", null);
+    list = p.getErrorHighlightPoints(shield, null);
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestCustomTel", "416-555-5555");
+    list = p.getErrorHighlightPoints(shield, "416-555-5555");
     assertEquals(true, list.size() == 0);
-    list = dt.getErrorHighlightPoints(shield, "unitTestCustomTel", "abc123def456");
+    list = p.getErrorHighlightPoints(shield, "abc123def456");
     assertEquals(true, list.size() == 1);
+  }
+
+  @Test
+  public void testRegexTypeInvalidFormta() {
+    ParameterRegex p = new ParameterRegex("", "r telephone", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.patternName == null);
+    assertTrue(p.pattern == null);
   }
 
   @Test
@@ -287,56 +221,22 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "foo"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "far"));
+
+    ParameterConstant p = new ParameterConstant("", "k FOO,BAR", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.constantValues == null);
+    p = new ParameterConstant("", "k FOO}", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.constantValues == null);
+
+    p = new ParameterConstant("", "", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.constantValues == null);
   }
 
   @Test
-  public void testEnum() {
-    Datatype dt = Datatype.NUMERIC;
-    assertTrue(Datatype.get(Datatype.TYPE_NUMERIC) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-
-    dt = Datatype.NUMERIC_DELIMITED;
-    assertTrue(Datatype.get(Datatype.TYPE_NUMERIC_DELIMITED) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, "foo", null).size() == 0);
-
-    dt = Datatype.ALPHANUMERIC;
-    assertTrue(Datatype.get(Datatype.TYPE_ALPHANUMERIC) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-
-    dt = Datatype.ALPHANUMERIC_AND_MORE;
-    assertTrue(Datatype.get(Datatype.TYPE_ALPHANUMERIC_AND_MORE) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-
-    dt = Datatype.STRING;
-    assertTrue(Datatype.get(Datatype.TYPE_STRING) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-
-    dt = Datatype.CHAR;
-    assertTrue(Datatype.get(Datatype.TYPE_CHAR) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-
-    dt = Datatype.REGEX;
-    assertTrue(Datatype.get(Datatype.TYPE_REGEX) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, "").size() == 0);
-    assertTrue(dt.getErrorHighlightPoints(shield, "", null).size() == 0);
-    assertTrue(dt.getErrorHighlightPoints(shield, "", "").size() == 0);
-
-    dt = Datatype.JAVA;
-    assertTrue(Datatype.get(Datatype.TYPE_JAVA) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-    assertTrue(dt.getErrorHighlightPoints(shield, "key", "value").size() == 1);
-
-    dt = Datatype.CONSTANT;
-    assertTrue(Datatype.get(Datatype.TYPE_CONSTANT) != null);
-    assertTrue(dt.getErrorHighlightPoints(shield, null, null).size() == 0);
-    assertTrue(dt.getErrorHighlightPoints(shield, "key", "value").size() == 1);
-    assertTrue(Datatype.get("k{") != null);
-
-    assertTrue(Datatype.get("foo{") == null);
+  public void testPoint() {
+    Point p = new Point(1, 100);
+    assertTrue(p.toString().contains("start: 1, end: 100"));
   }
 
-  
   @Test
   public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -379,11 +279,19 @@ public class DatatypeTest {
     result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
   }
-  
+
   @Test
   public void testJavaInvalidClass() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "unitTestJavaInvalidClass", "0000");
+    assertEquals(true, b);
+
+    req = new MockHttpServletRequest();
+    b = shield.threat(req, shield.parameters, "unitTestJavaInvalidClassEmpty", "0000");
+    assertEquals(true, b);
+
+    req = new MockHttpServletRequest();
+    b = shield.threat(req, shield.parameters, "unitTestJavaInvalidClassNoPackage", "0000");
     assertEquals(true, b);
   }
 
@@ -393,31 +301,4 @@ public class DatatypeTest {
     boolean b = shield.threat(req, shield.parameters, "unitTestJavaInvalidMethod", "0000");
     assertEquals(true, b);
   }
-  
-  @Test
-  public void getInvalidDatatype() {
-    Datatype dt = Datatype.get("foobar");
-    assertTrue(dt == null);
-  }
-
-  @Test
-  public void testBrokenConfiguredAlphanumericAndMore() {
-    Datatype dt = Datatype.get("unitTestAlphanumericAndMoreInvalidConfig1");
-    assertTrue(dt == null);
-    dt = Datatype.get("unitTestAlphanumericAndMoreInvalidConfig2");
-    assertTrue(dt == null);
-    dt = Datatype.get("unitTestAlphanumericAndMoreInvalidConfig3");
-    assertTrue(dt == null);
-  }
-  
-  @Test
-  public void testBrokenConfiguredNumericDelimited() {
-    Datatype dt = Datatype.get("unitTestNumericDelimitedInvalidConfig1");
-    assertTrue(dt == null);
-    dt = Datatype.get("unitTestNumericDelimitedInvalidConfig2");
-    assertTrue(dt == null);
-    dt = Datatype.get("unitTestNumericDelimitedInvalidConfig3");
-    assertTrue(dt == null);
-  }
-  
 }

@@ -73,7 +73,7 @@ public class ErrorMessagesTest {
       }
     }
   }
-  
+
   @Test
   public void numericDelimitedMessageNoPlaceholderTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -84,23 +84,19 @@ public class ErrorMessagesTest {
       }
     }
   }
-  
+
   @Test
   public void datatatypeErrorMsgAlpahnumericAndMoreTest() {
-    String s = Datatype.substituteAlphaNumericAndMoreMessageData(shield, "unitTestAlphanumericAndMore", "some {0} String");
+    ParameterAlphanumericAndMore p = new ParameterAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
+    String s = p.substituteAlphaNumericAndMoreChars("some {0} String");
     assertTrue(s.contains("?"));
-
-    s = Datatype.substituteAlphaNumericAndMoreMessageData(shield, "unitTestAlphanumericAndMoreNOT", "some {0} String");
-    assertTrue(!s.contains("?"));
   }
 
   @Test
   public void datatatypeErrorMsgNumericDelimietedTest() {
-    String s = Datatype.substituteAlphanumericAndMoreErrorMessage(shield, "unitTestNumericDelimited", "some {0} String");
+    ParameterNumericDelimited p = new ParameterNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
+    String s = p.substituteNumericDelimiter("some {0} String");
     assertTrue(s.contains(","));
-
-    s = Datatype.substituteAlphanumericAndMoreErrorMessage(shield, "unitTestNumericDelimitedNOT", "some {0} String");
-    assertTrue(!s.contains(","));
   }
 
   @Test
@@ -117,7 +113,8 @@ public class ErrorMessagesTest {
 
   @Test
   public void datatatypeErrorMsgConstantTest() {
-    String s = Datatype.getErrorMessage(shield, "unitTestConstant", Datatype.CONSTANT);
+    ParameterConstant p = new ParameterConstant("", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
+    String s = Error.getErrorMessage(shield, p);
     assertTrue(s.contains("foo"));
 
   }

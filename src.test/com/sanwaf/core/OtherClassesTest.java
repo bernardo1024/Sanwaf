@@ -26,9 +26,8 @@ public class OtherClassesTest {
 
   @Test
   public void TestDefaultContructorParameterItem() {
-    Parameter pi = new Parameter(Datatype.STRING);
+    Parameter pi = new ParameterString();
     String s = pi.toString();
-
     assertTrue(s.contains(", max: " + Integer.MAX_VALUE + ", min: 0"));
   }
 
@@ -43,7 +42,8 @@ public class OtherClassesTest {
 
   @Test
   public void TestErrorAddPoint() {
-    Error error = new Error(shield, Datatype.STRING, "foo", "bar", 0, 100);
+    Parameter p = new ParameterString("", 100, 0, "error msg", null);
+    Error error = new Error(shield, p, "foo", "bar");
     Point point = new Point(0, 5);
     error.addPoint(point);
     String s = error.toJson();
@@ -52,14 +52,16 @@ public class OtherClassesTest {
 
   @Test
   public void TestErrorAddPointErrorMax() {
-    Error error = new Error(shield, Datatype.STRING, "foo", "123456789", 0, 5);
+    Parameter p = new ParameterString("", 5, 0, "error msg", null);
+    Error error = new Error(shield, p, "foo", "123456789");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
   }
 
   @Test
   public void TestErrorAddPointErrorMin() {
-    Error error = new Error(shield, Datatype.STRING, "foo", "123", 5, 5);
+    Parameter p = new ParameterString("", 5, 5, "error msg", null);
+    Error error = new Error(shield, p, "foo", "123");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
   }

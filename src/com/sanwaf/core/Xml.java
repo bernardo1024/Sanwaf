@@ -1,6 +1,7 @@
 package com.sanwaf.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +13,12 @@ final class Xml {
   private String rawXml;
 
   Xml(String rawXml) {
-    this.rawXml = Util.stripXmlComments(rawXml);
+    this.rawXml = stripXmlComments(rawXml);
   }
 
   Xml(URL url) throws IOException {
     if (url != null) {
-      rawXml = Util.stripXmlComments(Util.readFile(url.openStream()));
+      rawXml = stripXmlComments(readFile(url.openStream()));
     } else {
       throw new IOException("url provided is null");
     }
@@ -82,5 +83,28 @@ final class Xml {
       }
     }
     return hits.toArray(new String[0]);
+  }
+
+  static String readFile(InputStream is) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    int read = 0;
+    byte[] data = new byte[1024];
+    while (true) {
+      read = is.read(data);
+      if (read < 0) {
+        break;
+      }
+      sb.append(new String(data));
+      data = new byte[1024];
+    }
+    is.close();
+    return sb.toString();
+  }
+
+  static String stripXmlComments(String s) {
+    if (s == null || s.length() == 0) {
+      return "";
+    }
+    return s.replaceAll("<!--.*-->", "").replaceAll("<!--((?!<!--)[\\s\\S])*-->", "");
   }
 }

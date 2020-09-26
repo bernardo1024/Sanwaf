@@ -63,7 +63,7 @@ public class XmlTest {
     Xml xml = new Xml("<sanwaf><foo>foo<foo></sanwaf>");
     String s = xml.get("<sanwaf><foo>foo<foo></sanwaf>", "foo");
     assertTrue(s.equals(""));
-    
+
     assertTrue(xml.toString().equals("<sanwaf><foo>foo<foo></sanwaf>"));
 
     s = xml.get("<sanwaf></foo>foo<foo></sanwaf>", "foo");

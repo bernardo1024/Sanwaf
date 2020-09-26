@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<sanwaf>
+	<global-settings>
+		<enabled>true</enabled>
+		<verbose>true</verbose>
+	</global-settings>
+	<shields>
+		<shield>
+			<name>RegexAlways</name>
+			<minLen>4</minLen>
+			<maxLen>9999</maxLen>
+			<regex>
+				<minLen>5</minLen>
+				<alwaysPerformRegex>
+					<enabled>true</enabled>
+					<exclusions>
+						<item>unitTestStringExcluded</item>
+					</exclusions>
+				</alwaysPerformRegex>
+				<autoRunPatterns>
+					<item>
+						<key>xss</key>
+						<value><![CDATA[<(|\/|[^\/>][^>]+|\/[^>][^>]+)>]]></value>
+					</item>
+				</autoRunPatterns>
+				<customPatterns>
+				</customPatterns>
+			</regex>
+			<metadata>
+				<enabled>
+					<parameters>true</parameters>
+				</enabled>
+				<secured>
+					<parameters>
+						<item>unitTestNumeric=N</item>
+						<item>unitTestAlphanumeric=A</item>
+					</parameters>
+				</secured>
+			</metadata>
+		</shield>
+	</shields>
+</sanwaf>

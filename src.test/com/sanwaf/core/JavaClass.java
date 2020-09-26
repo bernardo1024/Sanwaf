@@ -20,7 +20,7 @@ public class JavaClass {
   public static boolean multiParmsNotEqual(String s, ServletRequest req) {
     String s2 = req.getParameter("unitTestJavaMultiParm2");
     String s3 = req.getParameter("unitTestJavaMultiParm3");
-    if(s.equals(s2) && s.equals(s3)) {
+    if (s.equals(s2) && s.equals(s3)) {
       return false;
     }
     return true;

@@ -1,6 +1,5 @@
 package com.sanwaf.core;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.sanwaf.log.Logger;
 
 final class Shield {
+  static final String SPLIT_LINE_CHARS = ":::";
   Sanwaf sanwaf = null;
   Logger logger = null;
   String name = null;
@@ -29,9 +29,6 @@ final class Shield {
   Metadata parameters = null;
   Metadata cookies = null;
   Metadata headers = null;
-  Map<String, String> parmsUsingRegex = new HashMap<>();
-  Map<String, Method> parmsUsingJava = new HashMap<>();
-  Map<String, List<String>> parmsUsingConstants = new HashMap<>();
 
   Shield(Sanwaf sanwaf, Xml xml, Logger logger) {
     this.sanwaf = sanwaf;
@@ -41,9 +38,7 @@ final class Shield {
   }
 
   boolean threatDetected(ServletRequest req) {
-    return (  (parameters.enabled && parameterThreatDetected(req)) || 
-              (headers.enabled && headerThreatDetected(req)) || 
-              (cookies.enabled && cookieThreatDetected(req))  );
+    return ((parameters.enabled && parameterThreatDetected(req)) || (headers.enabled && headerThreatDetected(req)) || (cookies.enabled && cookieThreatDetected(req)));
   }
 
   private boolean parameterThreatDetected(ServletRequest req) {
@@ -100,46 +95,45 @@ final class Shield {
     if (len < minLen || len > maxLen) {
       return false;
     }
-    Parameter item;
+    Parameter parm;
     if (meta != null) {
-      item = getItemFromMetadata(meta, key);
-      if (item == null) {
+      parm = getParameterFromMetadata(meta, key);
+      if (parm == null) {
         String a = meta.getFromIndex(key);
         if (a == null) {
           return false;
         }
-        item = getItemFromMetadata(meta, a);
-        if (item == null) {
+        parm = getParameterFromMetadata(meta, a);
+        if (parm == null) {
           return false;
         }
-        key = a;
       }
-    } else { 
-      item = new Parameter(Datatype.STRING);
+    } else {
+      parm = new ParameterString();
     }
-    if (Datatype.isSizeError(this, item.type, key, value, len, item.max, item.min)) {
+    if (parm.isSizeError(value)) {
       return true;
     }
-    return item.type.inError(req, this, key, value, len);
+    return parm.inError(req, this, value);
   }
 
-  private Parameter getItemFromMetadata(Metadata meta, String key) {
-    Parameter item;
-    item = getItemByCase(meta, key);
-    if (item == null && regexAlways && !regexAlwaysExclusions.contains(key)) {
-      item = new Parameter(Datatype.STRING);
+  private Parameter getParameterFromMetadata(Metadata meta, String key) {
+    Parameter parm;
+    parm = getParameter(meta, key);
+    if (parm == null && regexAlways && !regexAlwaysExclusions.contains(key)) {
+      parm = new ParameterString();
     }
-    return item;
+    return parm;
   }
 
-  Parameter getItemByCase(Metadata meta, String key) {
-    Parameter item;
+  Parameter getParameter(Metadata meta, String key) {
+    Parameter parm;
     if (meta.caseSensitive) {
-      item = meta.map.get(key);
+      parm = meta.map.get(key);
     } else {
-      item = meta.map.get(key.toLowerCase());
+      parm = meta.map.get(key.toLowerCase());
     }
-    return item;
+    return parm;
   }
 
   List<Error> getErrors(ServletRequest req, String key, String value) {
@@ -160,22 +154,28 @@ final class Shield {
   }
 
   private Error getErrorForMetadata(ServletRequest req, Metadata meta, String key, String value) {
-    Parameter p = getItemByCase(meta, key);
+    Parameter p = getParameter(meta, key);
     if (p == null) {
       if (regexAlways) {
-        p = new Parameter(Datatype.STRING);
+        p = new ParameterString();
       } else {
         return null;
       }
     }
-    if (p.type.inError(req, this, key, value, value.length())) {
-      return new Error(this, p.type, key, value, p.min, p.max);
+    if (p.inError(req, this, value)) {
+      return new Error(this, p, key, value);
     }
     return null;
   }
 
   // XML LOAD CODE
   static final String XML_ITEM = "item";
+  static final String XML_ITEM_NAME = "name";
+  static final String XML_ITEM_TYPE = "type";
+  static final String XML_ITEM_MAX = "max";
+  static final String XML_ITEM_MIN = "min";
+  static final String XML_ITEM_MSG = "msg";
+  static final String XML_ITEM_PATH = "path";
   static final String XML_KEY = "key";
   static final String XML_VALUE = "value";
   static final String XML_NAME = "name";
@@ -191,11 +191,11 @@ final class Shield {
 
   private void load(Xml xml) {
     name = String.valueOf(xml.get(XML_NAME));
-    maxLen = Util.parseInt(xml.get(XML_MAX_LEN), maxLen);
+    maxLen = parseInt(xml.get(XML_MAX_LEN), maxLen);
     if (maxLen == -1) {
       maxLen = Integer.MAX_VALUE;
     }
-    minLen = Util.parseInt(xml.get(XML_MIN_LEN), minLen);
+    minLen = parseInt(xml.get(XML_MIN_LEN), minLen);
     if (minLen == -1) {
       minLen = Integer.MAX_VALUE;
     }
@@ -203,7 +203,7 @@ final class Shield {
     String regexBlock = xml.get(XML_REGEX);
     Xml regexBlockXml = new Xml(regexBlock);
     loadPatterns(regexBlockXml);
-    regexMinLen = Util.parseInt(regexBlockXml.get(XML_MIN_LEN), regexMinLen);
+    regexMinLen = parseInt(regexBlockXml.get(XML_MIN_LEN), regexMinLen);
     if (regexMinLen == -1) {
       regexMinLen = Integer.MAX_VALUE;
     }
@@ -217,16 +217,16 @@ final class Shield {
       Xml exclusionsBlockXml = new Xml(exclusionsBlock);
       String[] items = exclusionsBlockXml.getAll(XML_ITEM);
       for (String item : items) {
-        List<String> list = Util.split(item);
+        List<String> list = split(item);
         for (String l : list) {
           regexAlwaysExclusions.add(l);
         }
       }
     }
-    parameters = new Metadata(this, xml, Metadata.XML_PARAMETERS);
-    cookies = new Metadata(this, xml, Metadata.XML_COOKIES);
-    headers = new Metadata(this, xml, Metadata.XML_HEADERS);
-    Datatype.setShieldErrorMessages(xml, name);
+    parameters = new Metadata(xml, Metadata.XML_PARAMETERS);
+    cookies = new Metadata(xml, Metadata.XML_COOKIES);
+    headers = new Metadata(xml, Metadata.XML_HEADERS);
+    Error.setShieldErrorMessages(xml, name);
   }
 
   private void loadPatterns(Xml xml) {
@@ -236,7 +236,7 @@ final class Shield {
     for (String item : items) {
       Xml itemBlockXml = new Xml(item);
       String value = itemBlockXml.get(XML_VALUE);
-      List<String> list = Util.split(value);
+      List<String> list = split(value);
       for (String l : list) {
         patterns.add(Pattern.compile(l, Pattern.CASE_INSENSITIVE));
       }
@@ -248,7 +248,7 @@ final class Shield {
       Xml itemBlockXml = new Xml(item);
       String key = itemBlockXml.get(XML_KEY);
       String value = itemBlockXml.get(XML_VALUE);
-      List<String> list = Util.split(value);
+      List<String> list = split(value);
       for (String l : list) {
         customPatterns.put(key.toLowerCase(), Pattern.compile(l, Pattern.CASE_INSENSITIVE));
       }
@@ -258,7 +258,7 @@ final class Shield {
   private void logStartup() {
     StringBuilder sb = new StringBuilder();
     sb.append("Loading Shield: ").append(name);
-    if(sanwaf.verbose) { 
+    if (sanwaf.verbose) {
       sb.append("\nSettings:\n");
       sb.append("\t").append(XML_MAX_LEN).append("=").append(maxLen).append("\n");
       sb.append("\t").append(XML_MIN_LEN).append("=").append(minLen).append("\n");
@@ -269,21 +269,21 @@ final class Shield {
       sb.append("\t").append(Metadata.XML_COOKIES).append(".").append(Metadata.XML_CASE_SENSITIVE).append("=").append(cookies.caseSensitive).append("\n");
       sb.append("\t").append(Metadata.XML_HEADERS).append(".").append(Metadata.XML_ENABLED).append("=").append(headers.enabled).append("\n");
       sb.append("\t").append(Metadata.XML_HEADERS).append(".").append(Metadata.XML_CASE_SENSITIVE).append("=").append(headers.caseSensitive).append("\n");
-  
+
       int dot = 0;
       String propsRegex = XML_REGEX_PATTERNS_AUTO + ".";
       sb.append("\nPatterns:\n");
       for (Pattern pattern : patterns) {
         sb.append("\t").append(propsRegex).append(dot++).append("=").append(pattern).append("\n");
       }
-  
+
       sb.append("\n" + XML_REGEX_PATTERNS_CUSTOM + ":\n");
-      Iterator<Map.Entry<String,Pattern>> it = customPatterns.entrySet().iterator();
+      Iterator<Map.Entry<String, Pattern>> it = customPatterns.entrySet().iterator();
       while (it.hasNext()) {
-          Map.Entry<String,Pattern> pair = it.next();
-          sb.append("\t").append(pair.getKey()).append("=").append(pair.getValue()).append("\n");
+        Map.Entry<String, Pattern> pair = it.next();
+        sb.append("\t").append(pair.getKey()).append("=").append(pair.getValue()).append("\n");
       }
-      
+
       if (regexAlways) {
         sb.append("\n\tShield Secured List: *Ignored*");
         sb.append("\n\tRegexAlways=true (process all parameters)");
@@ -295,11 +295,48 @@ final class Shield {
       sb.append("\n");
       if (!regexAlways) {
         sb.append("Configured/Secured Entries:\n");
-        Util.appendPItemMapToSB(headers.map, sb, "\tHeaders");
-        Util.appendPItemMapToSB(cookies.map, sb, "\tCookies");
-        Util.appendPItemMapToSB(parameters.map, sb, "\tParameters");
+        appendPItemMapToSB(headers.map, sb, "\tHeaders");
+        appendPItemMapToSB(cookies.map, sb, "\tCookies");
+        appendPItemMapToSB(parameters.map, sb, "\tParameters");
       }
     }
     logger.info(sb.toString());
   }
+
+  static int parseInt(String s, int d) {
+    try {
+      return Integer.parseInt(s);
+    } catch (NumberFormatException nfe) {
+      return d;
+    }
+  }
+
+  static void appendPItemMapToSB(Map<String, Parameter> map, StringBuilder sb, String label) {
+    sb.append(label);
+    if (map == null || map.size() == 0) {
+      sb.append("\n\t\t(none found)");
+    } else {
+      Iterator<?> it = map.entrySet().iterator();
+      while (it.hasNext()) {
+        @SuppressWarnings("unchecked")
+        Map.Entry<String, Parameter> e = (Map.Entry<String, Parameter>) it.next();
+        sb.append("\n\t\t" + e.getKey() + "=" + e.getValue());
+      }
+    }
+    sb.append("\n");
+  }
+
+  static List<String> split(String s) {
+    List<String> out = new ArrayList<>();
+    if (s != null && s.length() > 0) {
+      String[] vs = s.split(SPLIT_LINE_CHARS);
+      for (String v : vs) {
+        if (v.length() > 0) {
+          out.add(v);
+        }
+      }
+    }
+    return out;
+  }
+
 }

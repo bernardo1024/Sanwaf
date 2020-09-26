@@ -1,26 +1,44 @@
 package com.sanwaf.core;
 
-final class Parameter {
-  Datatype type;
-  int max;
-  int min;
+import java.util.List;
 
-  Parameter(Datatype type) {
-    max = Integer.MAX_VALUE;
-    min = 0;
-    this.type = type;
+import javax.servlet.ServletRequest;
+
+abstract class Parameter {
+  String name;
+  String type = null;
+  int max = Integer.MAX_VALUE;
+  int min = 0;
+  String errorMsg = null;
+  String path = null;
+
+  Parameter() {
   }
 
-  Parameter(Datatype type, int max, int min) {
-    this.type = type;
+  Parameter(String name, int max, int min, String errorMsg, String path) {
+    this.name = name;
     this.max = max;
     this.min = min;
+    this.errorMsg = errorMsg;
+    this.path = path;
+  }
+
+  public abstract boolean inError(ServletRequest req, Shield shield, String value);
+
+  public abstract List<Point> getErrorHighlightPoints(Shield shield, String value);
+
+  public boolean isSizeError(String value) {
+    return (value.length() < min || value.length() > max);
   }
 
   public String toString() {
     StringBuilder sb = new StringBuilder("type: ").append(type);
     sb.append(", max: ").append(max);
     sb.append(", min: ").append(min);
+    sb.append(", path: ").append(path);
+    sb.append(", error-msg: ").append(errorMsg);
+    sb.append(", path: ").append(path);
     return sb.toString();
   }
+
 }

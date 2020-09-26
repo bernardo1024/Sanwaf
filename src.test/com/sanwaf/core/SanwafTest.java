@@ -135,9 +135,9 @@ public class SanwafTest {
     } catch (IOException ioe) {
     }
   }
-  
+
   @Test
-  public void testSanWafInvalidXML() { 
+  public void testSanWafInvalidXML() {
     try {
       new Sanwaf(new UnitTestLogger(), "invalidXmlFilename.foobar");
       fail("Error, Sanwaf instanciated with invalid xml file");
@@ -147,7 +147,7 @@ public class SanwafTest {
   }
 
   @Test
-  public void testSanWafLoggerAndFile() { 
+  public void testSanWafLoggerAndFile() {
     try {
       Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
       assertTrue(sw != null);
@@ -157,13 +157,13 @@ public class SanwafTest {
   }
 
   @Test
-  public void testThreatWithNull() { 
+  public void testThreatWithNull() {
     boolean b = sanwaf.isThreat(null);
     assertTrue(!b);
   }
 
   @Test
-  public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled() { 
+  public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled() {
     boolean xssAlways = shield.regexAlways;
     shield.regexAlways = true;
     boolean b = sanwaf.isThreat(null);

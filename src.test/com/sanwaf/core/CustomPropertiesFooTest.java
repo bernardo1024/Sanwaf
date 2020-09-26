@@ -4,14 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.sanwaf.core.Shield;
-import com.sanwaf.core.Datatype;
 import com.sanwaf.core.Sanwaf;
 
 public class CustomPropertiesFooTest {
@@ -26,16 +23,12 @@ public class CustomPropertiesFooTest {
     } catch (IOException ioe) {
       assertTrue(false);
     }
-    
+
     MockHttpServletRequest req = new MockHttpServletRequest();
 
     assertEquals(false, shield.threat(req, shield.parameters, "foounitTestNumeric", "0123456789"));
     assertEquals(true, shield.threat(req, shield.parameters, "foounitTestNumeric", "foo.12"));
     assertEquals(true, shield.threat(req, shield.parameters, "foounitTestNumeric", "12.bar"));
-
-    Map<String, String> m = new HashMap<String, String>();
-    m.put("foounitTestNumericDelimited", ",");
-    Datatype.numericDelimiters.put(shield.name, m);
 
     assertEquals(false, shield.threat(req, shield.parameters, "foounitTestNumericDelimited", "-12345"));
     assertEquals(false, shield.threat(req, shield.parameters, "foounitTestNumericDelimited", "121,23"));
@@ -71,6 +64,19 @@ public class CustomPropertiesFooTest {
     assertEquals(true, shield.threat(req, shield.parameters, "foounitTestCustomDate", "2016xxdd"));
     assertEquals(true, shield.threat(req, shield.parameters, "foounitTestCustomTel", "55-555-55556"));
 
+    assertEquals(true, shield.threat(req, shield.parameters, "fooaFoo", "abcdefghi"));
+    assertEquals(true, shield.threat(req, shield.parameters, "foobFoo", "abcdefghi"));
+    assertEquals(true, shield.threat(req, shield.parameters, "foocFoo", "abcdefghi"));
+    assertEquals(true, shield.threat(req, shield.parameters, "foodFoo", "abcdefghi"));
+    assertEquals(true, shield.threat(req, shield.parameters, "fooeFoo", "abcdefghi"));
+    assertEquals(true, shield.threat(req, shield.parameters, "foofFoo", "abcdefghi"));
+
+    assertEquals(false, shield.threat(req, shield.parameters, "fooaFoo", "12345,67890"));
+    assertEquals(false, shield.threat(req, shield.parameters, "foobFoo", "12345,67890"));
+    assertEquals(false, shield.threat(req, shield.parameters, "foocFoo", "12345,67890"));
+    assertEquals(false, shield.threat(req, shield.parameters, "foodFoo", "12345,67890"));
+    assertEquals(false, shield.threat(req, shield.parameters, "fooeFoo", "12345,67890"));
+    assertEquals(false, shield.threat(req, shield.parameters, "foofFoo", "12345,67890"));
   }
 
 }

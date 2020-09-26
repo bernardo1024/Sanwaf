@@ -63,44 +63,51 @@
 		k{}		- Must be equal to the of if the Constant values provided
 		r{}		- Custom regex expression (reusable per field regex capabilities)
 		j{}		- Java Class.method - returns true/false for pass/fail
+		
+		See below for specifying max/min and parameter level error messages
 
-	(min,max)	- Specify max & min length limits for the submitted data; specify -1 to use max range supported (Integer.MAX_VALUE)
-				- Suffix a data type with : (min,max)
-					For Example: 
-									n(7,7)			- 7 digit number
-									a(0,10)			- 0-10 characters of alphanumeric text
-									r{ssn}(0,10)	- 0-10 characters that also match a regex called ssn
 
 	CONFIGURATION:
 	**************
 	You configure how submitted data (parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
 	The secured section contains the following groups: parameters, headers, cookies. 
 						
-	GROUP FORMAT:
-	*************
-	Groups (parameters|headers|cookies) contain a list of items to be protected by the WAF.
-	Each item can contain single or multiple entries separated by three colons (":::") 
-	For example:
-				  Single:	
-							<item>key1=value</item>
-							<item>key2=value</item>
-			      Multiple:
-							<item>key1-value:::key2=value</item>
+		<secured>
+			<parameters>
+				<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+			</parameters>
+			<headers>
+				<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+			</headers>
+			<cookies>
+				<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+			</cookies>
+		</secured>
 		
-	NOTATION:
-	*********
-				<parameters|headers|cookies>
-					<item>key=[c|n|n{}|a|a{}|k{}|r{}|j{}][:::[...]...]</item>
-					...
-				</parameters|headers|cookies>
+	Item Format:
+	***********
+		<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+	where
+	
+		<name></name>	- parameter/header/cookie name
+						- specify many 'names' in one item tag by using the ':::' delimiter.  
+						- for example:
+							- <name>parameter1</name>
+							- <name>parameter1:::parameter2:::parameter3</name> 
+		<type></type>	- the parameter datatype (see Custom Datatypes above) (defaults to 's' if not specified)
+		<max></max>		- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
+		<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
+		<msg></msg>		- the error message for the parameter(s) (uses the shield or global error message is not specified)
+		<path></path>	- the path that must exist for the parameter evaluation to occur 
 		
 	EXAMPLE:
 	********
-				<parameters>
-					<item>foo=s(10,15)</item>
-					<item>bar=n{,}(5,5)</item>
-					<item>barfoo=s(10,15):::foobar=n{,}(5,5)</item>
-				</parameters>
+		<parameters>
+			<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><path>/put/accounts</path></item>
+			<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
+			<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
+			<item><name>count</name><type>n</type><max>0</max><min>1</min></item>
+		</parameters>
 
 
 	***************************************************************************************************
@@ -109,64 +116,60 @@
 	
 	(Character)
 		c		DESCRIPTION:	Any single character
-					FORMAT: 	key=c
-					EXAMPLE: 	parameterName=c
-								VALID: 			X
+				FORMAT: 		c
 	
 	(Number) 		
-		n		DESCRIPTION:	Any positive or negative numeric value ( '+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-				FORMAT:			key=n  
-				EXAMPLE:		parameterName=n
-								VALID: 			-321.123		INVALID: +12
-												   0.000			      12.34.56
+		n		DESCRIPTION:	Any positive or negative numeric value 
+								('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+				FORMAT:			n  
+				EXAMPLE:		-321.123, 0.0001 - are valid
+						 		+12, 12.34.56	- are invalid
 								
 	(Delimited list of Numbers)
 		n{}	    DESCRIPTION:	A character separated list of numbers
-				FORMAT:			key=n{<separator char>}  
-				EXAMPLE:		parameterName=n{,}
-								VALID: 			-321.123,0.000,123,45
+				FORMAT:			n{<separator char>}
+								Note: the min & max settings applies per delimted value  
+				EXAMPLE: 		using n{,}, -321.123,0.000,123,45 is valid
 												  
 	(Alphanumeric)
 		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT: 		key=a
-				EXAMPLE: 		parameterName=a
-								VALID:			abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ 
+				FORMAT: 		a
+				EXAMPLE:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
 	
 	(Alphanumeric and stated additional characters)						
-		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets (no delimiter)		
-				FORMAT: 		key=a{<characters to allow>}1
-								 For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:		parameterName=a{+\s,}
-								VALID: 			abcdefghijklm nopqrstuvwxyz+,
+		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
+				FORMAT: 		a{<characters to allow>}
+								- For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+				EXAMPLE:		using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
 	
 	(String) 
-		s 		DESCRIPTION:	Any string.  All regexs in the autoRegex are executed against the string - most expensive)
-				FORMAT: 		key=s
-				EXAMPLE:		parameterName=s
-								VALID: 			"Hello this string does not contain a XSS payload"
+		s 		DESCRIPTION:	Any string.  
+								All regex's in the autoRunPatterns are executed against the string				
+				FORMAT: 		s
+				EXAMPLE:		"Hello this string does not contain a XSS payload"
 
 	(Constant)
 		k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
-					FORMAT: 	key=k{<comma separated list of strings>}
-					EXAMPLE: 	unitTestString=k{FOO,BAR,FAR}
-								VALID: 			FOO, BAR, FAR	
+				FORMAT: 		k{<comma separated list of strings>}
+				EXAMPLE: 		using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
 
 	(Custom Regex)
 		r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
-					FORMAT: 	key=r{CustomRegexName}
-					EXAMPLE: 	unitTestString=R{date}
-								VALID: 			**depends on regex specified**	
+								Custom Regex's are specified in the Shield's customPatterns section
+								Regex must not include the '/' markers nor any flags.  
+								For example, only provide the value for <regex>:
+									/<regex>/gimsuy  
+				FORMAT: 		r{CustomRegexName}
 	
 	(Java)
-		j{}		DESCRIPTION: 	Java, call java class for processing.
-								The key value and the ServletRequest object is passed to the method.  
-								The method must be in the fomat:
-									public static boolean methodName(String s, ServletRequest request)
-										return true for threat found, else false;
-					FORMAT: 	key=j{fully qualified className.methodName()}
-					EXAMPLE: 	unitTestJava=j{com.foo.bar.SomeClass.someMethod()}
-								VALID: 			**depends on class processing**
-	
+		j{}		DESCRIPTION: 	Java, call java class for processing
+								-The key value and the ServletRequest object is passed to the method
+								-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+									For example:
+										public static boolean methodName(String s, ServletRequest request)
+											return true for threat found, else false
+				FORMAT: 		j{fully_qualified_className.methodName()}
+
  -->
 
 
@@ -259,8 +262,8 @@
 						<value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
 					</item>
 					<item>
-						<key>xss</key>
-						<value><![CDATA[(?:<|%3c)(?:|(?:\/|%2f)|[^/>][^>]+|(?:\/|%2f)[^>][^>]+)(?:>|%3e)]]></value>
+						<key>xss-form-elements</key>
+						<value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
 					</item>
 				</autoRunPatterns>
 				
@@ -303,14 +306,15 @@
 				<secured>
 					<!-- parameters listed below are only used by the sample application -->
 					<parameters>
-						<item>char=c</item>
-						<item>numeric=n</item>
-						<item>numericdelimited=n{,}</item>
-						<item>alphanumeric=a</item>
-						<item>alphanumericandmore=a{'}</item>
-						<item>string=s</item>
-						<item>regex=r{date}</item>
-						<!--item>java=j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</item-->
+						<item><name>char</name><type>c</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>parms:::use:::the:::same:::settings</name><type>n{,}</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>alphanumericandmore</name><type>a{'</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>string</name><type>s</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>regex</name><type>r{date}</type><max></max><min></min><msg></msg><path></path></item>
+						<!--item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><path></path></item-->
 					</parameters>
 					<headers>
 					</headers>

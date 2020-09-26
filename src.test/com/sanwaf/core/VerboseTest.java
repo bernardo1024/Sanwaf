@@ -23,14 +23,14 @@ public class VerboseTest {
 
   @Before
   public void setUpStreams() {
-      System.setOut(new PrintStream(outContent));
- }
+    System.setOut(new PrintStream(outContent));
+  }
 
   @After
   public void restoreStreams() {
-      System.setOut(originalOut);
+    System.setOut(originalOut);
   }
-  
+
   @Test
   public void verboseDisabledTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf.xml");
@@ -42,6 +42,7 @@ public class VerboseTest {
     assertTrue(!s.contains("Patterns:"));
     assertTrue(!s.contains("customPatterns:"));
     assertTrue(!s.contains("Configured/Secured Entries:"));
+    assertTrue(!s.contains("customPatterns"));
   }
 
   @Test
@@ -53,6 +54,7 @@ public class VerboseTest {
     assertTrue(s.contains("Patterns:"));
     assertTrue(s.contains("customPatterns:"));
     assertTrue(s.contains("Configured/Secured Entries:"));
+    assertTrue(s.contains("date="));
   }
 
   @Test
@@ -63,6 +65,8 @@ public class VerboseTest {
     assertTrue(s.contains("Shield Secured List: *Ignored*"));
     assertTrue(s.contains("Except for (exclusion list):"));
     assertTrue(!s.contains("Configured/Secured Entries:"));
+    assertTrue(s.contains("customPatterns"));
+    assertTrue(s.contains("date="));
   }
-  
+
 }

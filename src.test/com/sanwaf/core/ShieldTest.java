@@ -15,7 +15,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.sanwaf.core.Error;
 import com.sanwaf.core.Shield;
-import com.sanwaf.core.Datatype;
 import com.sanwaf.core.Sanwaf;
 
 public class ShieldTest {
@@ -76,8 +75,10 @@ public class ShieldTest {
 
   @Test
   public void TestToJson() {
-    Error error1 = new Error(shield, Datatype.STRING, "key1", "value2", 2, 3);
-    Error error2 = new Error(shield, Datatype.NUMERIC, "key11", "value22", 1, 1000);
+    Parameter p1 = new ParameterString("key1", 3, 2, "error msg1", null);
+    Error error1 = new Error(shield, p1, "key1", "value2");
+    Parameter p2 = new ParameterNumeric("key11", 1000, 1, "error msg2", null);
+    Error error2 = new Error(shield, p2, "key11", "value22");
     System.out.println(error1.toJson());
     System.out.println(Error.toJson(null));
     List<Error> errors = new ArrayList<Error>();
@@ -103,7 +104,7 @@ public class ShieldTest {
   }
 
   @Test
-  public void testUnprotectedParameter() { 
+  public void testUnprotectedParameter() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "foobarNotInParmStore", "<script>alert(1)</script>");
     assertEquals(false, b);
@@ -158,7 +159,6 @@ public class ShieldTest {
     testNumeric(false);
   }
 
-
   void testNumeric(boolean isThreat) {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("aParameterNumber", "foo.12");
@@ -172,6 +172,5 @@ public class ShieldTest {
     request.setCookies(new Cookie("aCookieNumber", "foo.12"));
     assertEquals(isThreat, sanwaf.isThreatDetected(request));
   }
-  
 
 }

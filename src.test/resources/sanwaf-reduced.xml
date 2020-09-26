@@ -16,8 +16,8 @@
 				</enabled>
 				<secured>
 					<parameters>
-						<item>unitTestNumeric=N</item>
-						<item>unitTestAlphanumeric=A</item>
+						<item><name>unitTestNumeric</name><type>n</type></item>
+						<item><name>unitTestAlphanumeric</name><type>a</type></item>
 					</parameters>
 				</secured>
 			</metadata>

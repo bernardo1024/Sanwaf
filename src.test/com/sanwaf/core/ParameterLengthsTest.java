@@ -137,8 +137,8 @@ public class ParameterLengthsTest {
     assertTrue(shield.maxLen == Integer.MAX_VALUE);
     assertTrue(shield.minLen == Integer.MAX_VALUE);
     assertTrue(shield.regexMinLen == Integer.MAX_VALUE);
-    
-    Parameter p = shield.getItemByCase(shield.parameters, "unitTestMaxMinLen");
+
+    Parameter p = shield.getParameter(shield.parameters, "unitTestMaxMinLen");
     assertTrue(p.max == Integer.MAX_VALUE);
     assertTrue(p.min == Integer.MAX_VALUE);
   }
