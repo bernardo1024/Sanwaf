@@ -217,7 +217,7 @@
 			<name>XSS</name>
 			
 			<!-- Minimum length of parameter to trigger this shield -->
-			<minLen>4</minLen>
+			<minLen>0</minLen>
 			
 			<!-- Maximum length of parameter to trigger this shield; Enter -1 to use max supported range or Integer.MAX_VALUE -->
 			<maxLen>-1</maxLen>
@@ -238,7 +238,7 @@
 			<!-- Regex configuration Section -->
 			<regex>
 				<!-- Minimum length of parameter to trigger the regex processing -->
-				<minLen>4</minLen>
+				<minLen>0</minLen>
 				
 				<!-- Control whether to treat all non-mapped/managed parameters as strings (regex) -->
 				<alwaysPerformRegex>
@@ -325,3 +325,4 @@
 		</shield>
 	</shields>
 </sanwaf>
+
