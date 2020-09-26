@@ -48,7 +48,7 @@ Then in your unhandled exception handler, you can pull the error values with the
 ## Sanwaf Quick Guide
 Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 
-###Sanwaf Structure
+### Sanwaf Structure
 	<sanwaf>
 		[global settings]
 		<shields>
