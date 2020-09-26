@@ -36,7 +36,7 @@ Create an authentication filter to validate all the incoming request objects.
 		// 1. throw Exception that will be caught by some globe exception handler to display proper error page
 		// 2. log the user out and redirect the user to a login page
 		//for this example, we will throw a SecurityException that will be caught and processed by an unhandled exception handler
-				throw new SecurityException("Security Violation.  Put your message here.");
+		throw new SecurityException("Security Violation.  Put your message here.");
 	}
 	
 
@@ -73,15 +73,15 @@ In order to improve the performance of scanning submitted data as fast as possib
 Use these data types whenever possible (instead of simply assigning all to the string data type that uses regex's).
   
 	Notation	Description 
-		c		- Character
-		n 		- Number
+		c	- Character
+		n 	- Number
 		n{} 	- Delimited list of Numbers
-		a		- Alphanumeric
-		a{}		- Alphanumeric and stated additional characters
-		s		- String (uses regex's - most expensive - try to use sparingly)
-		k{}		- Must be equal to the of if the Constant values provided
-		r{}		- Custom regex expression (reusable per field regex capabilities)
-		j{}		- Java Class.method - returns true/false for pass/fail
+		a	- Alphanumeric
+		a{}	- Alphanumeric and stated additional characters
+		s	- String (uses regex's - most expensive - try to use sparingly)
+		k{}	- Must be equal to the of if the Constant values provided
+		r{}	- Custom regex expression (reusable per field regex capabilities)
+		j{}	- Java Class.method - returns true/false for pass/fail
 
 ###Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section of this XML file.  
@@ -118,86 +118,92 @@ Also note the **secured section** contains the following groups: parameters, hea
 
 	</metadata>						
 ###Item Format of the Secured Section
+
 	<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+	
 where
 
 	<name></name>	- parameter/header/cookie name
-					- specify many 'names' in one item tag by using the ':::' delimiter.  
-					- for example:
-						- <name>parameter1</name>
-						- <name>parameter1:::parameter2:::parameter3</name> 
+			- specify many 'names' in one item tag by using the ':::' delimiter.  
+			- for example:
+				- <name>parameter1</name>
+				- <name>parameter1:::parameter2:::parameter3</name> 
 	<type></type>	- the parameter datatype (see Custom Datatypes above) (defaults to 's' if not specified)
-	<max></max>		- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
-	<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
-	<msg></msg>		- the error message for the parameter(s) (uses the shield or global error message is not specified)
+	<max></max>	- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
+	<min></min>	- the min length allowed for this parameter (defaults to 0 if not specified) 
+	<msg></msg>	- the error message for the parameter(s) (uses the shield or global error message is not specified)
 	<path></path>	- the path that must exist for the parameter evaluation to occur 
 
 ####Example
+
 	<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><path>/put/accounts</path></item>
 	<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
 	<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
 	<item><name>count</name><type>n</type><max>0</max><min>1</min></item>
 
 ###Custom Datatypes Guide
+
 	(Character)
 		c		DESCRIPTION:	Any single character
-				FORMAT: 		c
+				FORMAT: 	c
 	
 	(Number) 		
 		n		DESCRIPTION:	Any positive or negative numeric value 
-								('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-				FORMAT:			n  
-				EXAMPLE:		-321.123, 0.0001 - are valid
-						 		+12, 12.34.56	- are invalid
+						('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+				FORMAT:		n  
+				EXAMPLE:	-321.123, 0.0001 - are valid
+						+12, 12.34.56	- are invalid
 								
 	(Delimited list of Numbers)
 		n{}	    DESCRIPTION:	A character separated list of numbers
-				FORMAT:			n{<separator char>}
-								Note: the min & max settings applies per delimted value  
-				EXAMPLE: 		using n{,}, -321.123,0.000,123,45 is valid
+				FORMAT:		n{<separator char>}
+						Note: the min & max settings applies per delimted value  
+				EXAMPLE: 	using n{,}, -321.123,0.000,123,45 is valid
 												  
 	(Alphanumeric)
 		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT: 		a
-				EXAMPLE:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
+				FORMAT: 	a
+				EXAMPLE:	abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
 	
 	(Alphanumeric and stated additional characters)						
 		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
-				FORMAT: 		a{<characters to allow>}
-								- For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:		using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
+				FORMAT: 	a{<characters to allow>}
+						- For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+				EXAMPLE:	using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
 	
 	(String) 
 		s 		DESCRIPTION:	Any string.  
-								All regex's in the autoRunPatterns are executed against the string				
-				FORMAT: 		s
-				EXAMPLE:		"Hello this string does not contain a XSS payload"
+						All regex's in the autoRunPatterns are executed against the string				
+				FORMAT: 	s
+				EXAMPLE:	"Hello this string does not contain a XSS payload"
 
 	(Constant)
 		k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
-				FORMAT: 		k{<comma separated list of strings>}
-				EXAMPLE: 		using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
+				FORMAT: 	k{<comma separated list of strings>}
+				EXAMPLE: 	using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
 
 	(Custom Regex)
 		r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
-								Custom Regex's are specified in the Shield's customPatterns section
-								Regex must not include the '/' markers nor any flags.  
-								For example, only provide the value for <regex>:
-									/<regex>/gimsuy  
-				FORMAT: 		r{CustomRegexName}
+						Custom Regex's are specified in the Shield's customPatterns section
+						Regex must not include the '/' markers nor any flags.  
+						For example, only provide the value for <regex>:
+							/<regex>/gimsuy  
+				FORMAT: 	r{CustomRegexName}
 	
 	(Java)
 		j{}		DESCRIPTION: 	Java, call java class for processing
-								-The key value and the ServletRequest object is passed to the method
-								-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-									For example:
-										public static boolean methodName(String s, ServletRequest request)
-											return true for threat found, else false
-				FORMAT: 		j{fully_qualified_className.methodName()}
+						-The key value and the ServletRequest object is passed to the method
+						-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+							For example:
+								public static boolean methodName(String s, ServletRequest request)
+									return true for threat found, else false
+				FORMAT: 	j{fully_qualified_className.methodName()}
 
 
 ##Sample code
+
 #### For the sample app, go to https://github.com/bernardo1024/SanwafSample
+
 The following code is used for demonstration purposes.  Not all imports or code is provided.  
 Add Sanwaf as a dependency to your code:
 
