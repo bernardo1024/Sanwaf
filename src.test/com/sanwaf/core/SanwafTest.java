@@ -177,5 +177,4 @@ public class SanwafTest {
 
     shield.regexAlways = xssAlways;
   }
-
 }

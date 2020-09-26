@@ -65,5 +65,4 @@ public class OtherClassesTest {
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
   }
-
 }

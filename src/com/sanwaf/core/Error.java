@@ -186,3 +186,4 @@ final class Error {
   }
 
 }
+

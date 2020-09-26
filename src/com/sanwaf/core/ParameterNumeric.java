@@ -66,3 +66,4 @@ class ParameterNumeric extends Parameter {
   }
 
 }
+

@@ -302,3 +302,4 @@ public class DatatypeTest {
     assertEquals(true, b);
   }
 }
+

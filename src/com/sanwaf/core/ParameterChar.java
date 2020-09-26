@@ -26,3 +26,4 @@ final class ParameterChar extends Parameter {
     return (value.length() > 1);
   }
 }
+

@@ -156,3 +156,4 @@ public class UtilTest {
     assert (Xml.stripXmlComments(null).equals(""));
   }
 }
+

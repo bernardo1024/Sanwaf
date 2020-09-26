@@ -172,5 +172,4 @@ public class ShieldTest {
     request.setCookies(new Cookie("aCookieNumber", "foo.12"));
     assertEquals(isThreat, sanwaf.isThreatDetected(request));
   }
-
 }

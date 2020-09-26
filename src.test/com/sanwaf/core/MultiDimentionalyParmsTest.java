@@ -130,5 +130,4 @@ public class MultiDimentionalyParmsTest {
     r.addParameter("e[1].f[2]g(3)-h(4)", "12345abcd000");
     assertEquals(true, sanwaf.isThreatDetected(r));
   }
-
 }
