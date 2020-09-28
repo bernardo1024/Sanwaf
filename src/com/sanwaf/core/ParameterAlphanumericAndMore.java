@@ -39,7 +39,7 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     if (value == null) {
       return points;
@@ -85,6 +85,9 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
     if (value == null) {
       return false;
     }
+    if(isSizeError(value)) {
+      return true;
+    }
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isCharNotAlphanumeric(c)) {
@@ -103,13 +106,14 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
     return false;
   }
 
-  public String substituteAlphaNumericAndMoreChars(String errorString) {
-    int i = errorString.indexOf(Error.XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER);
+  @Override
+  public String modifyErrorMsg(String errorMsg) {
+    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
     if (i >= 0) {
-      return errorString.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(alphanumericAndMoreChars))
-          + errorString.substring(i + Error.XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER.length(), errorString.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(alphanumericAndMoreChars))
+          + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
     }
-    return errorString;
+    return errorMsg;
   }
 
   static String handleSpecialChars(char[] chars) {
@@ -138,4 +142,3 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
   }
 
 }
-

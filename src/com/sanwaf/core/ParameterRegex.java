@@ -18,7 +18,7 @@ final class ParameterRegex extends Parameter {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     if (value == null || value.length() == 0) {
       return points;
@@ -32,6 +32,9 @@ final class ParameterRegex extends Parameter {
 
   @Override
   public boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(isSizeError(value)) {
+      return true;
+    }
     if (pattern == null) {
       pattern = shield.customPatterns.get(patternName);
     }
@@ -45,4 +48,3 @@ final class ParameterRegex extends Parameter {
     }
   }
 }
-

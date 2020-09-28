@@ -12,7 +12,7 @@ class ParameterAlphanumeric extends Parameter {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     int start = -1;
     int len = value.length();
@@ -38,6 +38,9 @@ class ParameterAlphanumeric extends Parameter {
 
   @Override
   public boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(isSizeError(value)) {
+      return true;
+    }
     int i = 0;
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
@@ -53,4 +56,3 @@ class ParameterAlphanumeric extends Parameter {
   }
 
 }
-

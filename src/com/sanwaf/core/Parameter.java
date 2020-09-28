@@ -25,12 +25,16 @@ abstract class Parameter {
 
   public abstract boolean inError(ServletRequest req, Shield shield, String value);
 
-  public abstract List<Point> getErrorHighlightPoints(Shield shield, String value);
+  public abstract List<Point> getErrorPoints(Shield shield, String value);
 
-  public boolean isSizeError(String value) {
+  boolean isSizeError(String value) {
     return (value.length() < min || value.length() > max);
   }
 
+  public String modifyErrorMsg(String errorMsg) {
+    return errorMsg;
+  }
+  
   public String toString() {
     StringBuilder sb = new StringBuilder("type: ").append(type);
     sb.append(", max: ").append(max);
@@ -42,4 +46,3 @@ abstract class Parameter {
   }
 
 }
-

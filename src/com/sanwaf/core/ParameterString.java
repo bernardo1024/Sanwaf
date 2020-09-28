@@ -19,7 +19,7 @@ final class ParameterString extends Parameter {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
 
     for (Pattern p : shield.patterns) {
@@ -35,6 +35,9 @@ final class ParameterString extends Parameter {
 
   @Override
   public boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(isSizeError(value)) {
+      return true;
+    }
     for (Pattern p : shield.patterns) {
       if (p.matcher(value).find()) {
         return true;
@@ -43,4 +46,3 @@ final class ParameterString extends Parameter {
     return false;
   }
 }
-

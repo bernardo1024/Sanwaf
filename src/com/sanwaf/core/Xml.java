@@ -108,4 +108,3 @@ final class Xml {
     return s.replaceAll("<!--.*-->", "").replaceAll("<!--((?!<!--)[\\s\\S])*-->", "");
   }
 }
-

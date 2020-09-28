@@ -171,7 +171,7 @@ public final class Sanwaf {
     if (o != null) {
       return String.valueOf(o);
     }
-    return "Sanwaf not configured to set TrackId info";
+    return "Sanwaf TrackId is disabled";
   }
 
   /**
@@ -191,7 +191,7 @@ public final class Sanwaf {
     if (o != null) {
       return String.valueOf(o);
     }
-    return "Sanwaf not configured to set Error Info";
+    return "Sanwaf Error handling is disabled";
   }
 
   private List<Error> getErrorList(ServletRequest req) {
@@ -284,4 +284,3 @@ public final class Sanwaf {
   }
 
 }
-

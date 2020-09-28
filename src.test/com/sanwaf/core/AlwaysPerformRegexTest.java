@@ -39,4 +39,3 @@ public class AlwaysPerformRegexTest {
     assertTrue(result.equals(true));
   }
 }
-

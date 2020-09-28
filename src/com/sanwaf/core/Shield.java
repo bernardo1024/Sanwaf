@@ -38,7 +38,9 @@ final class Shield {
   }
 
   boolean threatDetected(ServletRequest req) {
-    return ((parameters.enabled && parameterThreatDetected(req)) || (headers.enabled && headerThreatDetected(req)) || (cookies.enabled && cookieThreatDetected(req)));
+    return (  (parameters.enabled && parameterThreatDetected(req)) || 
+              (headers.enabled && headerThreatDetected(req)) || 
+              (cookies.enabled && cookieThreatDetected(req))  );
   }
 
   private boolean parameterThreatDetected(ServletRequest req) {
@@ -110,9 +112,6 @@ final class Shield {
       }
     } else {
       parm = new ParameterString();
-    }
-    if (parm.isSizeError(value)) {
-      return true;
     }
     return parm.inError(req, this, value);
   }
@@ -340,4 +339,3 @@ final class Shield {
   }
 
 }
-

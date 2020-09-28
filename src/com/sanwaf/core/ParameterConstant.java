@@ -16,7 +16,7 @@ final class ParameterConstant extends Parameter {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     points.add(new Point(0, value.length()));
     return points;
@@ -24,6 +24,9 @@ final class ParameterConstant extends Parameter {
 
   @Override
   public boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if (isSizeError(value)) {
+      return true;
+    }
     return !constantValues.contains(value);
   }
 
@@ -35,12 +38,12 @@ final class ParameterConstant extends Parameter {
     }
   }
 
-  String substituteConstantValues(String errorString) {
-    int i = errorString.indexOf(Error.XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER);
+  @Override
+  public String modifyErrorMsg(String errorMsg) {
+    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
     if (i >= 0) {
-      return errorString.substring(0, i) + Metadata.jsonEncode(constantValues.toString()) + errorString.substring(i + Error.XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER.length(), errorString.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(constantValues.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
     }
-    return errorString;
+    return errorMsg;
   }
 }
-

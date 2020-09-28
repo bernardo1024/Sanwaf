@@ -12,7 +12,7 @@ final class ParameterChar extends Parameter {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     points.add(new Point(0, value.length()));
     return points;
@@ -26,4 +26,3 @@ final class ParameterChar extends Parameter {
     return (value.length() > 1);
   }
 }
-

@@ -89,8 +89,8 @@ public class SanwafTest {
     sanwaf.onErrorAddParmErrors = false;
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
-    assertTrue(Sanwaf.getTrackingId(request).indexOf("Sanwaf not configured") >= 0);
-    assertTrue(Sanwaf.getErrors(request).indexOf("Sanwaf not configured") >= 0);
+    assertTrue(Sanwaf.getTrackingId(request).indexOf("Sanwaf TrackId is disabled") >= 0);
+    assertTrue(Sanwaf.getErrors(request).indexOf("Sanwaf Error handling is disabled") >= 0);
 
     sanwaf.onErrorAddTrackId = trackID;
     sanwaf.onErrorAddParmErrors = trackErrors;
@@ -177,4 +177,5 @@ public class SanwafTest {
 
     shield.regexAlways = xssAlways;
   }
+
 }

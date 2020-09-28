@@ -25,25 +25,14 @@ final class ParameterNumericDelimited extends ParameterNumeric {
   }
 
   @Override
-  public boolean isSizeError(String value) {
-    String[] array = splitNumericDelimited(value);
-    for (String n : array) {
-      if (n.length() < min || n.length() > max) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
 
     if (value != null) {
       String[] ns = value.split(numericDelimiter, -1);
       for (String n : ns) {
         if (n.length() > 0) {
-          points.addAll(super.getErrorHighlightPoints(shield, n));
+          points.addAll(super.getErrorPoints(shield, n));
         }
       }
     }
@@ -67,12 +56,12 @@ final class ParameterNumericDelimited extends ParameterNumeric {
     return array;
   }
 
-  String substituteNumericDelimiter(String errorString) {
-    int i = errorString.indexOf(Error.XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER);
+  @Override
+  public String modifyErrorMsg(String errorMsg) {
+    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
     if (i >= 0) {
-      return errorString.substring(0, i) + Metadata.jsonEncode(numericDelimiter) + errorString.substring(i + Error.XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER.length(), errorString.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(numericDelimiter) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
     }
-    return errorString;
+    return errorMsg;
   }
 }
-

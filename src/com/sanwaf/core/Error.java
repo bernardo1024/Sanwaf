@@ -16,7 +16,7 @@ final class Error {
   static final String XML_ERROR_MSG_REGEX = "regex";
   static final String XML_ERROR_MSG_JAVA = "java";
   static final String XML_ERROR_MSG_CONSTANT = "constant";
-  static final String XML_ERROR_MSG_DELIMITAED_PROPS_PLACEHOLDER = "{0}";
+  static final String XML_ERROR_MSG_PLACEHOLDER = "{0}";
 
   static Map<String, String> defaultErrorMessages = new HashMap<>();
   static Map<String, Map<String, String>> shieldErrorMessages = new HashMap<>();
@@ -37,7 +37,7 @@ final class Error {
     this.message = getErrorMessage(shield, p);
 
     if (value != null) {
-      this.errorPoints.addAll(p.getErrorHighlightPoints(shield, value));
+      this.errorPoints.addAll(p.getErrorPoints(shield, value));
       if (value.length() < p.min || value.length() > p.max) {
         this.message += "<br>Invalid length. Must be between " + p.min + " and " + p.max + " characters";
       }
@@ -100,14 +100,7 @@ final class Error {
       }
     }
 
-    if (p.type.equals(Metadata.TYPE_ALPHANUMERIC_AND_MORE)) {
-      return ((ParameterAlphanumericAndMore) (p)).substituteAlphaNumericAndMoreChars(err);
-    } else if (p.type.equals(Metadata.TYPE_NUMERIC_DELIMITED)) {
-      return ((ParameterNumericDelimited) (p)).substituteNumericDelimiter(err);
-    } else if (p.type.equals(Metadata.TYPE_CONSTANT)) {
-      return ((ParameterConstant) (p)).substituteConstantValues(err);
-    }
-    return err;
+    return p.modifyErrorMsg(err);
   }
 
   static final String ARRAY_START = "[";
@@ -171,7 +164,6 @@ final class Error {
     sb.append(OBJ_SEP);
     sb.append(QUOTE).append("error").append(QUOTE).append(K_V_SEP);
     sb.append(QUOTE).append(Metadata.jsonEncode(message)).append(QUOTE);
-
     sb.append(OBJ_SEP);
     sb.append(QUOTE).append("type").append(QUOTE).append(K_V_SEP);
     sb.append(QUOTE).append(typeString).append(QUOTE);
@@ -184,6 +176,4 @@ final class Error {
     sb.append(OBJ_END);
     return sb.toString();
   }
-
 }
-

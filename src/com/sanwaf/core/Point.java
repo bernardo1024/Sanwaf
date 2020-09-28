@@ -16,4 +16,3 @@ final class Point {
     return sb.toString();
   }
 }
-

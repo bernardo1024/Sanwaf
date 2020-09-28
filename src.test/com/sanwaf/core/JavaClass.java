@@ -26,4 +26,3 @@ public class JavaClass {
     return true;
   }
 }
-

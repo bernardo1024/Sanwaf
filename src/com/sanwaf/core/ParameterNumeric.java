@@ -12,7 +12,7 @@ class ParameterNumeric extends Parameter {
   }
 
   @Override
-  public List<Point> getErrorHighlightPoints(final Shield shield, final String value) {
+  public List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     final int len = value.length();
     int errStart = -1;
@@ -48,6 +48,9 @@ class ParameterNumeric extends Parameter {
 
   @Override
   public boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(isSizeError(value)) {
+      return true;
+    }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
@@ -66,4 +69,3 @@ class ParameterNumeric extends Parameter {
   }
 
 }
-

@@ -34,4 +34,3 @@ public class ReduceXmlTest {
     assertTrue(result);
   }
 }
-

@@ -43,11 +43,11 @@ public class DatatypeTest {
     ParameterNumericDelimited p = new ParameterNumericDelimited("", "n{}", Integer.MAX_VALUE, 0, "", "");
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
-    List<Point> list = p.getErrorHighlightPoints(shield, "");
+    List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, null);
+    list = p.getErrorPoints(shield, null);
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, null);
+    list = p.getErrorPoints(shield, null);
     assertEquals(true, list.size() == 0);
   }
 
@@ -95,13 +95,13 @@ public class DatatypeTest {
     assertEquals(false, p.inError(req, shield, "abcde"));
     assertEquals(true, p.inError(req, shield, "abcde?fg"));
 
-    List<Point> list = p.getErrorHighlightPoints(shield, "abcde?fg");
+    List<Point> list = p.getErrorPoints(shield, "abcde?fg");
     assertEquals(true, list.size() == 1);
-    list = p.getErrorHighlightPoints(shield, "");
+    list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, null);
+    list = p.getErrorPoints(shield, null);
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, "1239.xyz");
+    list = p.getErrorPoints(shield, "1239.xyz");
     assertEquals(true, list.size() == 1);
   }
 
@@ -193,13 +193,13 @@ public class DatatypeTest {
     assertEquals(true, p.inError(req, shield, "a"));
     assertEquals(true, p.inError(req, shield, "abc-def-ghij-klmn"));
 
-    List<Point> list = p.getErrorHighlightPoints(shield, "");
+    List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, null);
+    list = p.getErrorPoints(shield, null);
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, "416-555-5555");
+    list = p.getErrorPoints(shield, "416-555-5555");
     assertEquals(true, list.size() == 0);
-    list = p.getErrorHighlightPoints(shield, "abc123def456");
+    list = p.getErrorPoints(shield, "abc123def456");
     assertEquals(true, list.size() == 1);
   }
 
@@ -247,6 +247,12 @@ public class DatatypeTest {
 
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestJava", "0001"));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestJava", "0000"));
+  }
+
+  @Test
+  public void parseMethodNameTest() {
+    assert (ParameterJava.parseMethod("foo.method()").equals("method"));
+    assert (ParameterJava.parseMethod("foomethod()").equals("foomethod()"));
   }
 
   @Test
@@ -302,4 +308,3 @@ public class DatatypeTest {
     assertEquals(true, b);
   }
 }
-
