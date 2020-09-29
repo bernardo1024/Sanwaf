@@ -106,20 +106,20 @@ Also note the **secured section** contains the following groups: parameters, hea
 
 		<secured>
 			<parameters>
-				<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</parameters>
 			<headers>
-				<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</headers>
 			<cookies>
-				<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</cookies>
 		</secured>
 
 	</metadata>						
 ### Item Format of the Secured Section
 
-	<item><name></name><type></type><max></max><min></min><msg></msg><path></path></item>
+	<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 	
 where
 
@@ -132,11 +132,11 @@ where
 	<max></max>	- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
 	<min></min>	- the min length allowed for this parameter (defaults to 0 if not specified) 
 	<msg></msg>	- the error message for the parameter(s) (uses the shield or global error message is not specified)
-	<path></path>	- the path that must exist for the parameter evaluation to occur 
+	<uri></uri>	- the uri that must match for the parameter evaluation to occur 
 
 #### Example
 
-	<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><path>/put/accounts</path></item>
+	<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
 	<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
 	<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
 	<item><name>count</name><type>n</type><max>0</max><min>1</min></item>
