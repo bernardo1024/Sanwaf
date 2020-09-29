@@ -13,13 +13,13 @@ final class ParameterString extends Parameter {
     type = Metadata.TYPE_STRING;
   }
 
-  ParameterString(String name, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterString(String name, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     type = Metadata.TYPE_STRING;
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
 
     for (Pattern p : shield.patterns) {
@@ -34,10 +34,9 @@ final class ParameterString extends Parameter {
   }
 
   @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(isSizeError(value)) {
-      return true;
-    }
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(!isPathValid(req)) { return false; }
+    if(isSizeError(value)) { return true; }
     for (Pattern p : shield.patterns) {
       if (p.matcher(value).find()) {
         return true;

@@ -6,13 +6,13 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 class ParameterNumeric extends Parameter {
-  ParameterNumeric(String name, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterNumeric(String name, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     type = Metadata.TYPE_NUMERIC;
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     final int len = value.length();
     int errStart = -1;
@@ -47,10 +47,9 @@ class ParameterNumeric extends Parameter {
   }
 
   @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(isSizeError(value)) {
-      return true;
-    }
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(!isPathValid(req)) { return false; }
+    if(isSizeError(value)) { return true; }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);

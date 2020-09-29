@@ -17,8 +17,8 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
 
   char[] alphanumericAndMoreChars = null;
 
-  ParameterAlphanumericAndMore(String name, String type, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterAlphanumericAndMore(String name, String type, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     this.type = Metadata.TYPE_ALPHANUMERIC_AND_MORE;
     parseMoreChars(type);
   }
@@ -39,7 +39,7 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     if (value == null) {
       return points;
@@ -81,19 +81,16 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
   }
 
   @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (value == null) {
-      return false;
-    }
-    if(isSizeError(value)) {
-      return true;
-    }
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(!isPathValid(req)) { return false; }
+    if(isSizeError(value)) { return true; }
+    if (value == null) { return false; }
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isCharNotAlphanumeric(c)) {
         boolean pass = false;
-        for (char cs : alphanumericAndMoreChars) {
-          if (c == cs) {
+        for (char more : alphanumericAndMoreChars) {
+          if (c == more) {
             pass = true;
             break;
           }
@@ -107,7 +104,7 @@ final class ParameterAlphanumericAndMore extends ParameterAlphanumeric {
   }
 
   @Override
-  public String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
     if (i >= 0) {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(alphanumericAndMoreChars))

@@ -76,16 +76,16 @@
 				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>unitTestNumeric</name><type>n</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestNumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestAlphanumericAndMore</name><type>a{? :}</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestAlphanumericAndMoreSpecialChars</name><type>a{\s\t\n\r}</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestString</name><type>s</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestChar</name><type>c</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestConstant</name><type>k{foo,bar,far}</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestRegex</name><type>r{date}</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestRegex</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>unitTestNumeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestNumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestAlphanumericAndMore</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestAlphanumericAndMoreSpecialChars</name><type>a{\s\t\n\r}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestString</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestChar</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestConstant</name><type>k{foo,bar,far}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestRegex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestRegex</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 					<headers>
 						<item><name>aHeaderNumber</name><type>n</type></item>
@@ -138,12 +138,11 @@
 				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>unitTestNumericDelimitedBadPlaceholder</name><type>n{,}</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestAlphanumericAndMoreBadPlaceholder</name><type>a{? :}</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>unitTestNumericDelimitedBadPlaceholder</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestAlphanumericAndMoreBadPlaceholder</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 				</secured>
 			</metadata>
 		</shield>
 	</shields>
 </sanwaf>
-

@@ -174,7 +174,7 @@ final class Shield {
   static final String XML_ITEM_MAX = "max";
   static final String XML_ITEM_MIN = "min";
   static final String XML_ITEM_MSG = "msg";
-  static final String XML_ITEM_PATH = "path";
+  static final String XML_ITEM_URI = "uri";
   static final String XML_KEY = "key";
   static final String XML_VALUE = "value";
   static final String XML_NAME = "name";

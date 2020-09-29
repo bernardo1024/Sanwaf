@@ -89,8 +89,8 @@ final class Error {
 
   static String getErrorMessage(final Shield shield, final Parameter p) {
     String err = null;
-    if (p.errorMsg != null && p.errorMsg.length() > 0) {
-      err = p.errorMsg;
+    if (p.msg != null && p.msg.length() > 0) {
+      err = p.msg;
     } else {
       Map<String, String> m = shieldErrorMessages.get(shield.name);
       if (m != null) {

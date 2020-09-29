@@ -73,14 +73,14 @@
 						<item><name>alphanumericAndMoreSized</name><type>a{,}</type><max>2</max><min>1</min><msg>alphanumeric and more error message {0}</msg></item>
 						<item><name>constant</name><type>k{C1,C2}</type><msg>constant error message </msg></item>
 						<item><name>regex</name><type>r{date}</type><msg>custom regex error message</msg></item>
-						<item><name>char</name><type>c</type><msg>char error message</msg><path></path></item>
+						<item><name>char</name><type>c</type><msg>char error message</msg><uri></uri></item>
 						<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><msg>java error message</msg></item>
 					</parameters>
 					<headers>
-						<item><name>aHeaderNumber</name><type>n</type><max>2</max><min>1</min><msg>header error msg</msg><path></path></item>
+						<item><name>aHeaderNumber</name><type>n</type><max>2</max><min>1</min><msg>header error msg</msg><uri></uri></item>
 					</headers>
 					<cookies>
-						<item><name>aCookieAlphanumericAndMore</name><type>a{,}</type><max></max><min></min><msg>cookie error msg</msg><path></path></item>
+						<item><name>aCookieAlphanumericAndMore</name><type>a{,}</type><max></max><min></min><msg>cookie error msg</msg><uri></uri></item>
 					</cookies>
 				</secured>
 			</metadata>
@@ -88,4 +88,3 @@
 	
 	</shields>
 </sanwaf>
-

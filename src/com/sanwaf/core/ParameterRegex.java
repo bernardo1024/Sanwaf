@@ -11,14 +11,14 @@ final class ParameterRegex extends Parameter {
   String patternName = null;
   Pattern pattern = null;
 
-  ParameterRegex(String name, String type, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterRegex(String name, String type, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     this.type = Metadata.TYPE_REGEX;
     addRegexParmToType(type);
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     if (value == null || value.length() == 0) {
       return points;
@@ -31,13 +31,12 @@ final class ParameterRegex extends Parameter {
   }
 
   @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(isSizeError(value)) {
-      return true;
-    }
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (pattern == null) {
       pattern = shield.customPatterns.get(patternName);
     }
+    if(!isPathValid(req)) { return false; }
+    if(isSizeError(value)) { return true; }
     return !pattern.matcher(value).find();
   }
 

@@ -9,24 +9,16 @@ import javax.servlet.ServletRequest;
 final class ParameterConstant extends Parameter {
   List<String> constantValues = null;
 
-  ParameterConstant(String name, String type, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterConstant(String name, String type, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     this.type = Metadata.TYPE_CONSTANT;
     addConstantToType(type);
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
-    List<Point> points = new ArrayList<>();
-    points.add(new Point(0, value.length()));
-    return points;
-  }
-
-  @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (isSizeError(value)) {
-      return true;
-    }
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(!isPathValid(req)) { return false; }
+    if(isSizeError(value)) { return true; }
     return !constantValues.contains(value);
   }
 
@@ -39,7 +31,7 @@ final class ParameterConstant extends Parameter {
   }
 
   @Override
-  public String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
     if (i >= 0) {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(constantValues.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());

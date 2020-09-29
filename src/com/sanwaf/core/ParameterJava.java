@@ -2,32 +2,22 @@ package com.sanwaf.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletRequest;
 
 final class ParameterJava extends Parameter {
   Method javaMethod = null;
 
-  ParameterJava(String name, String type, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterJava(String name, String type, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     this.type = Metadata.TYPE_JAVA;
     parseJavaMethod(type);
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
-    List<Point> points = new ArrayList<>();
-    points.add(new Point(0, value.length()));
-    return points;
-  }
-
-  @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(isSizeError(value)) {
-      return true;
-    }
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(!isPathValid(req)) { return false; }
+    if(isSizeError(value)) { return true; }
     return runJavaMethod(javaMethod, value, req);
   }
 

@@ -41,12 +41,11 @@
 				</enabled>
 				<secured>
 					<parameters>
-						<item><name>unitTestNumeric</name><type>n</type><max></max><min></min><msg></msg><path></path></item>
-						<item><name>unitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><path></path></item>
+						<item><name>unitTestNumeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 				</secured>
 			</metadata>
 		</shield>
 	</shields>
 </sanwaf>
-

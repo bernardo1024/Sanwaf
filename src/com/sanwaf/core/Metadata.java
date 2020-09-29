@@ -108,7 +108,7 @@ final class Metadata {
 
     String type = xml.get(Shield.XML_ITEM_TYPE);
     String msg = xml.get(Shield.XML_ITEM_MSG);
-    String path = xml.get(Shield.XML_ITEM_PATH);
+    String path = xml.get(Shield.XML_ITEM_URI);
     String sMax = xml.get(Shield.XML_ITEM_MAX);
     String sMin = xml.get(Shield.XML_ITEM_MIN);
 

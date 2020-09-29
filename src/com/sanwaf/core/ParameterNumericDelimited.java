@@ -8,8 +8,8 @@ import javax.servlet.ServletRequest;
 final class ParameterNumericDelimited extends ParameterNumeric {
   String numericDelimiter = "";
 
-  ParameterNumericDelimited(String name, String type, int max, int min, String errorMsg, String path) {
-    super(name, max, min, errorMsg, path);
+  ParameterNumericDelimited(String name, String type, int max, int min, String msg, String uri) {
+    super(name, max, min, msg, uri);
     this.type = Metadata.TYPE_NUMERIC_DELIMITED;
     parseAlphaNumericAndMoreChars(type);
   }
@@ -25,7 +25,7 @@ final class ParameterNumericDelimited extends ParameterNumeric {
   }
 
   @Override
-  public List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
 
     if (value != null) {
@@ -40,7 +40,7 @@ final class ParameterNumericDelimited extends ParameterNumeric {
   }
 
   @Override
-  public boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value) {
     String[] ns = splitNumericDelimited(value);
     for (String n : ns) {
       if (super.inError(req, shield, n)) {
@@ -57,7 +57,7 @@ final class ParameterNumericDelimited extends ParameterNumeric {
   }
 
   @Override
-  public String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
     if (i >= 0) {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(numericDelimiter) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
