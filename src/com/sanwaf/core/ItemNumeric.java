@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.servlet.ServletRequest;
 
-class ParameterNumeric extends Parameter {
-  ParameterNumeric(String name, int max, int min, String msg, String uri) {
+class ItemNumeric extends Item {
+  ItemNumeric(String name, int max, int min, String msg, String uri) {
     super(name, max, min, msg, uri);
-    type = Metadata.TYPE_NUMERIC;
+    type = NUMERIC;
   }
 
   @Override
@@ -18,15 +18,14 @@ class ParameterNumeric extends Parameter {
     int errStart = -1;
     boolean foundDot = false;
     boolean foundNeg = false;
-    int i = 0;
-    for (i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
       char c = value.charAt(i);
       int d = c - '0';
       if (d < 0 || d > 9) {
         if (!foundDot && c == '.') {
           foundDot = true;
         } else {
-          if (!foundNeg && i == 0 && c == '-') {
+          if (i == 0 && !foundNeg && c == '-') {
             foundNeg = true;
           }
           if (errStart < 0) {
@@ -41,15 +40,15 @@ class ParameterNumeric extends Parameter {
       }
     }
     if (errStart >= 0) {
-      points.add(new Point(errStart, i));
+      points.add(new Point(errStart, len));
     }
     return points;
   }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(!isPathValid(req)) { return false; }
-    if(isSizeError(value)) { return true; }
+    if (!isUriValid(req)) { return false; }
+    if (isSizeError(value)) { return true; }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
@@ -66,5 +65,4 @@ class ParameterNumeric extends Parameter {
     }
     return false;
   }
-
 }

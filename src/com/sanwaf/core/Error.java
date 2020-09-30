@@ -1,26 +1,10 @@
 package com.sanwaf.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 final class Error {
-  static final String XML_ERROR_MSG = "errorMessages";
-  static final String XML_ERROR_MSG_ALHPANUMERIC = "alphanumeric";
-  static final String XML_ERROR_MSG_ALPHANUMERIC_AND_MORE = "alphanumericAndMore";
-  static final String XML_ERROR_MSG_CHAR = "char";
-  static final String XML_ERROR_MSG_NUMERIC = "numeric";
-  static final String XML_ERROR_MSG_NUMERIC_DELIMITED = "numericDelimited";
-  static final String XML_ERROR_MSG_STRING = "string";
-  static final String XML_ERROR_MSG_REGEX = "regex";
-  static final String XML_ERROR_MSG_JAVA = "java";
-  static final String XML_ERROR_MSG_CONSTANT = "constant";
-  static final String XML_ERROR_MSG_PLACEHOLDER = "{0}";
-
-  static Map<String, String> defaultErrorMessages = new HashMap<>();
-  static Map<String, Map<String, String>> shieldErrorMessages = new HashMap<>();
-
   String shieldName;
   String key;
   String value;
@@ -29,11 +13,11 @@ final class Error {
   String typeString;
   String appVersion = Sanwaf.securedAppVersion;
 
-  Error(Shield shield, Parameter p, String key, String value) {
+  Error(Shield shield, Item p, String key, String value) {
     this.shieldName = shield.name;
     this.key = key;
     this.value = value;
-    this.typeString = p.name;
+    this.typeString = p.type;
     this.message = getErrorMessage(shield, p);
 
     if (value != null) {
@@ -44,62 +28,16 @@ final class Error {
     }
   }
 
-  void addPoint(Point point) {
-    errorPoints.add(point);
-  }
-
-  static void setDefaultErrorMessages(Xml xml) {
-    Xml msgBlockXml = new Xml(xml.get(XML_ERROR_MSG));
-    defaultErrorMessages.put(Metadata.TYPE_ALPHANUMERIC, msgBlockXml.get(XML_ERROR_MSG_ALHPANUMERIC));
-    defaultErrorMessages.put(Metadata.TYPE_ALPHANUMERIC_AND_MORE, msgBlockXml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));
-    defaultErrorMessages.put(Metadata.TYPE_CHAR, msgBlockXml.get(XML_ERROR_MSG_CHAR));
-    defaultErrorMessages.put(Metadata.TYPE_NUMERIC, msgBlockXml.get(XML_ERROR_MSG_NUMERIC));
-    defaultErrorMessages.put(Metadata.TYPE_NUMERIC_DELIMITED, msgBlockXml.get(XML_ERROR_MSG_NUMERIC_DELIMITED));
-    defaultErrorMessages.put(Metadata.TYPE_STRING, msgBlockXml.get(XML_ERROR_MSG_STRING));
-    defaultErrorMessages.put(Metadata.TYPE_REGEX, msgBlockXml.get(XML_ERROR_MSG_REGEX));
-    defaultErrorMessages.put(Metadata.TYPE_JAVA, msgBlockXml.get(XML_ERROR_MSG_JAVA));
-    defaultErrorMessages.put(Metadata.TYPE_CONSTANT, msgBlockXml.get(XML_ERROR_MSG_CONSTANT));
-  }
-
-  static void setShieldErrorMessages(Xml xml, String shieldName) {
-    String msgBlock = xml.get(XML_ERROR_MSG);
-    Xml msgBlockXml = new Xml(msgBlock);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_ALHPANUMERIC, Metadata.TYPE_ALPHANUMERIC, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_ALPHANUMERIC_AND_MORE, Metadata.TYPE_ALPHANUMERIC_AND_MORE, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_CHAR, Metadata.TYPE_CHAR, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_NUMERIC, Metadata.TYPE_NUMERIC, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_NUMERIC_DELIMITED, Metadata.TYPE_NUMERIC_DELIMITED, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_STRING, Metadata.TYPE_STRING, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_REGEX, Metadata.TYPE_REGEX, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_JAVA, Metadata.TYPE_JAVA, shieldName);
-    putShieldErrorMessage(msgBlockXml, XML_ERROR_MSG_CONSTANT, Metadata.TYPE_CONSTANT, shieldName);
-  }
-
-  private static void putShieldErrorMessage(Xml xml, String key, String type, String shieldName) {
-    String s = xml.get(key);
-    if (s.length() > 0) {
-      Map<String, String> map = shieldErrorMessages.get(shieldName);
-      if (map == null) {
-        map = new HashMap<>();
-      }
-      map.put(type, s);
-      shieldErrorMessages.put(shieldName, map);
-    }
-  }
-
-  static String getErrorMessage(final Shield shield, final Parameter p) {
+  static String getErrorMessage(final Shield shield, final Item p) {
     String err = null;
     if (p.msg != null && p.msg.length() > 0) {
       err = p.msg;
     } else {
-      Map<String, String> m = shieldErrorMessages.get(shield.name);
-      if (m != null) {
-        err = m.get(p.type);
-      } else {
-        err = defaultErrorMessages.get(p.type);
+      err = shield.errorMessages.get(p.type);
+      if (err == null || err.length() == 0) {
+        err = shield.sanwaf.globalErrorMessages.get(p.type);
       }
     }
-
     return p.modifyErrorMsg(err);
   }
 
@@ -112,9 +50,7 @@ final class Error {
   static final String K_V_SEP = ":";
 
   static String toJson(List<Error> errors) {
-    if (errors == null || errors.isEmpty()) {
-      return ARRAY_START + ARRAY_END;
-    }
+    if (errors == null || errors.isEmpty()) { return ARRAY_START + ARRAY_END; }
     StringBuilder sb = new StringBuilder();
     sb.append(ARRAY_START);
     boolean isFirst = true;
@@ -175,5 +111,30 @@ final class Error {
     sb.append(QUOTE).append(Metadata.jsonEncode(appVersion)).append(QUOTE);
     sb.append(OBJ_END);
     return sb.toString();
+  }
+
+  static final String XML_ERROR_MSG = "errorMessages";
+  static final String XML_ERROR_MSG_ALHPANUMERIC = "alphanumeric";
+  static final String XML_ERROR_MSG_ALPHANUMERIC_AND_MORE = "alphanumericAndMore";
+  static final String XML_ERROR_MSG_CHAR = "char";
+  static final String XML_ERROR_MSG_NUMERIC = "numeric";
+  static final String XML_ERROR_MSG_NUMERIC_DELIMITED = "numericDelimited";
+  static final String XML_ERROR_MSG_STRING = "string";
+  static final String XML_ERROR_MSG_REGEX = "regex";
+  static final String XML_ERROR_MSG_JAVA = "java";
+  static final String XML_ERROR_MSG_CONSTANT = "constant";
+  static final String XML_ERROR_MSG_PLACEHOLDER = "{0}";
+
+  static void setErrorMessages(Map<String, String> map, Xml xmlString) {
+    Xml xml = new Xml(xmlString.get(XML_ERROR_MSG));
+    map.put(Item.ALPHANUMERIC, xml.get(XML_ERROR_MSG_ALHPANUMERIC));
+    map.put(Item.ALPHANUMERIC_AND_MORE, xml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));
+    map.put(Item.CHAR, xml.get(XML_ERROR_MSG_CHAR));
+    map.put(Item.NUMERIC, xml.get(XML_ERROR_MSG_NUMERIC));
+    map.put(Item.NUMERIC_DELIMITED, xml.get(XML_ERROR_MSG_NUMERIC_DELIMITED));
+    map.put(Item.STRING, xml.get(XML_ERROR_MSG_STRING));
+    map.put(Item.REGEX, xml.get(XML_ERROR_MSG_REGEX));
+    map.put(Item.JAVA, xml.get(XML_ERROR_MSG_JAVA));
+    map.put(Item.CONSTANT, xml.get(XML_ERROR_MSG_CONSTANT));
   }
 }

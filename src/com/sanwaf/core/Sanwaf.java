@@ -3,8 +3,10 @@ package com.sanwaf.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletRequest;
@@ -27,6 +29,7 @@ public final class Sanwaf {
   boolean onErrorAddParmErrors = true;
   protected static String securedAppVersion = "unknown";
   protected List<Shield> shields = new ArrayList<>();
+  Map<String, String> globalErrorMessages = new HashMap<>();
 
   /**
    * Default Sanwaf constructor.
@@ -103,9 +106,7 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req) {
-    if (!enabled || !(req instanceof HttpServletRequest)) {
-      return false;
-    }
+    if (!enabled || !(req instanceof HttpServletRequest)) { return false; }
     for (Shield shield : shields) {
       if (shield.threatDetected(req)) {
         addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(req));
@@ -136,9 +137,7 @@ public final class Sanwaf {
    */
   public boolean isThreat(String value) {
     for (Shield sh : shields) {
-      if (sh.threat(null, null, "", value)) {
-        return true;
-      }
+      if (sh.threat(null, null, "", value)) { return true; }
     }
     return false;
   }
@@ -168,9 +167,7 @@ public final class Sanwaf {
    */
   public static String getTrackingId(HttpServletRequest req) {
     Object o = req.getAttribute(REQ_ATT_TRACK_ID);
-    if (o != null) {
-      return String.valueOf(o);
-    }
+    if (o != null) { return String.valueOf(o); }
     return "Sanwaf TrackId is disabled";
   }
 
@@ -188,17 +185,13 @@ public final class Sanwaf {
    */
   public static String getErrors(HttpServletRequest req) {
     Object o = req.getAttribute(REQ_ATT_ERRORS);
-    if (o != null) {
-      return String.valueOf(o);
-    }
+    if (o != null) { return String.valueOf(o); }
     return "Sanwaf Error handling is disabled";
   }
 
   private List<Error> getErrorList(ServletRequest req) {
     List<Error> errors = new ArrayList<>();
-    if (!onErrorAddParmErrors) {
-      return errors;
-    }
+    if (!onErrorAddParmErrors) { return errors; }
     String k = null;
     String[] values = null;
     Enumeration<?> names = req.getParameterNames();
@@ -274,7 +267,7 @@ public final class Sanwaf {
     onErrorAddTrackId = Boolean.parseBoolean(errorBlockXml.get(XML_ERR_SET_ATT_TRACK_ID));
     onErrorAddParmErrors = Boolean.parseBoolean(errorBlockXml.get(XML_SET_ATT_PARM_ERR));
 
-    Error.setDefaultErrorMessages(xml);
+    Error.setErrorMessages(globalErrorMessages, xml);
 
     String[] xmls = xml.getAll(XML_SHIELD);
     for (String item : xmls) {

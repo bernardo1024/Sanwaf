@@ -68,5 +68,4 @@ public class VerboseTest {
     assertTrue(s.contains("customPatterns"));
     assertTrue(s.contains("date="));
   }
-
 }

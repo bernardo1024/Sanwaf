@@ -7,15 +7,15 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletRequest;
 
-final class ParameterString extends Parameter {
+final class ItemString extends Item {
 
-  ParameterString() {
-    type = Metadata.TYPE_STRING;
+  ItemString() {
+    type = STRING;
   }
 
-  ParameterString(String name, int max, int min, String msg, String uri) {
+  ItemString(String name, int max, int min, String msg, String uri) {
     super(name, max, min, msg, uri);
-    type = Metadata.TYPE_STRING;
+    type = STRING;
   }
 
   @Override
@@ -35,12 +35,10 @@ final class ParameterString extends Parameter {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(!isPathValid(req)) { return false; }
-    if(isSizeError(value)) { return true; }
+    if (!isUriValid(req)) { return false; }
+    if (isSizeError(value)) { return true; }
     for (Pattern p : shield.patterns) {
-      if (p.matcher(value).find()) {
-        return true;
-      }
+      if (p.matcher(value).find()) { return true; }
     }
     return false;
   }

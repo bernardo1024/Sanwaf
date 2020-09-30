@@ -33,5 +33,4 @@ public class DatatypeXssEncodedPayloadsTest {
     UnitTestResult result = UnitTestUtil.runTestsUsingFile(shield, "src.test/resources/xssFormEncodedPayloads.txt", iterations, doHex, logErrors);
     UnitTestUtil.log("XSS-SanWaf", result);
   }
-
 }

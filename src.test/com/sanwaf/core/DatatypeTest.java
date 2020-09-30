@@ -40,7 +40,7 @@ public class DatatypeTest {
   @Test
   public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ParameterNumericDelimited p = new ParameterNumericDelimited("", "n{}", Integer.MAX_VALUE, 0, "", "");
+    ItemNumericDelimited p = new ItemNumericDelimited("", "n{}", Integer.MAX_VALUE, 0, "", "");
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
     List<Point> list = p.getErrorPoints(shield, "");
@@ -89,7 +89,7 @@ public class DatatypeTest {
   @Test
   public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ParameterAlphanumericAndMore p = new ParameterAlphanumericAndMore("", "a{,}", Integer.MAX_VALUE, 0, "", "");
+    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{,}", Integer.MAX_VALUE, 0, "", "");
     assertEquals(false, p.inError(req, shield, ""));
     assertEquals(false, p.inError(req, shield, null));
     assertEquals(false, p.inError(req, shield, "abcde"));
@@ -143,7 +143,7 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestChar", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestChar", null));
 
-    ParameterChar p = new ParameterChar("", 1, 0, "", "");
+    ItemChar p = new ItemChar("", 1, 0, "", "");
     assertTrue(p.inError(req, shield, "12345"));
     assertFalse(p.inError(req, shield, "1"));
     assertFalse(p.inError(req, shield, ""));
@@ -185,7 +185,7 @@ public class DatatypeTest {
   @Test
   public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ParameterRegex p = new ParameterRegex("", "r{telephone}", Integer.MAX_VALUE, 0, "", "");
+    ItemRegex p = new ItemRegex("", "r{telephone}", Integer.MAX_VALUE, 0, "", "");
     assertTrue(p.patternName != null && p.patternName.length() > 0);
 
     assertEquals(false, p.inError(req, shield, "416-555-5555"));
@@ -205,7 +205,7 @@ public class DatatypeTest {
 
   @Test
   public void testRegexTypeInvalidFormta() {
-    ParameterRegex p = new ParameterRegex("", "r telephone", Integer.MAX_VALUE, 0, "", "");
+    ItemRegex p = new ItemRegex("", "r telephone", Integer.MAX_VALUE, 0, "", "");
     assertTrue(p.patternName == null);
     assertTrue(p.pattern == null);
   }
@@ -222,13 +222,13 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "far"));
 
-    ParameterConstant p = new ParameterConstant("", "k FOO,BAR", Integer.MAX_VALUE, 0, "", "");
-    assertTrue(p.constantValues == null);
-    p = new ParameterConstant("", "k FOO}", Integer.MAX_VALUE, 0, "", "");
-    assertTrue(p.constantValues == null);
+    ItemConstant p = new ItemConstant("", "k FOO,BAR", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.constants == null);
+    p = new ItemConstant("", "k FOO}", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.constants == null);
 
-    p = new ParameterConstant("", "", Integer.MAX_VALUE, 0, "", "");
-    assertTrue(p.constantValues == null);
+    p = new ItemConstant("", "", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.constants == null);
   }
 
   @Test
@@ -251,8 +251,8 @@ public class DatatypeTest {
 
   @Test
   public void parseMethodNameTest() {
-    assert (ParameterJava.parseMethod("foo.method()").equals("method"));
-    assert (ParameterJava.parseMethod("foomethod()").equals("foomethod()"));
+    assert (ItemJava.parseMethod("foo.method()").equals("method"));
+    assert (ItemJava.parseMethod("foomethod()").equals("foomethod()"));
   }
 
   @Test

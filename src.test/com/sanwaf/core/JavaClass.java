@@ -11,18 +11,14 @@ import javax.servlet.ServletRequest;
  */
 public class JavaClass {
   public static boolean over10TrueElseFalse(String s, ServletRequest req) {
-    if (Integer.parseInt(s) > 10) {
-      return true;
-    }
+    if (Integer.parseInt(s) > 10) { return true; }
     return false;
   }
 
   public static boolean multiParmsNotEqual(String s, ServletRequest req) {
     String s2 = req.getParameter("unitTestJavaMultiParm2");
     String s3 = req.getParameter("unitTestJavaMultiParm3");
-    if (s.equals(s2) && s.equals(s3)) {
-      return false;
-    }
+    if (s.equals(s2) && s.equals(s3)) { return false; }
     return true;
   }
 }

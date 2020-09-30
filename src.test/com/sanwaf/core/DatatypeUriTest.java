@@ -77,7 +77,6 @@ public class DatatypeUriTest {
     assertEquals(false, sanwaf.isThreatDetected(req));
   }
 
-
   @Test
   public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -143,4 +142,26 @@ public class DatatypeUriTest {
     assertEquals(false, sanwaf.isThreatDetected(req));
   }
 
+  @Test
+  public void testMultipleUris() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    req.setRequestURI("/foo/bar");
+    req.addParameter("unitTestMultipleUris", "<script>alert(1)</script>");
+    assertEquals(true, sanwaf.isThreatDetected(req));
+
+    req = new MockHttpServletRequest();
+    req.setRequestURI("/far/nar");
+    req.addParameter("unitTestMultipleUris", "<script>alert(1)</script>");
+    assertEquals(true, sanwaf.isThreatDetected(req));
+
+    req = new MockHttpServletRequest();
+    req.setRequestURI("/tar/mar");
+    req.addParameter("unitTestMultipleUris", "<script>alert(1)</script>");
+    assertEquals(true, sanwaf.isThreatDetected(req));
+
+    req = new MockHttpServletRequest();
+    req.setRequestURI("/foo/bar/invalid");
+    req.addParameter("unitTestMultipleUris", "<script>alert(1)</script>");
+    assertEquals(false, sanwaf.isThreatDetected(req));
+  }
 }

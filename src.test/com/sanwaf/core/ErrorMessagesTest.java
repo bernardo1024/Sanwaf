@@ -87,14 +87,14 @@ public class ErrorMessagesTest {
 
   @Test
   public void datatatypeErrorMsgAlpahnumericAndMoreTest() {
-    ParameterAlphanumericAndMore p = new ParameterAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
+    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
     String s = p.modifyErrorMsg("some {0} String");
     assertTrue(s.contains("?"));
   }
 
   @Test
   public void datatatypeErrorMsgNumericDelimietedTest() {
-    ParameterNumericDelimited p = new ParameterNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
+    ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
     String s = p.modifyErrorMsg("some {0} String");
     assertTrue(s.contains(","));
   }
@@ -113,10 +113,9 @@ public class ErrorMessagesTest {
 
   @Test
   public void datatatypeErrorMsgConstantTest() {
-    ParameterConstant p = new ParameterConstant("", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
+    ItemConstant p = new ItemConstant("", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
     String s = Error.getErrorMessage(shield, p);
     assertTrue(s.contains("foo"));
 
   }
-
 }

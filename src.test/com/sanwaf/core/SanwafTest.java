@@ -112,8 +112,7 @@ public class SanwafTest {
       assertTrue(sw != null);
       sw.reLoad();
       assertTrue(sw != null);
-    } catch (IOException ioe) {
-    }
+    } catch (IOException ioe) {}
   }
 
   @Test
@@ -122,8 +121,7 @@ public class SanwafTest {
       Sanwaf sw = new Sanwaf(new com.sanwaf.log.LoggerSystemOut());
       assertTrue(sw != null);
       sw.reLoad();
-    } catch (IOException ioe) {
-    }
+    } catch (IOException ioe) {}
   }
 
   @Test
@@ -132,8 +130,7 @@ public class SanwafTest {
       Sanwaf sw = new Sanwaf();
       assertTrue(sw != null);
       sw.reLoad();
-    } catch (IOException ioe) {
-    }
+    } catch (IOException ioe) {}
   }
 
   @Test
@@ -177,5 +174,4 @@ public class SanwafTest {
 
     shield.regexAlways = xssAlways;
   }
-
 }

@@ -7,22 +7,20 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletRequest;
 
-final class ParameterRegex extends Parameter {
+final class ItemRegex extends Item {
   String patternName = null;
   Pattern pattern = null;
 
-  ParameterRegex(String name, String type, int max, int min, String msg, String uri) {
+  ItemRegex(String name, String type, int max, int min, String msg, String uri) {
     super(name, max, min, msg, uri);
-    this.type = Metadata.TYPE_REGEX;
-    addRegexParmToType(type);
+    this.type = REGEX;
+    setPattern(type);
   }
 
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if (value == null || value.length() == 0) {
-      return points;
-    }
+    if (value == null || value.length() == 0) { return points; }
     Matcher m = pattern.matcher(value);
     if (!m.find()) {
       points.add(new Point(0, value.length()));
@@ -35,15 +33,15 @@ final class ParameterRegex extends Parameter {
     if (pattern == null) {
       pattern = shield.customPatterns.get(patternName);
     }
-    if(!isPathValid(req)) { return false; }
-    if(isSizeError(value)) { return true; }
+    if (!isUriValid(req)) { return false; }
+    if (isSizeError(value)) { return true; }
     return !pattern.matcher(value).find();
   }
 
-  private void addRegexParmToType(String value) {
-    int start = value.indexOf(Metadata.TYPE_REGEX);
+  private void setPattern(String value) {
+    int start = value.indexOf(REGEX);
     if (start >= 0) {
-      patternName = value.substring(start + Metadata.TYPE_REGEX.length(), value.length() - 1).toLowerCase();
+      patternName = value.substring(start + REGEX.length(), value.length() - 1).toLowerCase();
     }
   }
 }

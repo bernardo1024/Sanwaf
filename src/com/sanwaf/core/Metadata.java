@@ -6,26 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 final class Metadata {
-  static final String INDEX_PARM_MARKER = "  ";
-  static final String STAR = "*";
-  static final String TYPE_NUMERIC = "n";
-  static final String TYPE_NUMERIC_DELIMITED = "n{";
-  static final String TYPE_ALPHANUMERIC = "a";
-  static final String TYPE_ALPHANUMERIC_AND_MORE = "a{";
-  static final String TYPE_STRING = "s";
-  static final String TYPE_CHAR = "c";
-  static final String TYPE_REGEX = "r{";
-  static final String TYPE_JAVA = "j{";
-  static final String TYPE_CONSTANT = "k{";
-
-  static final String SEP_START_CHAR = "{";
-  static final String SEP_END_CHAR = "}";
-  static final String MSG_START_CHAR = "[";
-  static final String MSG_END_CHAR = "]";
-  static final String LENGTH_START_CHAR = "(";
-  static final String LENGTH_MID_CHAR = ",";
-  static final String LENGTH_END_CHAR = ")";
-
+  static final String XML_ITEM = "item";
+  static final String XML_ITEM_NAME = "name";
+  static final String XML_ITEM_TYPE = "type";
+  static final String XML_ITEM_MAX = "max";
+  static final String XML_ITEM_MIN = "min";
+  static final String XML_ITEM_MSG = "msg";
+  static final String XML_ITEM_URI = "uri";
+  static final String XML_KEY = "key";
+  static final String XML_VALUE = "value";
+  static final String XML_NAME = "name";
+  static final String XML_MIN_LEN = "minLen";
+  static final String XML_MAX_LEN = "maxLen";
+  static final String XML_MAX_LEN_LOG = "maxLenLogViolation";
+  static final String XML_MAX_LEN_FAIL = "maxLenFailOnViolation";
+  static final String XML_REGEX = "regex";
+  static final String XML_REGEX_ALWAYS_REGEX = "alwaysPerformRegex";
+  static final String XML_REGEX_ALWAYS_REGEX_EXCLUSIONS = "exclusions";
+  static final String XML_REGEX_PATTERNS_AUTO = "autoRunPatterns";
+  static final String XML_REGEX_PATTERNS_CUSTOM = "customPatterns";
   static final String XML_METADATA = "metadata";
   static final String XML_CASE_SENSITIVE = "caseSensitive";
   static final String XML_SECURED = "secured";
@@ -34,9 +33,13 @@ final class Metadata {
   static final String XML_COOKIES = "cookies";
   static final String XML_ENABLED = "enabled";
 
+  static final String INDEX_PARM_MARKER = "  ";
+  static final String STAR = "*";
+  static final String SEPARATOR = ":::";
+
   boolean enabled = false;
   boolean caseSensitive = true;
-  Map<String, Parameter> map = new HashMap<>();
+  Map<String, Item> items = new HashMap<>();
   Map<String, List<String>> index = new HashMap<>();
 
   Metadata(Xml xml, String type) {
@@ -45,16 +48,12 @@ final class Metadata {
 
   String getFromIndex(String key) {
     List<String> list = index.get(key.substring(0, 1));
-    if (list == null) {
-      return null;
-    }
+    if (list == null) { return null; }
 
     for (String s : list) {
       int last = 0;
       while (true) {
-        if (s.length() != 2) {
-          return resolveStarAtEndOfWord(key, list);
-        }
+        if (s.length() != 2) { return resolveStarAtEndOfWord(key, list); }
         int start = key.indexOf(s.charAt(0), last);
         if (start <= 0) {
           break;
@@ -71,16 +70,14 @@ final class Metadata {
 
   private String resolveStarAtEndOfWord(String key, List<String> list) {
     String k2 = stripEosNumbers(key);
-    if (list.contains(INDEX_PARM_MARKER + k2)) {
-      return k2;
-    }
+    if (list.contains(INDEX_PARM_MARKER + k2)) { return k2; }
     return null;
   }
 
   void load(Xml xml, String type) {
     initA2Zindex(index);
 
-    String metadataBlock = xml.get(Metadata.XML_METADATA);
+    String metadataBlock = xml.get(XML_METADATA);
     Xml metadataBlockXml = new Xml(metadataBlock);
     String securedBlock = metadataBlockXml.get(XML_SECURED);
     Xml securedBlockXml = new Xml(securedBlock);
@@ -95,22 +92,22 @@ final class Metadata {
 
     String subBlock = securedBlockXml.get(type);
     Xml subBlockXml = new Xml(subBlock);
-    String[] items = subBlockXml.getAll(Shield.XML_ITEM);
-    for (String item : items) {
-      processItem(item);
+    String[] xmlItems = subBlockXml.getAll(XML_ITEM);
+    for (String itemString : xmlItems) {
+      parseItem(itemString);
     }
   }
 
-  private void processItem(String item) {
+  private void parseItem(String item) {
     Xml xml = new Xml(item);
-    String namesString = xml.get(Shield.XML_ITEM_NAME);
-    String[] names = namesString.split(Shield.SPLIT_LINE_CHARS);
+    String namesString = xml.get(XML_ITEM_NAME);
+    String[] names = namesString.split(SEPARATOR);
 
-    String type = xml.get(Shield.XML_ITEM_TYPE);
-    String msg = xml.get(Shield.XML_ITEM_MSG);
-    String path = xml.get(Shield.XML_ITEM_URI);
-    String sMax = xml.get(Shield.XML_ITEM_MAX);
-    String sMin = xml.get(Shield.XML_ITEM_MIN);
+    String type = xml.get(XML_ITEM_TYPE);
+    String msg = xml.get(XML_ITEM_MSG);
+    String uri = xml.get(XML_ITEM_URI);
+    String sMax = xml.get(XML_ITEM_MAX);
+    String sMin = xml.get(XML_ITEM_MIN);
 
     int max = Integer.MAX_VALUE;
     int min = 0;
@@ -132,42 +129,10 @@ final class Metadata {
       if (name == null) {
         continue;
       }
-      processType(name, type, min, max, msg, path);
-    }
-  }
-
-  private void processType(String key, String value, int min, int max, String errorMsg, String path) {
-    if (!caseSensitive) {
-      key = key.toLowerCase();
-    }
-    Parameter p = null;
-    String t = value.toLowerCase();
-    int pos = t.indexOf(SEP_START_CHAR);
-    if (pos > 0) {
-      t = t.substring(0, pos + SEP_START_CHAR.length());
-    }
-
-    if (t.equals(TYPE_NUMERIC)) {
-      p = new ParameterNumeric(key, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_NUMERIC_DELIMITED)) {
-      p = new ParameterNumericDelimited(key, value, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_ALPHANUMERIC)) {
-      p = new ParameterAlphanumeric(key, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_ALPHANUMERIC_AND_MORE)) {
-      p = new ParameterAlphanumericAndMore(key, value, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_STRING)) {
-      p = new ParameterString(key, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_CHAR)) {
-      p = new ParameterChar(key, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_REGEX)) {
-      p = new ParameterRegex(key, value, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_JAVA)) {
-      p = new ParameterJava(key, value, max, min, errorMsg, path);
-    } else if (t.equals(TYPE_CONSTANT)) {
-      p = new ParameterConstant(key, value, max, min, errorMsg, path);
-    }
-    if (p != null) {
-      map.put(key, p);
+      if (!caseSensitive) {
+        name = name.toLowerCase();
+      }
+      items.put(name, Item.getItem(name, type, min, max, msg, uri));
     }
   }
 
@@ -181,12 +146,8 @@ final class Metadata {
     int last = 0;
     while (true) {
       int starPos = name.indexOf(STAR, last);
-      if (starPos < 0) {
-        return name;
-      }
-      if (starPos == 0) {
-        return null;
-      }
+      if (starPos < 0) { return name; }
+      if (starPos == 0) { return null; }
       String f = name.substring(starPos - 1, starPos);
       String markerChars;
 
@@ -194,16 +155,10 @@ final class Metadata {
         markerChars = INDEX_PARM_MARKER + name.substring(0, name.length() - 1);
       } else {
         markerChars = f + name.substring(starPos + 1, starPos + 2);
-        if (!isNotAlphanumeric(markerChars)) {
-          return null;
-        }
+        if (!isNotAlphanumeric(markerChars)) { return null; }
       }
       String firstCharOfKey = name.substring(0, 1);
-      List<String> chars = map.get(firstCharOfKey);
-      if (chars == null) {
-        chars = new ArrayList<>();
-        map.put(firstCharOfKey, chars);
-      }
+      List<String> chars = map.computeIfAbsent(firstCharOfKey, k -> new ArrayList<>());
       if (!chars.contains(markerChars)) {
         chars.add(markerChars);
       }
@@ -228,9 +183,7 @@ final class Metadata {
   static boolean isNotAlphanumeric(String s) {
     char[] chars = s.toCharArray();
     for (char c : chars) {
-      if (!(c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a)) {
-        return false;
-      }
+      if (!(c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a)) { return false; }
     }
     return true;
   }

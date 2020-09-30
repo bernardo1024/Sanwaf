@@ -124,7 +124,7 @@ Also note the **secured section** contains the following groups: parameters, hea
 where
 
 	<name></name>	- parameter/header/cookie name
-			- specify many 'names' in one item tag by using the ':::' delimiter.  
+			- specify multiple 'names' in one item tag by using the ':::' delimiter.  
 			- for example:
 				- <name>parameter1</name>
 				- <name>parameter1:::parameter2:::parameter3</name> 
@@ -133,13 +133,14 @@ where
 	<min></min>	- the min length allowed for this parameter (defaults to 0 if not specified) 
 	<msg></msg>	- the error message for the parameter(s) (uses the shield or global error message is not specified)
 	<uri></uri>	- the uri that must match for the parameter evaluation to occur 
+			- to specify multiple uri's for one item, use the ':::' delimiter.  
 
 #### Example
 
-	<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
+	<item><name>telephone</name><type>r{telephone}</type><max>12</max><min>1</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
 	<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
 	<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
-	<item><name>count</name><type>n</type><max>0</max><min>1</min></item>
+	<item><name>count</name><type>n</type><uri>/uri1:::uri2:::uri3</uri></item>
 
 ### Custom Datatypes Guide
 

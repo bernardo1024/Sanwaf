@@ -30,7 +30,7 @@ public class OtherClassesTest {
 
   @Test
   public void TestDefaultContructorParameterItem() {
-    Parameter pi = new ParameterString();
+    Item pi = new ItemString();
     String s = pi.toString();
     assertTrue(s.contains(", max: " + Integer.MAX_VALUE + ", min: 0"));
   }
@@ -45,18 +45,8 @@ public class OtherClassesTest {
   }
 
   @Test
-  public void TestErrorAddPoint() {
-    Parameter p = new ParameterString("", 100, 0, "error msg", null);
-    Error error = new Error(shield, p, "foo", "bar");
-    Point point = new Point(0, 5);
-    error.addPoint(point);
-    String s = error.toJson();
-    assertTrue(s.contains("foo"));
-  }
-
-  @Test
   public void TestErrorAddPointErrorMax() {
-    Parameter p = new ParameterString("", 5, 0, "error msg", null);
+    Item p = new ItemString("", 5, 0, "error msg", null);
     Error error = new Error(shield, p, "foo", "123456789");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
@@ -64,7 +54,7 @@ public class OtherClassesTest {
 
   @Test
   public void TestErrorAddPointErrorMin() {
-    Parameter p = new ParameterString("", 5, 5, "error msg", null);
+    Item p = new ItemString("", 5, 5, "error msg", null);
     Error error = new Error(shield, p, "foo", "123");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
@@ -73,7 +63,7 @@ public class OtherClassesTest {
   @Test
   public void appendParameterItemMapToSBTest() {
     StringBuilder sb = new StringBuilder();
-    Map<String, Parameter> m = new HashMap<>();
+    Map<String, Item> m = new HashMap<>();
     Shield.appendPItemMapToSB(m, sb, "label");
     assertEquals(true, sb.indexOf("(none found)") > 0);
 
@@ -144,30 +134,30 @@ public class OtherClassesTest {
   @Test
   public void isCharAlphanumericTest() {
     char c = 0x29;
-    assertEquals(true, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x7b;
-    assertEquals(true, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x3b;
-    assertEquals(true, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x3c;
-    assertEquals(true, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x5b;
-    assertEquals(true, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x5c;
-    assertEquals(true, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(true, ItemAlphanumeric.isNotAlphanumeric(c));
 
     c = 0x31;
-    assertEquals(false, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x39;
-    assertEquals(false, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x41;
-    assertEquals(false, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x59;
-    assertEquals(false, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x61;
-    assertEquals(false, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
     c = 0x79;
-    assertEquals(false, ParameterAlphanumeric.isCharNotAlphanumeric(c));
+    assertEquals(false, ItemAlphanumeric.isNotAlphanumeric(c));
   }
 
   @Test
@@ -179,6 +169,7 @@ public class OtherClassesTest {
     s = Metadata.stripEosNumbers("abc123");
     assert (s.equals("abc"));
   }
+
   @Test
   public void refineNameTest() {
     assert (Metadata.refineName("*foo.method()", shield.parameters.index) == null);
@@ -190,5 +181,4 @@ public class OtherClassesTest {
     assert (Xml.stripXmlComments("").equals(""));
     assert (Xml.stripXmlComments(null).equals(""));
   }
-
 }

@@ -94,16 +94,11 @@ public class ErrorMessagesParmsTest {
   }
 
   private static boolean isKeywordFound(List<Error> errors, String keyword) {
-    if (errors == null || errors.size() < 1) {
-      return false;
-    }
+    if (errors == null || errors.size() < 1) { return false; }
 
     for (Error error : errors) {
-      if (!error.toJson().contains(keyword)) {
-        return false;
-      }
+      if (!error.toJson().contains(keyword)) { return false; }
     }
     return true;
   }
-
 }

@@ -12,7 +12,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.sanwaf.core.Shield;
 import com.sanwaf.core.Sanwaf;
 
-public class ParameterLengthsTest {
+public class ItemLengthsTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
@@ -138,9 +138,8 @@ public class ParameterLengthsTest {
     assertTrue(shield.minLen == Integer.MAX_VALUE);
     assertTrue(shield.regexMinLen == Integer.MAX_VALUE);
 
-    Parameter p = shield.getParameter(shield.parameters, "unitTestMaxMinLen");
+    Item p = shield.getParameter(shield.parameters, "unitTestMaxMinLen");
     assertTrue(p.max == Integer.MAX_VALUE);
     assertTrue(p.min == Integer.MAX_VALUE);
   }
-
 }
