@@ -26,7 +26,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if (value == null) { return points; }
+    if (value == null) {
+      return points;
+    }
     int start = -1;
     int len = value.length();
     for (int i = 0; i < len; i++) {
@@ -58,19 +60,29 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req)) { return false; }
-    if (isSizeError(value)) { return true; }
-    if (value == null) { return false; }
+    if (!isUriValid(req)) {
+      return false;
+    }
+    if (isSizeError(value)) {
+      return true;
+    }
+    if (value == null) {
+      return false;
+    }
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
-      if (isNotAlphanumeric(c) && !isInMoreChars(c)) { return true; }
+      if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
+        return true;
+      }
     }
     return false;
   }
 
   private boolean isInMoreChars(char c) {
     for (char more : moreChars) {
-      if (c == more) { return true; }
+      if (c == more) {
+        return true;
+      }
     }
     return false;
   }
@@ -78,7 +90,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   String modifyErrorMsg(String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
-    if (i >= 0) { return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length()); }
+    if (i >= 0) {
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
+    }
     return errorMsg;
   }
 

@@ -26,7 +26,8 @@ abstract class Item {
   String msg = null;
   String[] uri = null;
 
-  Item() {}
+  Item() {
+  }
 
   Item(String name, int max, int min, String msg, String uri) {
     this.name = name;
@@ -75,11 +76,17 @@ abstract class Item {
   }
 
   boolean isUriValid(ServletRequest req) {
-    if (uri == null || uri.length == 0) { return true; }
+    if (uri == null || uri.length == 0) {
+      return true;
+    }
     String reqUri = ((HttpServletRequest) req).getRequestURI();
-    if (reqUri == null || reqUri.length() == 0) { return true; }
+    if (reqUri == null || reqUri.length() == 0) {
+      return true;
+    }
     for (String u : uri) {
-      if (u.equals(reqUri)) { return true; }
+      if (u.equals(reqUri)) {
+        return true;
+      }
     }
     return false;
   }

@@ -12,6 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.sanwaf.core.Sanwaf.AllowListType;
 import com.sanwaf.log.Logger;
 
 final class Shield {
@@ -49,7 +50,9 @@ final class Shield {
       k = (String) names.nextElement();
       values = req.getParameterValues(k);
       for (String v : values) {
-        if (threat(req, parameters, k, v)) { return true; }
+        if (threat(req, parameters, k, v)) {
+          return true;
+        }
       }
     }
     return false;
@@ -61,7 +64,9 @@ final class Shield {
       String s = String.valueOf(names.nextElement());
       Enumeration<?> items = ((HttpServletRequest) req).getHeaders(s);
       while (items.hasMoreElements()) {
-        if (threat(req, headers, s, (String) items.nextElement())) { return true; }
+        if (threat(req, headers, s, (String) items.nextElement())) {
+          return true;
+        }
       }
     }
     return false;
@@ -71,7 +76,9 @@ final class Shield {
     Cookie[] items = ((HttpServletRequest) req).getCookies();
     if (items != null) {
       for (Cookie c : items) {
-        if (threat(req, cookies, c.getName(), c.getValue())) { return true; }
+        if (threat(req, cookies, c.getName(), c.getValue())) {
+          return true;
+        }
       }
     }
     return false;
@@ -82,17 +89,25 @@ final class Shield {
   }
 
   boolean threat(ServletRequest req, Metadata meta, String key, String value) {
-    if (key == null || value == null) { return false; }
+    if (key == null || value == null) {
+      return false;
+    }
     int len = value.length();
-    if (len < minLen || len > maxLen) { return false; }
+    if (len < minLen || len > maxLen) {
+      return false;
+    }
     Item parm;
     if (meta != null) {
       parm = getParameterFromMetadata(meta, key);
       if (parm == null) {
         String a = meta.getFromIndex(key);
-        if (a == null) { return false; }
+        if (a == null) {
+          return false;
+        }
         parm = getParameterFromMetadata(meta, a);
-        if (parm == null) { return false; }
+        if (parm == null) {
+          return false;
+        }
       }
     } else {
       parm = new ItemString();
@@ -107,6 +122,53 @@ final class Shield {
       parm = new ItemString();
     }
     return parm;
+  }
+
+  String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
+
+    if (name == null || req == null) {
+      return null;
+    }
+
+    if (type == AllowListType.HEADER) {
+      return getAllowListedHeader(name, req);
+    } else if (type == AllowListType.COOKIE) {
+      return getAllowListedCookie(name, req);
+    } else if (type == AllowListType.PARAMETER) {
+      return getAllowListedParameter(name, req);
+    }
+    return null;
+  }
+
+  String getAllowListedHeader(String name, HttpServletRequest req) {
+    Item item = getParameterFromMetadata(headers, name);
+    if (item != null) {
+      return req.getHeader(name);
+    }
+    return null;
+  }
+
+  String getAllowListedCookie(String name, HttpServletRequest req) {
+    Item item = getParameterFromMetadata(cookies, name);
+    if (item != null) {
+      Cookie[] cookieValues = req.getCookies();
+      if (cookieValues != null) {
+        for (Cookie c : cookieValues) {
+          if (c.getName().equals(name)) {
+            return c.getValue();
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  String getAllowListedParameter(String name, HttpServletRequest req) {
+    Item item = getParameterFromMetadata(parameters, name);
+    if (item != null) {
+      return req.getParameter(name);
+    }
+    return null;
   }
 
   Item getParameter(Metadata meta, String key) {
@@ -145,7 +207,9 @@ final class Shield {
         return null;
       }
     }
-    if (p.inError(req, this, value)) { return new Error(this, p, key, value); }
+    if (p.inError(req, this, value)) {
+      return new Error(this, p, key, value);
+    }
     return null;
   }
 

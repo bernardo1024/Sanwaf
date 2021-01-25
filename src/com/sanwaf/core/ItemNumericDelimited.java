@@ -33,7 +33,9 @@ final class ItemNumericDelimited extends ItemNumeric {
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     String[] ns = value.split(delimiter);
     for (String n : ns) {
-      if (super.inError(req, shield, n)) { return true; }
+      if (super.inError(req, shield, n)) {
+        return true;
+      }
     }
     return false;
   }
@@ -41,7 +43,9 @@ final class ItemNumericDelimited extends ItemNumeric {
   @Override
   String modifyErrorMsg(String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
-    if (i >= 0) { return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length()); }
+    if (i >= 0) {
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
+    }
     return errorMsg;
   }
 

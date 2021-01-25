@@ -33,12 +33,18 @@ class ItemAlphanumeric extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req)) { return false; }
-    if (isSizeError(value)) { return true; }
+    if (!isUriValid(req)) {
+      return false;
+    }
+    if (isSizeError(value)) {
+      return true;
+    }
     int i = 0;
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
-      if (isNotAlphanumeric(c)) { return true; }
+      if (isNotAlphanumeric(c)) {
+        return true;
+      }
     }
     return false;
   }

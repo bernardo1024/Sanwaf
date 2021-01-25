@@ -33,14 +33,20 @@ final class Xml {
   }
 
   String get(String xml, String key) {
-    if (xml == null || xml.length() == 0) { return ""; }
+    if (xml == null || xml.length() == 0) {
+      return "";
+    }
     String xmlUc = xml.toUpperCase();
     String keyUc = "<" + key.toUpperCase() + ">";
     int start = xmlUc.indexOf(keyUc);
-    if (start < 0) { return ""; }
+    if (start < 0) {
+      return "";
+    }
     String endKeyUc = "</" + key.toUpperCase() + ">";
     int end = xmlUc.indexOf(endKeyUc, start);
-    if (end < 0) { return ""; }
+    if (end < 0) {
+      return "";
+    }
     String value = xml.substring(start + keyUc.length(), end);
     int cdataStart = value.indexOf(CDATA_START);
     if (cdataStart == 0) {
@@ -96,7 +102,9 @@ final class Xml {
   }
 
   static String stripXmlComments(String s) {
-    if (s == null || s.length() == 0) { return ""; }
+    if (s == null || s.length() == 0) {
+      return "";
+    }
     return s.replaceAll("<!--.*-->", "").replaceAll("<!--((?!<!--)[\\s\\S])*-->", "");
   }
 }

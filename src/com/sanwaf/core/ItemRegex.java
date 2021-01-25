@@ -20,7 +20,9 @@ final class ItemRegex extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if (value == null || value.length() == 0) { return points; }
+    if (value == null || value.length() == 0) {
+      return points;
+    }
     Matcher m = pattern.matcher(value);
     if (!m.find()) {
       points.add(new Point(0, value.length()));
@@ -33,8 +35,12 @@ final class ItemRegex extends Item {
     if (pattern == null) {
       pattern = shield.customPatterns.get(patternName);
     }
-    if (!isUriValid(req)) { return false; }
-    if (isSizeError(value)) { return true; }
+    if (!isUriValid(req)) {
+      return false;
+    }
+    if (isSizeError(value)) {
+      return true;
+    }
     return !pattern.matcher(value).find();
   }
 

@@ -17,15 +17,21 @@ final class ItemConstant extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req)) { return false; }
-    if (isSizeError(value)) { return true; }
+    if (!isUriValid(req)) {
+      return false;
+    }
+    if (isSizeError(value)) {
+      return true;
+    }
     return !constants.contains(value);
   }
 
   @Override
   String modifyErrorMsg(String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
-    if (i >= 0) { return errorMsg.substring(0, i) + Metadata.jsonEncode(constants.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length()); }
+    if (i >= 0) {
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(constants.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
+    }
     return errorMsg;
   }
 

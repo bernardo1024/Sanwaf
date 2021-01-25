@@ -29,7 +29,9 @@ public class UnitTestUtil {
 
   static Shield getShield(Sanwaf sanwaf, String name) {
     for (Shield shield : sanwaf.shields) {
-      if (shield.name.equalsIgnoreCase(name)) { return shield; }
+      if (shield.name.equalsIgnoreCase(name)) {
+        return shield;
+      }
     }
     return null;
   }
@@ -37,7 +39,9 @@ public class UnitTestUtil {
   static UnitTestResult runTestsUsingFile(Shield shield, String filename, int iterations, boolean doHex, boolean logErrors) {
     UnitTestResult result = new UnitTestResult();
     String file = UnitTestUtil.readFile(filename);
-    if (file == null || file.length() == 0) { return null; }
+    if (file == null || file.length() == 0) {
+      return null;
+    }
 
     file = file.replace("\r", "");
     String[] lines = file.split("\n");
@@ -73,7 +77,9 @@ public class UnitTestUtil {
   }
 
   static void testAllHexPermutations(Shield shield, UnitTestResult result, String parmName, String payload, boolean expected, boolean logError) {
-    if (payload == null || payload.length() == 0) { return; }
+    if (payload == null || payload.length() == 0) {
+      return;
+    }
     boolean runMultiple = payload.startsWith("#");
     if (runMultiple) {
       payload = payload.substring(1, payload.length());
@@ -150,7 +156,9 @@ public class UnitTestUtil {
     FileInputStream fis = null;
     try {
       File f = new File(s);
-      if (!f.exists()) { return ""; }
+      if (!f.exists()) {
+        return "";
+      }
       int size = (int) f.length();
       int read = 0;
       fis = new FileInputStream(s);

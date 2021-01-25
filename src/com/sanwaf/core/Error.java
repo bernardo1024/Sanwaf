@@ -50,7 +50,9 @@ final class Error {
   static final String K_V_SEP = ":";
 
   static String toJson(List<Error> errors) {
-    if (errors == null || errors.isEmpty()) { return ARRAY_START + ARRAY_END; }
+    if (errors == null || errors.isEmpty()) {
+      return ARRAY_START + ARRAY_END;
+    }
     StringBuilder sb = new StringBuilder();
     sb.append(ARRAY_START);
     boolean isFirst = true;

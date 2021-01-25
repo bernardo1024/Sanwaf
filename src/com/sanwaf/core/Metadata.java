@@ -48,12 +48,16 @@ final class Metadata {
 
   String getFromIndex(String key) {
     List<String> list = index.get(key.substring(0, 1));
-    if (list == null) { return null; }
+    if (list == null) {
+      return null;
+    }
 
     for (String s : list) {
       int last = 0;
       while (true) {
-        if (s.length() != 2) { return resolveStarAtEndOfWord(key, list); }
+        if (s.length() != 2) {
+          return resolveStarAtEndOfWord(key, list);
+        }
         int start = key.indexOf(s.charAt(0), last);
         if (start <= 0) {
           break;
@@ -70,7 +74,9 @@ final class Metadata {
 
   private String resolveStarAtEndOfWord(String key, List<String> list) {
     String k2 = stripEosNumbers(key);
-    if (list.contains(INDEX_PARM_MARKER + k2)) { return k2; }
+    if (list.contains(INDEX_PARM_MARKER + k2)) {
+      return k2;
+    }
     return null;
   }
 
@@ -146,8 +152,12 @@ final class Metadata {
     int last = 0;
     while (true) {
       int starPos = name.indexOf(STAR, last);
-      if (starPos < 0) { return name; }
-      if (starPos == 0) { return null; }
+      if (starPos < 0) {
+        return name;
+      }
+      if (starPos == 0) {
+        return null;
+      }
       String f = name.substring(starPos - 1, starPos);
       String markerChars;
 
@@ -155,7 +165,9 @@ final class Metadata {
         markerChars = INDEX_PARM_MARKER + name.substring(0, name.length() - 1);
       } else {
         markerChars = f + name.substring(starPos + 1, starPos + 2);
-        if (!isNotAlphanumeric(markerChars)) { return null; }
+        if (!isNotAlphanumeric(markerChars)) {
+          return null;
+        }
       }
       String firstCharOfKey = name.substring(0, 1);
       List<String> chars = map.computeIfAbsent(firstCharOfKey, k -> new ArrayList<>());
@@ -183,7 +195,9 @@ final class Metadata {
   static boolean isNotAlphanumeric(String s) {
     char[] chars = s.toCharArray();
     for (char c : chars) {
-      if (!(c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a)) { return false; }
+      if (!(c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a)) {
+        return false;
+      }
     }
     return true;
   }

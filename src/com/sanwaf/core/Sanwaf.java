@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import com.sanwaf.core.Sanwaf.AllowListType;
 import com.sanwaf.log.Logger;
 import com.sanwaf.log.LoggerSystemOut;
 
@@ -30,6 +31,10 @@ public final class Sanwaf {
   protected static String securedAppVersion = "unknown";
   protected List<Shield> shields = new ArrayList<>();
   Map<String, String> globalErrorMessages = new HashMap<>();
+
+  public enum AllowListType {
+    HEADER, COOKIE, PARAMETER
+  }
 
   /**
    * Default Sanwaf constructor.
@@ -106,7 +111,9 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req) {
-    if (!enabled || !(req instanceof HttpServletRequest)) { return false; }
+    if (!enabled || !(req instanceof HttpServletRequest)) {
+      return false;
+    }
     for (Shield shield : shields) {
       if (shield.threatDetected(req)) {
         addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(req));
@@ -137,9 +144,46 @@ public final class Sanwaf {
    */
   public boolean isThreat(String value) {
     for (Shield sh : shields) {
-      if (sh.threat(null, null, "", value)) { return true; }
+      if (sh.threat(null, null, "", value)) {
+        return true;
+      }
     }
     return false;
+  }
+
+  /**
+   * Method to retrieve an allow-listed header/cookie/parameter value from a
+   * request. The header/cookie/parameter value will be returned IFF the its
+   * name is set in any Shield's Metadata block
+   * 
+   * <pre>
+   *    <metadata>
+   *      <secured>
+   *        <headers></headers>
+   *        <cookies></cookies>
+   *        <parameters></parameters>
+   *      </secured>
+   *    </metadata>
+   * </pre>
+   * 
+   * @param request
+   *          HttpServletRequest Object to pull the header/cookie/parameter
+   *          value from
+   * @param type
+   *          the Sanwaf.AllowListType type (HEADER, COOKIE, PARAMETER)
+   * @param name
+   *          the name of the header/cookie/parameter you want to get
+   * @return String the value of the requested header/cookie/parameter requested
+   *         or null.
+   */
+  public String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
+    for (Shield sh : shields) {
+      String value = sh.getAllowListedValue(name, type, req);
+      if (value != null) {
+        return value;
+      }
+    }
+    return null;
   }
 
   /**
@@ -167,7 +211,9 @@ public final class Sanwaf {
    */
   public static String getTrackingId(HttpServletRequest req) {
     Object o = req.getAttribute(REQ_ATT_TRACK_ID);
-    if (o != null) { return String.valueOf(o); }
+    if (o != null) {
+      return String.valueOf(o);
+    }
     return "Sanwaf TrackId is disabled";
   }
 
@@ -185,13 +231,17 @@ public final class Sanwaf {
    */
   public static String getErrors(HttpServletRequest req) {
     Object o = req.getAttribute(REQ_ATT_ERRORS);
-    if (o != null) { return String.valueOf(o); }
+    if (o != null) {
+      return String.valueOf(o);
+    }
     return "Sanwaf Error handling is disabled";
   }
 
   private List<Error> getErrorList(ServletRequest req) {
     List<Error> errors = new ArrayList<>();
-    if (!onErrorAddParmErrors) { return errors; }
+    if (!onErrorAddParmErrors) {
+      return errors;
+    }
     String k = null;
     String[] values = null;
     Enumeration<?> names = req.getParameterNames();

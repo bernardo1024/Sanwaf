@@ -35,10 +35,16 @@ final class ItemString extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req)) { return false; }
-    if (isSizeError(value)) { return true; }
+    if (!isUriValid(req)) {
+      return false;
+    }
+    if (isSizeError(value)) {
+      return true;
+    }
     for (Pattern p : shield.patterns) {
-      if (p.matcher(value).find()) { return true; }
+      if (p.matcher(value).find()) {
+        return true;
+      }
     }
     return false;
   }

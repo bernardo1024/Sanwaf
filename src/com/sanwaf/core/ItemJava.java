@@ -16,14 +16,20 @@ final class ItemJava extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req)) { return false; }
-    if (isSizeError(value)) { return true; }
+    if (!isUriValid(req)) {
+      return false;
+    }
+    if (isSizeError(value)) {
+      return true;
+    }
     return runJavaMethod(javaMethod, value, req);
   }
 
   private void setJavaMethod(String type) {
     String sClazzAndMethod = type.substring(type.indexOf(JAVA) + JAVA.length(), type.length() - 1);
-    if (sClazzAndMethod == null || sClazzAndMethod.length() == 0) { return; }
+    if (sClazzAndMethod == null || sClazzAndMethod.length() == 0) {
+      return;
+    }
 
     Class<?> clazz = null;
     try {
@@ -36,7 +42,9 @@ final class ItemJava extends Item {
 
   static String parseClazz(String s) {
     int last = s.lastIndexOf('.');
-    if (last > 0) { return s.substring(0, last); }
+    if (last > 0) {
+      return s.substring(0, last);
+    }
     return s;
   }
 
@@ -44,7 +52,9 @@ final class ItemJava extends Item {
     int start = s.lastIndexOf('.');
     if (start > 0) {
       int end = s.lastIndexOf('(');
-      if (end > 0) { return s.substring(start + 1, end); }
+      if (end > 0) {
+        return s.substring(start + 1, end);
+      }
     }
     return s;
   }
