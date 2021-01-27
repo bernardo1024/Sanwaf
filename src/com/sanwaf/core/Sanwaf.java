@@ -12,7 +12,6 @@ import java.util.UUID;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import com.sanwaf.core.Sanwaf.AllowListType;
 import com.sanwaf.log.Logger;
 import com.sanwaf.log.LoggerSystemOut;
 

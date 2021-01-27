@@ -61,6 +61,18 @@ public class DatatypeTest {
   }
 
   @Test
+  public void testAlphanumericSizeError() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "123"));
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "1234"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "12345"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "123456"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "1234567"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "12345678"));
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestAlphanumericSizeError", "123456789"));
+  }
+
+  @Test
   public void testAlphanumericType2() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "unitTestAlphanumeric", "abcdefg123-22");

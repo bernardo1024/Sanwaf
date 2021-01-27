@@ -42,7 +42,6 @@ public class AllowlistTest {
   @Test
   public void testCookie() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    req = new MockHttpServletRequest();
     req.setCookies(new Cookie("allowlistedCookie", "found"), new Cookie("notAllowlistedCookie", "notFound"));
 
     String value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
@@ -50,6 +49,18 @@ public class AllowlistTest {
     assertEquals(true, value.equals("found"));
 
     value = sanwaf.getAllowListedValue("notAllowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
+    assertEquals(true, value == null);
+  }
+
+  @Test
+  public void testNullCookie() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    String value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
+    assertEquals(true, value == null);
+
+    req = new MockHttpServletRequest();
+    req.setCookies(new Cookie("notAllowlistedCookie", "notFound"));
+    value = sanwaf.getAllowListedValue("allowlistedCookie", Sanwaf.AllowListType.COOKIE, req);
     assertEquals(true, value == null);
   }
 

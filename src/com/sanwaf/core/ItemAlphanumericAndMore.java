@@ -34,17 +34,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     for (int i = 0; i < len; i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c)) {
-        if (!isInMoreChars(c)) {
-          if (start < 0) {
-            start = i;
-          }
-
-        } else {
-          if (start >= 0) {
-            points.add(new Point(start, i));
-            start = -1;
-          }
-        }
+        start = processNotAlphanumeric(points, start, i, c);
       } else {
         if (start >= 0) {
           points.add(new Point(start, i));
@@ -56,6 +46,21 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
       points.add(new Point(start, len));
     }
     return points;
+  }
+
+  private int processNotAlphanumeric(List<Point> points, int start, int i, char c) {
+    if (!isInMoreChars(c)) {
+      if (start < 0) {
+        start = i;
+      }
+
+    } else {
+      if (start >= 0) {
+        points.add(new Point(start, i));
+        start = -1;
+      }
+    }
+    return start;
   }
 
   @Override

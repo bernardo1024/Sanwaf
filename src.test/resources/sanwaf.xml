@@ -94,6 +94,7 @@
 						<item><name>unitTestNumericDelimitedInvalidConfig2</name><type>n,}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>unitTestNumericDelimitedInvalidConfig3</name><type>n,</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>unitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>unitTestAlphanumericSizeError</name><type>a</type><max>8</max><min>5</min><msg></msg><uri></uri></item>
 						<item><name>unitTestAlphanumericAndMore</name><type>a{?\s:}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>unitTestAlphanumericAndMoreSpecialChars</name><type>a{\s\t\n\r}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>unitTestAlphanumericAndMoreCurlyBraces</name><type>a{{}}</type><max></max><min></min><msg></msg><uri></uri></item>
