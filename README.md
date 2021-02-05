@@ -47,6 +47,7 @@ When/If an error is detected, you pull the error info with these methods:
 	String parmsInErrorJson = sanwaf.getParmErrors(request);
 	
 To use Sanwaf to read allowlisted headers/cookies/parameters:
+
 	String value = sanwaf.getAllowListedValue("[Header Cookie Parameter]", Sanwaf.AllowListType.[HEADER COOKIE PARAMETER], request);
 
 ## Sanwaf Quick Guide
