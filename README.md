@@ -25,7 +25,7 @@ in the Sanwaf Project type:
 
 
 ## Implementation
-Create an authentication filter to validate all the incoming request objects.
+Create an authentication filter to validate all the incoming request objects. 
 
 	//instanciate Sanwaf - you should create a logger that implements the com.sanwaf.log.Logger Interface
 	public static Sanwaf sanwaf = new Sanwaf();
@@ -38,12 +38,16 @@ Create an authentication filter to validate all the incoming request objects.
 		//for this example, we will throw a SecurityException that will be caught and processed by an unhandled exception handler
 		throw new SecurityException("Security Violation.  Put your message here.");
 	}
+
+Alternatively, use can use Sanwaf inline anywhere in your code.
+
+When/If an error is detected, you pull the error info with these methods:
+
+	String sanwafTrackId = sanwaf.getTrackId(request);
+	String parmsInErrorJson = sanwaf.getParmErrors(request);
 	
-
-Then in your unhandled exception handler, you can pull the error values with these methods:
-
-	String sanwafTrackId = Sanwaf.getTrackId(request);
-	String parmsInErrorJson = Sanwaf.getParmErrors(request);
+To use Sanwaf to read allowlisted headers/cookies/parameters:
+	String value = sanwaf.getAllowListedValue("[Header Cookie Parameter]", Sanwaf.AllowListType.[HEADER COOKIE PARAMETER], request);
 
 ## Sanwaf Quick Guide
 Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
