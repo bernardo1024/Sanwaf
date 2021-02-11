@@ -89,20 +89,11 @@ public class SanwafTest {
     sanwaf.onErrorAddParmErrors = false;
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
-    assertTrue(Sanwaf.getTrackingId(request).indexOf("Sanwaf TrackId is disabled") >= 0);
-    assertTrue(Sanwaf.getErrors(request).indexOf("Sanwaf Error handling is disabled") >= 0);
+    assertTrue(Sanwaf.getTrackingId(request) == null);
+    assertTrue(Sanwaf.getErrors(request) == null);
 
     sanwaf.onErrorAddTrackId = trackID;
     sanwaf.onErrorAddParmErrors = trackErrors;
-  }
-
-  @Test
-  public void testSanWafIsThreat() { // test a non-mapped parm allows all
-    boolean b = sanwaf.isThreat("<script>alert(1)</script>");
-    assertEquals(true, b);
-
-    b = sanwaf.isThreat("alert(1)");
-    assertEquals(false, b);
   }
 
   @Test
@@ -154,12 +145,6 @@ public class SanwafTest {
     } catch (IOException ioe) {
       fail("exception Raised");
     }
-  }
-
-  @Test
-  public void testThreatWithNull() {
-    boolean b = sanwaf.isThreat(null);
-    assertTrue(!b);
   }
 
   @Test

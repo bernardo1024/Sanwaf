@@ -151,6 +151,36 @@ public final class Sanwaf {
   }
 
   /**
+   * Method to determine if a given value contains a threat determined by
+   * configured shields.  If specified to do so this method sets the errors 
+   * detected in the request attributes that can be retrieved using the 
+   * getTrackingId & getErrors methods  
+   * 
+   * <pre>
+   * If an error is detected, attributes will be added to request for processing latter.  
+   *  Attributes added are dependent on the properties settings of:
+   *        <provideTrackId>true/false</provideTrackId>
+   *        <provideErrors>true/false</provideErrors>
+   * 
+   * Use the following methods in this class to retrieve the values:
+   *  public static String getTrackingId(HttpServletRequest req)
+   *  public static String getErrors(HttpServletRequest req)
+   * </pre>
+   * 
+   * @param value
+   *          a String object you want to scan for threats
+   * @return boolean true/false if a threat was detected
+   */
+  public boolean isThreat(String value, boolean setErrorAttributes, ServletRequest req) {
+    boolean foundThreat = isThreat(value);
+    
+    if(foundThreat && setErrorAttributes) {
+      addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(value));
+    }
+    return foundThreat;
+  }
+
+  /**
    * Method to retrieve an allow-listed header/cookie/parameter value from a
    * request. The header/cookie/parameter value will be returned IFF the its
    * name is set in any Shield's Metadata block
@@ -213,7 +243,7 @@ public final class Sanwaf {
     if (o != null) {
       return String.valueOf(o);
     }
-    return "Sanwaf TrackId is disabled";
+    return null;
   }
 
   /**
@@ -233,7 +263,7 @@ public final class Sanwaf {
     if (o != null) {
       return String.valueOf(o);
     }
-    return "Sanwaf Error handling is disabled";
+    return null;
   }
 
   private List<Error> getErrorList(ServletRequest req) {
@@ -255,10 +285,28 @@ public final class Sanwaf {
     return errors;
   }
 
+  private List<Error> getErrorList(String v) {
+    List<Error> errors = new ArrayList<>();
+    if (!onErrorAddParmErrors) {
+      return errors;
+    }
+    getShieldErrors(null, errors, null, v);
+    return errors;
+  }
+
   private void getShieldErrors(ServletRequest req, List<Error> errors, String key, String value) {
-    for (Shield sh : shields) {
-      if (sh.threatDetected(req)) {
-        errors.addAll(sh.getErrors(req, key, value));
+    if(req == null) {
+      if(isThreat(value)) {
+        for (Shield sh : shields) {
+          errors.addAll(sh.getErrors(req, key, value, true));
+        }
+      }
+    }
+    else {
+      for (Shield sh : shields) {
+        if (sh.threatDetected(req)) {
+          errors.addAll(sh.getErrors(req, key, value));
+        }
       }
     }
   }

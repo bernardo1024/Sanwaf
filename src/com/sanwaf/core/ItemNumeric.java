@@ -17,20 +17,19 @@ class ItemNumeric extends Item {
     final int len = value.length();
     int errStart = -1;
     boolean foundDot = false;
-    boolean foundNeg = false;
-    for (int i = 0; i < len; i++) {
+    int start = 0;
+    if (value.charAt(0) == '-') {
+      start = 1;
+    }
+
+    for (int i = start; i < len; i++) {
       char c = value.charAt(i);
       int d = c - '0';
       if (d < 0 || d > 9) {
         if (!foundDot && c == '.') {
           foundDot = true;
         } else {
-          if (i == 0 && !foundNeg && c == '-') {
-            foundNeg = true;
-          }
-          if (errStart < 0) {
-            errStart = i;
-          }
+          errStart = checkErrStart(errStart, i);
         }
       } else {
         if (errStart >= 0) {
@@ -43,6 +42,13 @@ class ItemNumeric extends Item {
       points.add(new Point(errStart, len));
     }
     return points;
+  }
+  
+  private int checkErrStart(int errStart, int i) {
+    if (errStart < 0) {
+      errStart = i;
+    }
+    return errStart;
   }
 
   @Override

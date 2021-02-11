@@ -182,10 +182,17 @@ final class Shield {
   }
 
   List<Error> getErrors(ServletRequest req, String key, String value) {
+    return getErrors(req, key, value, false);
+  }
+  
+  List<Error> getErrors(ServletRequest req, String key, String value, boolean forceRegexAlways) {
     List<Error> errors = new ArrayList<>();
-    Error err = getErrorForMetadata(req, parameters, key, value);
+    Error err = getErrorForMetadata(req, parameters, key, value, forceRegexAlways);
     if (err != null) {
       errors.add(err);
+      if(forceRegexAlways) {
+        return errors;
+      }
     }
     err = getErrorForMetadata(req, headers, key, value);
     if (err != null) {
@@ -197,11 +204,15 @@ final class Shield {
     }
     return errors;
   }
-
+  
   private Error getErrorForMetadata(ServletRequest req, Metadata meta, String key, String value) {
+    return getErrorForMetadata(req, meta, key, value, false);
+  }
+  
+  private Error getErrorForMetadata(ServletRequest req, Metadata meta, String key, String value, boolean forceRegexAlways) {
     Item p = getParameter(meta, key);
     if (p == null) {
-      if (regexAlways) {
+      if (regexAlways || forceRegexAlways) {
         p = new ItemString();
       } else {
         return null;
