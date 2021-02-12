@@ -73,4 +73,18 @@ public class SanwafIsThreatTest {
     assertTrue(s == null);
   }
 
+  @Test
+  public void testSanWafIsThreatDoNotAddErrorParms() { // test a non-mapped parm allows all
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request = new MockHttpServletRequest();
+    boolean orig = sanwaf.onErrorAddParmErrors;
+    sanwaf.onErrorAddParmErrors = false;
+    boolean result = sanwaf.isThreat("<script>alert(1)</script>", true, request);
+    assertTrue(result == true);
+    String trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    String s = Sanwaf.getErrors(request);
+    assertTrue(s == null);
+    sanwaf.onErrorAddParmErrors = orig;
+  }
 }
