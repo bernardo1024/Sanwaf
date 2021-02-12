@@ -29,12 +29,15 @@ public class DatatypeTest {
   @Test
   public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-
     assertEquals(false, shield.threat(req, shield.parameters, "lengthN_0_5", "12345"));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestNumeric", "0123456789"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestNumeric", "-12345"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestNumeric", "-12345.67"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumeric", "foo.12"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumeric", "12.bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumeric", "12.34.56.78"));
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumeric", "- 12345.67"));
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestNumeric", "-12345..67"));
   }
 
   @Test

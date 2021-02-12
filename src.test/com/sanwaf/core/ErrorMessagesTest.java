@@ -98,6 +98,24 @@ public class ErrorMessagesTest {
     String s = p.modifyErrorMsg("some {0} String");
     assertTrue(s.contains(","));
   }
+  
+  @Test
+  public void datatatypeErrorMsgNumericTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "unitTestNumeric", "-123 456");
+    assertTrue(errors.size() > 0);
+    assertTrue(errors.get(0).errorPoints.size() > 0);
+
+    req = new MockHttpServletRequest();
+    errors = sanwaf.getError(req, shield, "unitTestNumeric", "-123..456");
+    assertTrue(errors.size() > 0);
+    assertTrue(errors.get(0).errorPoints.size() > 0);
+
+    req = new MockHttpServletRequest();
+    errors = sanwaf.getError(req, shield, "unitTestNumeric", "-123.456");
+    assertTrue(errors.size() == 0);
+  }
+  
 
   @Test
   public void testAlphanumericAndMoreSpecialCharsErrorMessges() {
