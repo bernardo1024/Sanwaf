@@ -10,48 +10,21 @@
 			<provideTrackId>true</provideTrackId>
 			<provideErrors>true</provideErrors>
 		</errorHandling>
-		<errorMessages>
-		</errorMessages>
 	</global-settings>
 	
 	<shields>
 		<shield>
-			<name>XSS</name>
-			<minLen>4</minLen>
-			<maxLen>9999</maxLen>
-			<regex>
-				<minLen>5</minLen>
-				<alwaysPerformRegex>
-					<enabled>false</enabled>
-					<exclusions>
-						<item>unitTestStringExcluded</item>
-					</exclusions>
-				</alwaysPerformRegex>
-				<autoRunPatterns>
-				</autoRunPatterns>
-				<customPatterns>
-				</customPatterns>
-			</regex>
+			<name>Allowlist</name>
 			<metadata>
-				<enabled>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</enabled>
-				<caseSensitive>
-					<parameters>true</parameters>
-					<headers>true</headers>
-					<cookies>true</cookies>
-				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>allowlistedParameter</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>allowlistedParameter</name></item>
 					</parameters>
 					<headers>
-						<item><name>allowlistedHeader</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>allowlistedHeader</name></item>
 					</headers>
 					<cookies>
-						<item><name>allowlistedCookie</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>allowlistedCookie</name></item>
 					</cookies>
 				</secured>
 			</metadata>
