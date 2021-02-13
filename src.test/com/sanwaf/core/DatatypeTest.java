@@ -102,6 +102,15 @@ public class DatatypeTest {
   }
 
   @Test
+  public void testAlphanumericAndMoreInvalidConfig() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericAndMoreInvalidConfig1", "abc123? :"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericAndMoreInvalidConfig2", "1?234"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericAndMoreInvalidConfig3", "1?a1b2c?3d4"));
+    assertEquals(false, shield.threat(req, shield.parameters, "unitTestAlphanumericAndMoreInvalidConfig4", "abc123"));
+  }
+
+  @Test
   public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{,}", Integer.MAX_VALUE, 0, "", "");
@@ -236,6 +245,7 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "foo"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "far"));
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestConstant", "FOOO"));
 
     ItemConstant p = new ItemConstant("", "k FOO,BAR", Integer.MAX_VALUE, 0, "", "");
     assertTrue(p.constants == null);
@@ -256,6 +266,7 @@ public class DatatypeTest {
   public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(true, shield.threat(req, shield.parameters, "unitTestJava", "12345"));
+    assertEquals(true, shield.threat(req, shield.parameters, "unitTestJava", "12345678901"));//violates max setting
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestJava", "10"));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestJava", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "unitTestJava", null));
@@ -308,6 +319,10 @@ public class DatatypeTest {
     assertEquals(true, b);
 
     req = new MockHttpServletRequest();
+    b = shield.threat(req, shield.parameters, "unitTestJavaInvalidClass2", "0000");
+    assertEquals(true, b);
+
+    req = new MockHttpServletRequest();
     b = shield.threat(req, shield.parameters, "unitTestJavaInvalidClassEmpty", "0000");
     assertEquals(true, b);
 
@@ -320,6 +335,6 @@ public class DatatypeTest {
   public void testJavaInvalidMethod() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, "unitTestJavaInvalidMethod", "0000");
-    assertEquals(true, b);
+    assertEquals(false, b);
   }
 }

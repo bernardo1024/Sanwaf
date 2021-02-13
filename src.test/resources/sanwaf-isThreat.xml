@@ -3,7 +3,7 @@
 <sanwaf>
 	<global-settings>
 		<enabled>true</enabled>
-		<verbose>false</verbose>
+		<verbose>true</verbose>
 		<app.version>=${Your_Application_Release_Version}</app.version>	
 		<errorHandling>
 			<provideTrackId>true</provideTrackId>
@@ -28,12 +28,9 @@
 			<minLen>3</minLen>
 			<maxLen>9999</maxLen>
 			<regex>
-				<minLen>5</minLen>
+				<minLen>0</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
-					<exclusions>
-						<item>unitTestStringExcluded</item>
-					</exclusions>
 				</alwaysPerformRegex>
 				<autoRunPatterns>
 					<item>
@@ -41,6 +38,12 @@
 						<value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
 					</item>
 				</autoRunPatterns>
+        <customPatterns>
+          <item>
+            <key>telephone</key>
+            <value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value>
+          </item>
+        </customPatterns>
 			</regex>
 			<metadata>
 				<enabled>
@@ -61,4 +64,37 @@
 			</metadata>
 		</shield>
 	</shields>
+  <shields>
+    <shield>
+      <name>OTHER</name>
+      <minLen>3</minLen>
+      <maxLen>9999</maxLen>
+      <regex>
+        <minLen>5</minLen>
+        <alwaysPerformRegex>
+          <enabled>false</enabled>
+        </alwaysPerformRegex>
+        <autoRunPatterns>
+        </autoRunPatterns>
+      </regex>
+      <metadata>
+        <enabled>
+          <parameters>true</parameters>
+          <headers>true</headers>
+          <cookies>true</cookies>
+        </enabled>
+        <caseSensitive>
+          <parameters>true</parameters>
+          <headers>true</headers>
+          <cookies>true</cookies>
+        </caseSensitive>
+        <secured>
+          <parameters></parameters>
+          <headers></headers>
+          <cookies></cookies>
+        </secured>
+      </metadata>
+    </shield>
+  </shields>
+
 </sanwaf>

@@ -39,6 +39,13 @@ abstract class Item {
 
   abstract boolean inError(ServletRequest req, Shield shield, String value);
 
+
+  static Item getItem(String name, Item item) {
+    item.name = name;
+    return item;
+  }
+  
+
   static Item getItem(String name, String type, int min, int max, String msg, String uri) {
     Item item = null;
     String t = type.toLowerCase();
@@ -50,23 +57,35 @@ abstract class Item {
     if (t.equals(NUMERIC)) {
       item = new ItemNumeric(name, max, min, msg, uri);
     } else if (t.equals(NUMERIC_DELIMITED)) {
+      type = ensureTypeFormat(type);
       item = new ItemNumericDelimited(name, type, max, min, msg, uri);
     } else if (t.equals(ALPHANUMERIC)) {
       item = new ItemAlphanumeric(name, max, min, msg, uri);
     } else if (t.equals(ALPHANUMERIC_AND_MORE)) {
+      type = ensureTypeFormat(type);
       item = new ItemAlphanumericAndMore(name, type, max, min, msg, uri);
     } else if (t.equals(CHAR)) {
       item = new ItemChar(name, max, min, msg, uri);
     } else if (t.equals(REGEX)) {
+      type = ensureTypeFormat(type);
       item = new ItemRegex(name, type, max, min, msg, uri);
     } else if (t.equals(JAVA)) {
+      type = ensureTypeFormat(type);
       item = new ItemJava(name, type, max, min, msg, uri);
     } else if (t.equals(CONSTANT)) {
+      type = ensureTypeFormat(type);
       item = new ItemConstant(name, type, max, min, msg, uri);
     } else {
       item = new ItemString(name, max, min, msg, uri);
     }
     return item;
+  }
+  
+  private static String ensureTypeFormat(String type) {
+    if(type.length() > 1 && !type.endsWith(SEP_END)){
+      return type + SEP_END;
+    }
+    return type;
   }
 
   List<Point> getErrorPoints(Shield shield, String value) {
@@ -114,7 +133,7 @@ abstract class Item {
 
   private void setUri(String uriString) {
     if (uriString != null && uriString.length() > 0) {
-      uri = uriString.split(":::");
+      uri = uriString.split(Metadata.SEPARATOR);
     }
   }
 }

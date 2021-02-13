@@ -100,15 +100,39 @@ final class Metadata {
     Xml subBlockXml = new Xml(subBlock);
     String[] xmlItems = subBlockXml.getAll(XML_ITEM);
     for (String itemString : xmlItems) {
-      parseItem(itemString);
+      loadItem(itemString);
     }
   }
 
-  private void parseItem(String item) {
-    Xml xml = new Xml(item);
+  private void loadItem(String itemString) {
+    Xml xml = new Xml(itemString);
+    Item item = parseItem(xml);
     String namesString = xml.get(XML_ITEM_NAME);
-    String[] names = namesString.split(SEPARATOR);
+    
+    if(namesString.contains(SEPARATOR)) {
+      String[] names = namesString.split(SEPARATOR);
+      for (String name : names) {
+        name = refineName(name, index);
+        if (name == null || name.length() == 0) {
+          continue;
+        }
+        if (!caseSensitive) {
+          name = name.toLowerCase();
+        }
+        items.put(name, Item.getItem(name, item));
+      }
+    }
+    else {
+      item.name = refineName(item.name, index);
+      if (!caseSensitive) {
+        item.name = item.name.toLowerCase();
+      }
+      items.put(item.name, item);
+    }
+  }
 
+  static Item parseItem(Xml xml) {
+    String name = xml.get(XML_ITEM_NAME);
     String type = xml.get(XML_ITEM_TYPE);
     String msg = xml.get(XML_ITEM_MSG);
     String uri = xml.get(XML_ITEM_URI);
@@ -129,19 +153,9 @@ final class Metadata {
     if (min == -1) {
       min = Integer.MAX_VALUE;
     }
-
-    for (String name : names) {
-      name = refineName(name, index);
-      if (name == null) {
-        continue;
-      }
-      if (!caseSensitive) {
-        name = name.toLowerCase();
-      }
-      items.put(name, Item.getItem(name, type, min, max, msg, uri));
-    }
+    return Item.getItem(name, type, min, max, msg, uri);
   }
-
+  
   static void initA2Zindex(Map<String, List<String>> map) {
     for (char ch = 'a'; ch <= 'z'; ++ch) {
       map.put(String.valueOf(ch), null);

@@ -136,5 +136,10 @@ public class MultiDimentionalyParmsTest {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("notdefined[1]", "<script>alert(1)</script>");
     assertEquals(false, sanwaf.isThreatDetected(r));
+    
+    r = new MockHttpServletRequest();
+    r.addParameter("notDefinedNoBrackets1", "<script>alert(1)</script>");
+    assertEquals(true, sanwaf.isThreatDetected(r));
+    
   }
 }

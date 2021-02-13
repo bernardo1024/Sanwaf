@@ -9,7 +9,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.sanwaf.core.Shield;
 import com.sanwaf.core.Sanwaf;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 

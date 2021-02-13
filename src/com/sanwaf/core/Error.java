@@ -34,7 +34,7 @@ final class Error {
       err = p.msg;
     } else {
       err = shield.errorMessages.get(p.type);
-      if (err == null || err.length() == 0) {
+      if (err.length() == 0) {
         err = shield.sanwaf.globalErrorMessages.get(p.type);
       }
     }

@@ -74,7 +74,7 @@
 				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>fooaFoo:::foobFoo:::foocFoo:::foodFoo:::fooeFoo:::foofFoo</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>::::::fooaFoo:::foobFoo:::foocFoo:::foodFoo:::fooeFoo:::foofFoo:::</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>foounitTestNumeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>foounitTestNumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>foounitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
@@ -91,7 +91,8 @@
 						<item><name>foovUnitTestAlphanumeric[*].key</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>foovUnitTestAlphanumericAndMore[*].key</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>foovUnitTestString[*].key</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>foogA*</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>foogA*</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>*foo</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item><!-NOT VALID-->
 					</parameters>
 					<headers>
 					</headers>

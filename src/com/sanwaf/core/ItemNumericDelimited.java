@@ -51,11 +51,7 @@ final class ItemNumericDelimited extends ItemNumeric {
 
   private void setDelimiter(String value) {
     int start = value.indexOf(SEP_START);
-    if (start > 0) {
-      int end = value.lastIndexOf(SEP_END);
-      if (end > start) {
-        delimiter = value.substring(start + SEP_START.length(), end);
-      }
-    }
+    int end = value.lastIndexOf(SEP_END);
+    delimiter = value.substring(start + SEP_START.length(), end);
   }
 }

@@ -77,5 +77,8 @@ public class CustomPropertiesFooTest {
     assertEquals(false, shield.threat(req, shield.parameters, "foodFoo", "12345,67890"));
     assertEquals(false, shield.threat(req, shield.parameters, "fooeFoo", "12345,67890"));
     assertEquals(false, shield.threat(req, shield.parameters, "foofFoo", "12345,67890"));
+    
+    assertEquals(false, shield.threat(req, shield.parameters, "*foo", "<script>alert(1)</script>"));
+    
   }
 }

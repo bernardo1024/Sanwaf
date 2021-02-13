@@ -2,6 +2,7 @@ package com.sanwaf.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
@@ -49,6 +50,7 @@ public final class Sanwaf {
    */
   public Sanwaf() throws IOException {
     this(new LoggerSystemOut(), "/" + STANDALONE_XML_FILENAME);
+    logger.info("NOTE: Sanwaf is NOT configured with a valid Logger and is using the LoggerSystemOut class which uses System.out.println(...).  To correct this, implement the com.sanwaf.log.Logger Interface and provide in the Sanwaf constructor");
   }
 
   /**
@@ -113,8 +115,8 @@ public final class Sanwaf {
     if (!enabled || !(req instanceof HttpServletRequest)) {
       return false;
     }
-    for (Shield shield : shields) {
-      if (shield.threatDetected(req)) {
+    for (Shield sh : shields) {
+      if (sh.threatDetected(req)) {
         addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(req));
         return true;
       }
@@ -124,35 +126,34 @@ public final class Sanwaf {
 
   /**
    * Method to determine if a given value contains a threat determined by
-   * configured shields
-   * 
-   * <pre>
-   * If an error is detected, attributes will be added to request for processing latter.  
-   *  Attributes added are dependent on the properties settings of:
-   *        <provideTrackId>true/false</provideTrackId>
-   *        <provideErrors>true/false</provideErrors>
-   * 
-   * Use the following methods in this class to retrieve the values:
-   *  public static String getTrackingId(HttpServletRequest req)
-   *  public static String getErrors(HttpServletRequest req)
-   * </pre>
+   * configured shield's autoRunPatterns
    * 
    * @param value
    *          a String object you want to scan for threats
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value) {
-    for (Shield sh : shields) {
-      if (sh.threat(null, null, "", value)) {
-        return true;
-      }
-    }
-    return false;
+    return checkForThreats(value, null);
   }
 
   /**
    * Method to determine if a given value contains a threat determined by
-   * configured shields.  If specified to do so this method sets the errors 
+   * the specified list of shield's autoRunPatterns
+   * 
+   * @param value
+   *          a String object you want to scan for threats
+   * @param shieldName
+   *          The shields name that you want to execute the autoRunPatterns from 
+   * @return boolean true/false if a threat was detected
+   */
+  public boolean isThreat(String value, String shieldName) {
+    return checkForThreats(value, shieldName);
+  }
+
+  /**
+   * Method to determine if a given value contains a threat determined by
+   * configured or specified shield's autoRunPatterns.  
+   * If specified to do so this method sets the errors 
    * detected in the request attributes that can be retrieved using the 
    * getTrackingId & getErrors methods  
    * 
@@ -168,18 +169,65 @@ public final class Sanwaf {
    * </pre>
    * 
    * @param value
-   *          a String object you want to scan for threats
+   *          String object you want to scan for threats
+   * @param shieldName
+   *          The shields name that you want to execute the autoRunPatterns from 
+   * @param setErrorAttributes
+   *          boolean to indicate whether to set the tracking id and error json to the request's attributes 
+   * @param req
+   *          ServletRequest to add the error attributes to (can be null if setErrorAttributes is false)
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreat(String value, boolean setErrorAttributes, ServletRequest req) {
-    boolean foundThreat = isThreat(value);
-    
+  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req) {
+    boolean foundThreat = checkForThreats(value, shieldName);
     if(foundThreat && setErrorAttributes) {
       addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(value));
     }
     return foundThreat;
   }
+  
+  /**
+   * Method to determine if a given value contains a threat determined by
+   * the specified list of shield's autoRunPatterns
+   * 
+   * @param value
+   *          a String object you want to scan for threats
+   * @param shieldName
+   *          The shields name that you want to execute the autoRunPatterns from 
+   * @param xml
+   *          XML String to configure the data type.  See sanwaf.xml shield/metadata/secured section for configuration details
+   * @param setErrorAttributes
+   *          boolean to indicate whether to set the tracking id and error json to the request's attributes 
+   * @param req
+   *          calling ServletRequest object used to test URIs
+   * @return boolean true/false if a threat was detected
+   */
+  public boolean isThreat(String value, String shieldName, String xml, boolean setErrorAttributes, ServletRequest req) {
+    Item item = Metadata.parseItem(new Xml(xml));
+    Shield sh = getShield(shieldName);
+    if(sh == null) {
+      logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
+      return false;
+    }
+    if(item.inError(req, sh, value)) {
+      if(setErrorAttributes) {
+        Error error = new Error(sh, item, null, value);
+        addErrorAttributes(req, getSortOfRandomNumber(), Arrays.asList(error));
+      }
+      return true;
+    }
+    return false;
+  }
 
+  private boolean checkForThreats(String value, String shieldName) {
+    for (Shield sh : shields) {
+      if((shieldName == null || shieldName.contains(sh.name)) && sh.threat(null, null, "", value)) {
+          return true;
+      }
+    }
+    return false;
+  }
+  
   /**
    * Method to retrieve an allow-listed header/cookie/parameter value from a
    * request. The header/cookie/parameter value will be returned IFF the its
@@ -331,6 +379,15 @@ public final class Sanwaf {
     } catch (IllegalFormatException e) {
       return String.valueOf(UUID.randomUUID());
     }
+  }
+  
+  Shield getShield(String name) {
+    for (Shield shield : shields) {
+      if (shield.name.equalsIgnoreCase(name)) {
+        return shield;
+      }
+    }
+    return null;
   }
 
   // XML LOAD CODE

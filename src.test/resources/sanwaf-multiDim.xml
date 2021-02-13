@@ -75,6 +75,7 @@
 						<item><name>d(*).e(*)</name><type>a</type><max>10</max><min>6</min><msg></msg><uri></uri></item>
             <item><name>e[*].f[*]g(*)-h(*)</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><name>notDefinedArrayHolder[*]</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>notDefinedNoBrackets*</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 				</secured>
 			</metadata>

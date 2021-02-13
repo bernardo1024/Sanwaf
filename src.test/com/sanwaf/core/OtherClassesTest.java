@@ -53,6 +53,14 @@ public class OtherClassesTest {
   }
 
   @Test
+  public void TestErrorWithNullValue() {
+    Item p = new ItemString("", 5, 0, "error msg", null);
+    Error error = new Error(shield, p, "foo", null);
+    String s = error.toJson();
+    assertTrue(s.contains("{\"key\":\"foo\",\"value\":\"\",\"samplePoints\":[],"));
+  }
+
+  @Test
   public void TestErrorAddPointErrorMin() {
     Item p = new ItemString("", 5, 5, "error msg", null);
     Error error = new Error(shield, p, "foo", "123");

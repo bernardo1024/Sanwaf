@@ -16,6 +16,16 @@
 		<shield>
 			<name>Allowlist</name>
 			<metadata>
+				<enabled>
+					<parameters>true</parameters>
+					<headers>true</headers>
+					<cookies>true</cookies>
+				</enabled>
+				<caseSensitive>
+					<parameters>true</parameters>
+					<headers>true</headers>
+					<cookies>true</cookies>
+				</caseSensitive>
 				<secured>
 					<parameters>
 						<item><name>allowlistedParameter</name></item>

@@ -15,7 +15,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   static final String NEWLINE_LONG = "<newline>";
   static final String CARRIAGE_RETURN_LONG = "<carriage return>";
 
-  char[] moreChars = null;
+  char[] moreChars = new char[0];
 
   ItemAlphanumericAndMore(String name, String type, int max, int min, String msg, String uri) {
     super(name, max, min, msg, uri);
@@ -128,15 +128,8 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   private void setMoreChars(String value) {
     int start = value.indexOf(SEP_START);
-    if (start > 0) {
-      int end = value.lastIndexOf(SEP_END);
-      if (end > start) {
-        char[] array = getMoreCharArray(value.substring(start + SEP_START.length(), end));
-        moreChars = array;
-      }
-    }
-    if (moreChars == null) {
-      moreChars = new char[0];
-    }
+    int end = value.lastIndexOf(SEP_END);
+    char[] array = getMoreCharArray(value.substring(start + SEP_START.length(), end));
+    moreChars = array;
   }
 }

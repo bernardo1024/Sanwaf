@@ -27,7 +27,7 @@ final class ItemJava extends Item {
 
   private void setJavaMethod(String type) {
     String sClazzAndMethod = type.substring(type.indexOf(JAVA) + JAVA.length(), type.length() - 1);
-    if (sClazzAndMethod == null || sClazzAndMethod.length() == 0) {
+    if (sClazzAndMethod.length() == 0) {
       return;
     }
 
