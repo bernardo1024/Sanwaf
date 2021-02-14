@@ -172,7 +172,6 @@ public class DatatypeTest {
     assertFalse(p.inError(req, shield, "1"));
     assertFalse(p.inError(req, shield, ""));
     assertFalse(p.inError(req, shield, null));
-
   }
 
   @Test

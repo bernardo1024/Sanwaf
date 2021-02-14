@@ -40,7 +40,7 @@ public class ShieldTest {
   }
 
   @Test
-  public void testHighlightXssRegexMatch() {
+  public void testRegexMatch() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... </script>");
     for (Error error : errors) {
@@ -57,12 +57,9 @@ public class ShieldTest {
     for (Error error : errors) {
       System.out.println("String(XSS3)=" + error.toJson());
     }
-  }
 
-  @Test
-  public void testHighlightRegexMatch() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... <script>");
+    req = new MockHttpServletRequest();
+    errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... <script>");
     for (Error error : errors) {
       System.out.println("String(XSS)=" + error.toJson());
     }
@@ -71,7 +68,7 @@ public class ShieldTest {
     for (Error error : errors) {
       System.out.println("Number=" + error.toJson());
     }
-  }
+}
 
   @Test
   public void TestToJson() {
