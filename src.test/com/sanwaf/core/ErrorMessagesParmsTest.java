@@ -30,7 +30,7 @@ public class ErrorMessagesParmsTest {
   }
 
   @Test
-  public void customShieldHighlightXssRegexMatchTest() {
+  public void customShieldErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "string", "some text <script> some other script... <script>");
     if (!isKeywordFound(errors, "string error msg")) {

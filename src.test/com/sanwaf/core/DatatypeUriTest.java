@@ -29,12 +29,12 @@ public class DatatypeUriTest {
   public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestNumeric", "123");
+    req.addParameter("Numeric", "123");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestNumeric", "123");
+    req.addParameter("Numeric", "123");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -42,12 +42,12 @@ public class DatatypeUriTest {
   public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestNumericDelimited", "123,456");
+    req.addParameter("NumericDelimited", "123,456");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestNumericDelimited", "123,456");
+    req.addParameter("NumericDelimited", "123,456");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -55,12 +55,12 @@ public class DatatypeUriTest {
   public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestAlphanumeric", "abc123");
+    req.addParameter("Alphanumeric", "abc123");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestAlphanumeric", "abc123");
+    req.addParameter("Alphanumeric", "abc123");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -68,12 +68,12 @@ public class DatatypeUriTest {
   public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestAlphanumericAndMore", "abc123 :");
+    req.addParameter("AlphanumericAndMore", "abc123 :");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestAlphanumericAndMore", "abc123 :");
+    req.addParameter("AlphanumericAndMore", "abc123 :");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -81,12 +81,12 @@ public class DatatypeUriTest {
   public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestChar", "c");
+    req.addParameter("Char", "c");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestChar", "c");
+    req.addParameter("Char", "c");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -94,12 +94,12 @@ public class DatatypeUriTest {
   public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestRegex", "555-555-5555");
+    req.addParameter("Regex", "555-555-5555");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestRegex", "555-555-5555");
+    req.addParameter("Regex", "555-555-5555");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -107,12 +107,12 @@ public class DatatypeUriTest {
   public void testConstantType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestConstant", "FOO");
+    req.addParameter("Constant", "FOO");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestConstant", "FOO");
+    req.addParameter("Constant", "FOO");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -120,12 +120,12 @@ public class DatatypeUriTest {
   public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestJava", "10");
+    req.addParameter("Java", "10");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestJava", "10");
+    req.addParameter("Java", "10");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -133,12 +133,12 @@ public class DatatypeUriTest {
   public void testString() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestString", "valid string");
+    req.addParameter("String", "valid string");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestString", "valid string");
+    req.addParameter("String", "valid string");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 
@@ -146,22 +146,22 @@ public class DatatypeUriTest {
   public void testMultipleUris() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
-    req.addParameter("unitTestMultipleUris", "123456");
+    req.addParameter("MultipleUris", "123456");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/far/nar");
-    req.addParameter("unitTestMultipleUris", "123456");
+    req.addParameter("MultipleUris", "123456");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/tar/mar");
-    req.addParameter("unitTestMultipleUris", "123456");
+    req.addParameter("MultipleUris", "123456");
     assertEquals(false, sanwaf.isThreatDetected(req));
 
     req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar/invalid");
-    req.addParameter("unitTestMultipleUris", "123456");
+    req.addParameter("MultipleUris", "123456");
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 }

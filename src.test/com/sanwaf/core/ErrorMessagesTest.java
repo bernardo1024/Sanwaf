@@ -42,7 +42,7 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void AlpahnumericAndMoreDatatatypeErrorMsgTest() {
+  public void alpahnumericAndMoreDatatatypeErrorMsgTest() {
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
     String s = p.modifyErrorMsg("some {0} String");
     assertTrue(s.contains("?"));
@@ -60,7 +60,7 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void AlphanumericAndMoreSpecialCharsErrorMessgesTest() {
+  public void alphanumericAndMoreSpecialCharsErrorMessgesTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "AlphanumericAndMoreSpecialChars", "^^^");
     assertTrue(errors.size() == 1);
@@ -94,14 +94,14 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void NumericDelimietedDatatatypeErrorMsgTest() {
+  public void numericDelimietedDatatatypeErrorMsgTest() {
     ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
     String s = p.modifyErrorMsg("some {0} String");
     assertTrue(s.contains(","));
   }
   
   @Test
-  public void NumericDatatatypeErrorMsgTest() {
+  public void numericDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "Numeric", "-123 456");
     assertTrue(errors.size() > 0);
@@ -118,14 +118,14 @@ public class ErrorMessagesTest {
   }
   
   @Test
-  public void ConstantDatatatypeErrorMsgTest() {
+  public void constantDatatatypeErrorMsgTest() {
     ItemConstant p = new ItemConstant("", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
     String s = Error.getErrorMessage(shield, p);
     assertTrue(s.contains("foo"));
   }
 
   @Test
-  public void RegexMessageTest() {
+  public void regexMessageTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "Regex", "some text <script> some other script... <script>");
     for (Error error : errors) {
@@ -136,7 +136,7 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void JavaMessageTest() {
+  public void javaMessageTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     List<Error> errors = sanwaf.getError(req, shield, "Java", "some text <script> some other script... <script>");
     for (Error error : errors) {

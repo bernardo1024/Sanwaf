@@ -29,13 +29,13 @@ public class AlwaysPerformRegexTest {
   @Test
   public void testRegexAlways() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.addParameter("unitTestStringExcluded", "<script>alert(1)</script>");
+    request.addParameter("StringExcluded", "<script>alert(1)</script>");
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(false));
 
     request = new MockHttpServletRequest();
     request.addParameter("foobar", "<script>alert(1)</script>");
     result = sanwaf.isThreatDetected(request);
-    assertTrue(result.equals(true));
+    assertTrue(result);
   }
 }

@@ -32,7 +32,6 @@
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
 					<exclusions>
-						<item>unitTestStringExcluded</item>
 					</exclusions>
 				</alwaysPerformRegex>
 				<autoRunPatterns>

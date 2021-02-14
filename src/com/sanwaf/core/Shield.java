@@ -20,7 +20,7 @@ final class Shield {
   Logger logger = null;
   String name = null;
   int minLen = 0;
-  int maxLen = 0;
+  int maxLen = Integer.MAX_VALUE;
   int regexMinLen = 0;
   boolean regexAlways = false;
   Map<String, String> errorMessages = new HashMap<>();

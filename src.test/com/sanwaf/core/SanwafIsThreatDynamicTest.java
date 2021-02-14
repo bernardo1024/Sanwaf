@@ -242,8 +242,6 @@ public class SanwafIsThreatDynamicTest {
     assertTrue(trackId != null);
     s = Sanwaf.getErrors(request);
     assertTrue(s != null);
-
-  
   }
 
   @Test

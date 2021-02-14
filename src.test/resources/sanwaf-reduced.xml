@@ -8,16 +8,13 @@
 	<shields>
 		<shield>
 			<name>XSS</name>
-			<minLen>3</minLen>
-			<maxLen>9999</maxLen>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>
 				</enabled>
 				<secured>
 					<parameters>
-						<item><name>unitTestNumeric</name><type>n</type></item>
-						<item><name>unitTestAlphanumeric</name><type>a</type></item>
+						<item><name>Numeric</name><type>n</type></item>
 					</parameters>
 				</secured>
 			</metadata>

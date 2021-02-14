@@ -27,10 +27,15 @@ public class ReduceXmlTest {
   }
 
   @Test
-  public void testShieldWithMissingXmlSections() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+  public void numericTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.addParameter("unitTestNumeric", "abc123");
+    request.addParameter("Numeric", "abc123");
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result);
+  
+    request = new MockHttpServletRequest();
+    request.addParameter("Numeric", "12345");
+    result = sanwaf.isThreatDetected(request);
+    assertTrue(!result);
   }
 }
