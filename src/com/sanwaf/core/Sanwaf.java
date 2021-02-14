@@ -379,10 +379,8 @@ public final class Sanwaf {
 
   private void getShieldErrors(ServletRequest req, List<Error> errors, String key, String value) {
     if(req == null) {
-      if(isThreat(value)) {
-        for (Shield sh : shields) {
-          errors.addAll(sh.getErrors(req, key, value, true));
-        }
+      for (Shield sh : shields) {
+        errors.addAll(sh.getErrors(req, key, value, true));
       }
     }
     else {

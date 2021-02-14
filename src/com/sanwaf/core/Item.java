@@ -82,7 +82,7 @@ abstract class Item {
   }
   
   private static String ensureTypeFormat(String type) {
-    if(type.length() > 1 && !type.endsWith(SEP_END)){
+    if(!type.endsWith(SEP_END)){
       return type + SEP_END;
     }
     return type;
@@ -95,13 +95,10 @@ abstract class Item {
   }
 
   boolean isUriValid(ServletRequest req) {
-    if (uri == null || uri.length == 0) {
+    if (uri == null) {
       return true;
     }
     String reqUri = ((HttpServletRequest) req).getRequestURI();
-    if (reqUri == null || reqUri.length() == 0) {
-      return true;
-    }
     for (String u : uri) {
       if (u.equals(reqUri)) {
         return true;
