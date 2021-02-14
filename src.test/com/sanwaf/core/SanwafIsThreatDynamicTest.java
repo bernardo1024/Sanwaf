@@ -206,6 +206,47 @@ public class SanwafIsThreatDynamicTest {
   }
 
   @Test
+  public void testSanWafIsThreatMaxMinMsgUri() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foobar");
+    boolean result = sanwaf.isThreat("12345", "XSS", "<item><name>MaxMinMsgUri</name><type>n</type><max>5</max><min>5</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>", true, request);
+    assertTrue(result == false);
+    String trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId == null);
+    String s = Sanwaf.getErrors(request);
+    assertTrue(s == null);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foobar");
+    result = sanwaf.isThreat("1", "XSS", "<item><name>MaxMinMsgUri</name><type>n</type><max>5</max><min>5</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>", true, request);
+    assertTrue(result == true);
+    trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    s = Sanwaf.getErrors(request);
+    assertTrue(s != null);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foobar");
+    result = sanwaf.isThreat("123456", "XSS", "<item><name>MaxMinMsgUri</name><type>n</type><max>5</max><min>5</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>", true, request);
+    assertTrue(result == true);
+    trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    s = Sanwaf.getErrors(request);
+    assertTrue(s != null);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/badUri");
+    result = sanwaf.isThreat("123456", "XSS", "<item><name>MaxMinMsgUri</name><type>n</type><max>5</max><min>5</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>", true, request);
+    assertTrue(result == true);
+    trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    s = Sanwaf.getErrors(request);
+    assertTrue(s != null);
+
+  
+  }
+
+  @Test
   public void testSanWafIsThreatDynamicXmlInvalidShieldName() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", "INVALID", "<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>", true, request);

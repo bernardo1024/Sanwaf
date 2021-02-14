@@ -25,10 +25,10 @@
 	<shields>
 		<shield>
 			<name>XSS</name>
-			<minLen>3</minLen>
-			<maxLen>9999</maxLen>
+			<minLen>0</minLen>
+			<maxLen>-1</maxLen>
 			<regex>
-				<minLen>5</minLen>
+				<minLen>0</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
 					<exclusions>

@@ -36,7 +36,7 @@ final class ItemRegex extends Item {
       pattern = shield.customPatterns.get(patternName);
     }
     if (!isUriValid(req)) {
-      return false;
+      return true;
     }
     if (isSizeError(value)) {
       return true;

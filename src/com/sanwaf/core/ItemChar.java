@@ -11,7 +11,7 @@ final class ItemChar extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return false;
+      return true;
     }
     if (isSizeError(value)) {
       return true;
