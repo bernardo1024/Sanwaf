@@ -31,31 +31,27 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void customShieldHighlightXssRegexMatchTest() {
+  public void alphanumericAndMoreMessageTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestString", "some text <script> some other script... <script>");
+    List<Error> errors = sanwaf.getError(req, shield, "AlphanumericAndMore", "abc : ? . 123!");
     for (Error error : errors) {
-      if (!error.toJson().contains("XSS CUSTOM")) {
+      if (!error.toJson().contains("XSS CUSTOM Alphanumeric and more") && !error.toJson().contains("[? :]")) {
         fail("XSS - Test FAILED.\n" + error.toJson());
       }
     }
   }
 
   @Test
-  public void alphanumericAndMoreMessageTest() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestAlphanumericAndMore", "abc : ? . 123!");
-    for (Error error : errors) {
-      if (!error.toJson().contains("XSS CUSTOM") && !error.toJson().contains("[? :]")) {
-        fail("XSS - Test FAILED.\n" + error.toJson());
-      }
-    }
+  public void AlpahnumericAndMoreDatatatypeErrorMsgTest() {
+    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
+    String s = p.modifyErrorMsg("some {0} String");
+    assertTrue(s.contains("?"));
   }
-
+  
   @Test
   public void alphanumericAndMoreMessageNoPlaceholderTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shieldBadPlaceholders, "unitTestAlphanumericAndMoreBadPlaceholder", "abc : ? . 123!");
+    List<Error> errors = sanwaf.getError(req, shieldBadPlaceholders, "AlphanumericAndMoreBadPlaceholder", "abc : ? . 123!");
     for (Error error : errors) {
       if (!error.toJson().contains("[0]")) {
         fail("XSS - Test FAILED.\n" + error.toJson());
@@ -64,63 +60,9 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void numericDelimitedMessageTest() {
+  public void AlphanumericAndMoreSpecialCharsErrorMessgesTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestNumericDelimited", "123,456;789");
-    for (Error error : errors) {
-      if (!error.toJson().contains("XSS CUSTOM") && !error.toJson().contains("\",\"")) {
-        fail("XSS - Test FAILED.\n" + error.toJson());
-      }
-    }
-  }
-
-  @Test
-  public void numericDelimitedMessageNoPlaceholderTest() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shieldBadPlaceholders, "unitTestNumericDelimitedBadPlaceholder", "123,456;789");
-    for (Error error : errors) {
-      if (!error.toJson().contains("\\\"0\\\"")) {
-        fail("XSS - Test FAILED.\n" + error.toJson());
-      }
-    }
-  }
-
-  @Test
-  public void datatatypeErrorMsgAlpahnumericAndMoreTest() {
-    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
-    String s = p.modifyErrorMsg("some {0} String");
-    assertTrue(s.contains("?"));
-  }
-
-  @Test
-  public void datatatypeErrorMsgNumericDelimietedTest() {
-    ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
-    String s = p.modifyErrorMsg("some {0} String");
-    assertTrue(s.contains(","));
-  }
-  
-  @Test
-  public void datatatypeErrorMsgNumericTest() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestNumeric", "-123 456");
-    assertTrue(errors.size() > 0);
-    assertTrue(errors.get(0).errorPoints.size() > 0);
-
-    req = new MockHttpServletRequest();
-    errors = sanwaf.getError(req, shield, "unitTestNumeric", "-123..456");
-    assertTrue(errors.size() > 0);
-    assertTrue(errors.get(0).errorPoints.size() > 0);
-
-    req = new MockHttpServletRequest();
-    errors = sanwaf.getError(req, shield, "unitTestNumeric", "-123.456");
-    assertTrue(errors.size() == 0);
-  }
-  
-
-  @Test
-  public void testAlphanumericAndMoreSpecialCharsErrorMessges() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestAlphanumericAndMoreSpecialChars", "^^^");
+    List<Error> errors = sanwaf.getError(req, shield, "AlphanumericAndMoreSpecialChars", "^^^");
     assertTrue(errors.size() == 1);
     String error = errors.get(0).toJson();
     assertTrue(error.contains("<space>"));
@@ -130,10 +72,78 @@ public class ErrorMessagesTest {
   }
 
   @Test
-  public void datatatypeErrorMsgConstantTest() {
+  public void numericDelimitedMessageTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "NumericDelimited", "123,456;789");
+    for (Error error : errors) {
+      if (!error.toJson().contains("XSS CUSTOM Numeric") && !error.toJson().contains("\",\"")) {
+        fail("XSS - Test FAILED.\n" + error.toJson());
+      }
+    }
+  }
+
+  @Test
+  public void numericDelimitedMessageNoPlaceholderTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shieldBadPlaceholders, "NumericDelimitedBadPlaceholder", "123,456;789");
+    for (Error error : errors) {
+      if (!error.toJson().contains("\\\"0\\\"")) {
+        fail("XSS - Test FAILED.\n" + error.toJson());
+      }
+    }
+  }
+
+  @Test
+  public void NumericDelimietedDatatatypeErrorMsgTest() {
+    ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
+    String s = p.modifyErrorMsg("some {0} String");
+    assertTrue(s.contains(","));
+  }
+  
+  @Test
+  public void NumericDatatatypeErrorMsgTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "Numeric", "-123 456");
+    assertTrue(errors.size() > 0);
+    assertTrue(errors.get(0).errorPoints.size() > 0);
+
+    req = new MockHttpServletRequest();
+    errors = sanwaf.getError(req, shield, "Numeric", "-123..456");
+    assertTrue(errors.size() > 0);
+    assertTrue(errors.get(0).errorPoints.size() > 0);
+
+    req = new MockHttpServletRequest();
+    errors = sanwaf.getError(req, shield, "Numeric", "-123.456");
+    assertTrue(errors.size() == 0);
+  }
+  
+  @Test
+  public void ConstantDatatatypeErrorMsgTest() {
     ItemConstant p = new ItemConstant("", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
     String s = Error.getErrorMessage(shield, p);
     assertTrue(s.contains("foo"));
-
   }
+
+  @Test
+  public void RegexMessageTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "Regex", "some text <script> some other script... <script>");
+    for (Error error : errors) {
+      if (!error.toJson().contains("XSS CUSTOM Regex")) {
+        fail("XSS - Test FAILED.\n" + error.toJson());
+      }
+    }
+  }
+
+  @Test
+  public void JavaMessageTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "Java", "some text <script> some other script... <script>");
+    for (Error error : errors) {
+      if (!error.toJson().contains("XSS CUSTOM Java")) {
+        fail("XSS - Test FAILED.\n" + error.toJson());
+      }
+    }
+  }
+
 }

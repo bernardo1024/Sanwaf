@@ -10,7 +10,7 @@
 			<name>XSS</name>
 			<minLen>4</minLen>
 			<maxLen>9999</maxLen>
-			<regex>
+			<regex-config>
 				<minLen>5</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
@@ -34,7 +34,7 @@
 						<value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
 					</item>
 				</customPatterns>
-			</regex>
+			</regex-config>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>

@@ -27,7 +27,7 @@
 			<name>XSS</name>
 			<minLen>0</minLen>
 			<maxLen>-1</maxLen>
-			<regex>
+			<regex-config>
 				<minLen>0</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
@@ -59,7 +59,7 @@
 						<value><![CDATA[(?:^\d{3}-?\d{2}-?\d{4}$|^XXX-XX-XXXX$)]]></value>
 					</item>
 				</customPatterns>
-			</regex>
+			</regex-config>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>
@@ -98,14 +98,14 @@
 			<name>ParmLength</name>
 			<minLen>-1</minLen>
 			<maxLen>-1</maxLen>
-			<regex>
+			<regex-config>
 				<minLen>-1</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
 				</alwaysPerformRegex>
 				<autoRunPatterns></autoRunPatterns>
 				<customPatterns></customPatterns>
-			</regex>
+			</regex-config>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>

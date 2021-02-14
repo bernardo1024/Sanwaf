@@ -21,6 +21,7 @@ final class Metadata {
   static final String XML_MAX_LEN_LOG = "maxLenLogViolation";
   static final String XML_MAX_LEN_FAIL = "maxLenFailOnViolation";
   static final String XML_REGEX = "regex";
+  static final String XML_REGEX_CONFIG = "regex-config";
   static final String XML_REGEX_ALWAYS_REGEX = "alwaysPerformRegex";
   static final String XML_REGEX_ALWAYS_REGEX_EXCLUSIONS = "exclusions";
   static final String XML_REGEX_PATTERNS_AUTO = "autoRunPatterns";

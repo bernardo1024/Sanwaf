@@ -236,7 +236,7 @@ final class Shield {
       minLen = Integer.MAX_VALUE;
     }
 
-    String regexBlock = xml.get(Metadata.XML_REGEX);
+    String regexBlock = xml.get(Metadata.XML_REGEX_CONFIG);
     Xml regexBlockXml = new Xml(regexBlock);
     loadPatterns(regexBlockXml);
     regexMinLen = parseInt(regexBlockXml.get(Metadata.XML_MIN_LEN), regexMinLen);

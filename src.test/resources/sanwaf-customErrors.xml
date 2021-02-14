@@ -38,13 +38,11 @@
 				<java> XSS CUSTOM Java error msg</java>
 				<constant> XSS CUSTOM Constant error msg {0}</constant>
 			</errorMessages>
-			<regex>
+			<regex-config>
 				<minLen>5</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
-					<exclusions>
-						<item>unitTestStringExcluded</item>
-					</exclusions>
+					<exclusions></exclusions>
 				</alwaysPerformRegex>
 				<autoRunPatterns>
 					<item>
@@ -62,7 +60,7 @@
 						<value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
 					</item>
 				</customPatterns>
-			</regex>
+			</regex-config>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>
@@ -76,16 +74,16 @@
 				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>unitTestNumeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestNumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestAlphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestAlphanumericAndMore</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestAlphanumericAndMoreSpecialChars</name><type>a{\s\t\n\r}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestString</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestChar</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestConstant</name><type>k{foo,bar,far}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestRegex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestRegex</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>NumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>Alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>AlphanumericAndMore</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>AlphanumericAndMoreSpecialChars</name><type>a{\s\t\n\r}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>String</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>Char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>Constant</name><type>k{foo,bar,far}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>Regex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>Java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 					<headers>
 						<item><name>aHeaderNumber</name><type>n</type></item>
@@ -104,13 +102,11 @@
 				<numericDelimited> Contains non-numeric characters. Number can be delimited by the "0" character.</numericDelimited>
 				<alphanumericAndMore> Contains non-alphanumeric-more. More characters are [0].</alphanumericAndMore>
 			</errorMessages>
-			<regex>
+			<regex-config>
 				<minLen>5</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
-					<exclusions>
-						<item>unitTestStringExcluded</item>
-					</exclusions>
+					<exclusions></exclusions>
 				</alwaysPerformRegex>
 				<autoRunPatterns>
 					<item>
@@ -123,12 +119,8 @@
 					</item>
 				</autoRunPatterns>
 				<customPatterns>
-					<item>
-						<key>date</key>
-						<value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
-					</item>
 				</customPatterns>
-			</regex>
+			</regex-config>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>
@@ -138,8 +130,8 @@
 				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>unitTestNumericDelimitedBadPlaceholder</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>unitTestAlphanumericAndMoreBadPlaceholder</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>NumericDelimitedBadPlaceholder</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>AlphanumericAndMoreBadPlaceholder</name><type>a{? :}</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 				</secured>
 			</metadata>

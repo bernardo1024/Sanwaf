@@ -27,7 +27,7 @@
 			<name>XSS</name>
 			<minLen>3</minLen>
 			<maxLen>9999</maxLen>
-			<regex>
+			<regex-config>
 				<minLen>0</minLen>
 				<alwaysPerformRegex>
 					<enabled>false</enabled>
@@ -44,7 +44,7 @@
             <value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value>
           </item>
         </customPatterns>
-			</regex>
+			</regex-config>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>
@@ -69,14 +69,14 @@
       <name>OTHER</name>
       <minLen>3</minLen>
       <maxLen>9999</maxLen>
-      <regex>
+      <regex-config>
         <minLen>5</minLen>
         <alwaysPerformRegex>
           <enabled>false</enabled>
         </alwaysPerformRegex>
         <autoRunPatterns>
         </autoRunPatterns>
-      </regex>
+      </regex-config>
       <metadata>
         <enabled>
           <parameters>true</parameters>
