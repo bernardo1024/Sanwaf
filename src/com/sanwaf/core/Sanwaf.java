@@ -92,10 +92,11 @@ public final class Sanwaf {
   }
 
   /**
-   * Method to determine if a given request contains a threat determined by
-   * configured shields
+   * Test if a threat is detected in a given request
    * 
    * <pre>
+   * Threats detected are derived from all shields configurations
+   * 
    * If an error is detected, attributes will be added to request for processing latter.  
    *  Attributes added are dependent on the properties settings of:
    *        <provideTrackId>true/false</provideTrackId>
@@ -125,11 +126,16 @@ public final class Sanwaf {
   }
 
   /**
-   * Method to determine if a given value contains a threat determined by
-   * configured shield's autoRunPatterns
+   * Test if a threat is detected in a value
+   *
+   * <pre>
+   * Threats detected are derived from all shields configurations
+   * 
+   * No error attributes are set.
+   * </pre>
    * 
    * @param value
-   *          a String object you want to scan for threats
+   *          the string you want to scan for threats
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value) {
@@ -137,13 +143,20 @@ public final class Sanwaf {
   }
 
   /**
-   * Method to determine if a given value contains a threat determined by
-   * the specified list of shield's autoRunPatterns
+   * Test if a threat is detected in a value using a given shield
+   *
+   * <pre>
+   * Threats detected are derived from the provided shield's configuration
+   * 
+   * The shields autoRunPatterns will be executed against the value
+   * 
+   * No error attributes are set.
+   * </pre>
    * 
    * @param value
-   *          a String object you want to scan for threats
+   *          the string you want to scan for threats
    * @param shieldName
-   *          The shields name that you want to execute the autoRunPatterns from 
+   *          the shields name that you want to execute the autoRunPatterns from 
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName) {
@@ -151,13 +164,15 @@ public final class Sanwaf {
   }
 
   /**
-   * Method to determine if a given value contains a threat determined by
-   * configured or specified shield's autoRunPatterns.  
-   * If specified to do so this method sets the errors 
-   * detected in the request attributes that can be retrieved using the 
-   * getTrackingId & getErrors methods  
-   * 
+   * Test if a threat is detected in a value using a given shield
+   *
    * <pre>
+   * Threats detected are derived from the provided shield's configuration
+   * 
+   * The shields autoRunPatterns will be executed against the value
+   * 
+   * Error attributes will be set if specified
+   * 
    * If an error is detected, attributes will be added to request for processing latter.  
    *  Attributes added are dependent on the properties settings of:
    *        <provideTrackId>true/false</provideTrackId>
@@ -169,7 +184,7 @@ public final class Sanwaf {
    * </pre>
    * 
    * @param value
-   *          String object you want to scan for threats
+   *         the string you want to scan for threats
    * @param shieldName
    *          The shields name that you want to execute the autoRunPatterns from 
    * @param setErrorAttributes
@@ -187,13 +202,31 @@ public final class Sanwaf {
   }
   
   /**
-   * Method to determine if a given value contains a threat determined by
-   * the specified list of shield's autoRunPatterns
+   * Test if a threat is detected in a value using XML provided
+   *
+   * <pre>
+   * Threats detected are derived from the XML provided
+   * XML must conform to Sanwaf.xml specifications
+   * 
+   * The specified shield's autoRunPatterns will be executed against the value for datatype String
+   * 
+   * Error attributes will be set if specified
+   * 
+   * If an error is detected, attributes will be added to request for processing latter.  
+   *  Attributes added are dependent on the properties settings of:
+   *        <provideTrackId>true/false</provideTrackId>
+   *        <provideErrors>true/false</provideErrors>
+   * 
+   * Use the following methods in this class to retrieve the values:
+   *  public static String getTrackingId(HttpServletRequest req)
+   *  public static String getErrors(HttpServletRequest req)
+   * </pre>
    * 
    * @param value
-   *          a String object you want to scan for threats
+   *          the string you want to scan for threats
    * @param shieldName
-   *          The shields name that you want to execute the autoRunPatterns from 
+   *          the shields name that you want to execute the autoRunPatterns from (String data type only)
+   *          or use the custom regex's specified (regex data type only) 
    * @param xml
    *          XML String to configure the data type.  See sanwaf.xml shield/metadata/secured section for configuration details
    * @param setErrorAttributes
@@ -229,11 +262,12 @@ public final class Sanwaf {
   }
   
   /**
-   * Method to retrieve an allow-listed header/cookie/parameter value from a
-   * request. The header/cookie/parameter value will be returned IFF the its
-   * name is set in any Shield's Metadata block
+   * Retrieve an allow-listed parameter/header/cookie
    * 
    * <pre>
+   *  The header/cookie/parameter value will be returned IFF the its
+   *  name is set in any Shield's Metadata block
+   *
    *    <metadata>
    *      <secured>
    *        <headers></headers>
@@ -247,9 +281,9 @@ public final class Sanwaf {
    *          HttpServletRequest Object to pull the header/cookie/parameter
    *          value from
    * @param type
-   *          the Sanwaf.AllowListType type (HEADER, COOKIE, PARAMETER)
+   *          Sanwaf.AllowListType enumeration (HEADER, COOKIE, PARAMETER)
    * @param name
-   *          the name of the header/cookie/parameter you want to get
+   *          the name of the header/cookie/parameter you want to retrieve
    * @return String the value of the requested header/cookie/parameter requested
    *         or null.
    */
@@ -264,7 +298,7 @@ public final class Sanwaf {
   }
 
   /**
-   * The reload method to dynamically reload sanwaf.
+   * Dynamically reload sanwaf
    *
    * @return void
    */
@@ -276,8 +310,8 @@ public final class Sanwaf {
    * Get the Sanwaf Tracking ID
    * 
    * <pre>
-   * useful for displaying to your users in case they call support. this allows
-   * you to pull the exact exception from the log file
+   *  useful for displaying to your users in case they call support. this allows
+   *  you to pull the exact exception from the log file
    * 
    * <pre>
    * 
@@ -295,10 +329,11 @@ public final class Sanwaf {
   }
 
   /**
-   * Returns all threats found for a give request object in JSON format
+   * Get Sanwaf Errors
    * 
    * <pre>
-   * Used to display errors to the user.
+   *  Returns all threats found for a give request object in JSON format
+   *  used to display errors to the user.
    * </pre>
    * 
    * @param req
