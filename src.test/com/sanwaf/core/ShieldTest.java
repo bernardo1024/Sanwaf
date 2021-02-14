@@ -42,34 +42,34 @@ public class ShieldTest {
   @Test
   public void testHighlightXssRegexMatch() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestString", "some text <script> some other script... </script>");
+    List<Error> errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... </script>");
     for (Error error : errors) {
-      System.out.println("unitTestString(XSS1)=" + error.toJson());
+      System.out.println("String(XSS1)=" + error.toJson());
     }
 
-    errors = sanwaf.getError(req, shield, "unitTestString", "javascript: abc123<script abc123> foo <script bar");
+    errors = sanwaf.getError(req, shield, "String", "javascript: abc123<script abc123> foo <script bar");
     for (Error error : errors) {
-      System.out.println("unitTestString(XSS2)=" + error.toJson());
+      System.out.println("String(XSS2)=" + error.toJson());
     }
 
-    errors = sanwaf.getError(req, shield, "unitTestString",
+    errors = sanwaf.getError(req, shield, "String",
         "any string<B>ANY  etc.) and here foo (bar). and we go until quotes . <font color=\" this should not be highlighted) and this (one, and should) be=\" not this");
     for (Error error : errors) {
-      System.out.println("unitTestString(XSS3)=" + error.toJson());
+      System.out.println("String(XSS3)=" + error.toJson());
     }
   }
 
   @Test
   public void testHighlightRegexMatch() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "unitTestString", "some text <script> some other script... <script>");
+    List<Error> errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... <script>");
     for (Error error : errors) {
-      System.out.println("unitTestString(XSS)=" + error.toJson());
+      System.out.println("String(XSS)=" + error.toJson());
     }
 
-    errors = sanwaf.getError(req, shield, "unitTestNumeric", "123abc456");
+    errors = sanwaf.getError(req, shield, "Numeric", "123abc456");
     for (Error error : errors) {
-      System.out.println("unitTestNumber=" + error.toJson());
+      System.out.println("Number=" + error.toJson());
     }
   }
 
@@ -90,7 +90,7 @@ public class ShieldTest {
   @Test
   public void testXssTooBig() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "unitTestString", breakMaxSizeString);
+    boolean b = shield.threat(req, shield.parameters, "String", breakMaxSizeString);
     assertEquals(false, b);
   }
 
@@ -99,7 +99,7 @@ public class ShieldTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     boolean b = shield.threat(req, shield.parameters, null, "<script>alert(1)</script>");
     assertEquals(false, b);
-    b = shield.threat(req, shield.parameters, "unitTestString", null);
+    b = shield.threat(req, shield.parameters, "String", null);
     assertEquals(false, b);
   }
 

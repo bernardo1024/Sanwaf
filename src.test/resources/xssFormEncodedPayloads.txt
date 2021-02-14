@@ -1,55 +1,55 @@
 #PARM NAME			FAIL		VALUE
-unitTestString		true		<<<bar>>>
-unitTestString		true		<foo    >
-unitTestString		true		</bar>
-unitTestString		true		<foo >
-unitTestString		true		</bar >
-unitTestString		true		<input type="">
-unitTestString		true		<a foobar>
-unitTestString		true		\743cinput>
-unitTestString		true		\0743cinput>
-unitTestString		true		\x3cinput>
-unitTestString		true		<input>
-unitTestString		true		%3cinput>
-unitTestString		true		\074input>
-unitTestString		true		\74input>
-unitTestString		true		\%374input>
-unitTestString		true		\%37%34input>
-unitTestString		true		%5c74input>
-unitTestString		true		%5c%30%37%34input>
-unitTestString		true		\x3cinput>
-unitTestString		true		%5cx3cinput>
-unitTestString		true		%5c%783cinput>
-unitTestString		true		\u003cinput>
-unitTestString		true		%5c%750%303cinput>
-unitTestString		true		%5c%75%30%303cinput>
-unitTestString		true		<input%3e
-unitTestString		true		<input\076
-unitTestString		true		<input\76
-unitTestString		true		<input%5c076
-unitTestString		true		<input%5c76
-unitTestString		true		<input%5c%3076
-unitTestString		true		<input%5c%30%376
-unitTestString		true		<input%5c%30%37%36
-unitTestString		true		<input\x3e
-unitTestString		true		<input%5cx3e
-unitTestString		true		<input%5c%783e
-unitTestString		true		<input\u003e
-unitTestString		true		<input%5cu003e
-unitTestString		true		<input%5c%75003e
-unitTestString		true		<input%5c%75%3003e
-unitTestString		true		<input%5c%75%30%303e
-unitTestString		false		< junk >link 
-unitTestString		false		<>
-unitTestString		false		</>
-unitTestString		false		<  >
-unitTestString		false		</  >
-unitTestString		false		< /  >
-unitTestString		false		< foo  >
-unitTestString		false		</ bar  >
-unitTestString		false		< /bar  >
-unitTestString		false		<//bar>
-unitTestString		false		<// bar>
-unitTestString		false		< input >
-unitTestString		false		input > 
-unitTestString		false		input 
+String		true		<<<bar>>>
+String		true		<foo    >
+String		true		</bar>
+String		true		<foo >
+String		true		</bar >
+String		true		<input type="">
+String		true		<a foobar>
+String		true		\743cinput>
+String		true		\0743cinput>
+String		true		\x3cinput>
+String		true		<input>
+String		true		%3cinput>
+String		true		\074input>
+String		true		\74input>
+String		true		\%374input>
+String		true		\%37%34input>
+String		true		%5c74input>
+String		true		%5c%30%37%34input>
+String		true		\x3cinput>
+String		true		%5cx3cinput>
+String		true		%5c%783cinput>
+String		true		\u003cinput>
+String		true		%5c%750%303cinput>
+String		true		%5c%75%30%303cinput>
+String		true		<input%3e
+String		true		<input\076
+String		true		<input\76
+String		true		<input%5c076
+String		true		<input%5c76
+String		true		<input%5c%3076
+String		true		<input%5c%30%376
+String		true		<input%5c%30%37%36
+String		true		<input\x3e
+String		true		<input%5cx3e
+String		true		<input%5c%783e
+String		true		<input\u003e
+String		true		<input%5cu003e
+String		true		<input%5c%75003e
+String		true		<input%5c%75%3003e
+String		true		<input%5c%75%30%303e
+String		false		< junk >link 
+String		false		<>
+String		false		</>
+String		false		<  >
+String		false		</  >
+String		false		< /  >
+String		false		< foo  >
+String		false		</ bar  >
+String		false		< /bar  >
+String		false		<//bar>
+String		false		<// bar>
+String		false		< input >
+String		false		input > 
+String		false		input 

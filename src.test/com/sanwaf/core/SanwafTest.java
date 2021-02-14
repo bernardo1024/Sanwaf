@@ -33,7 +33,7 @@ public class SanwafTest {
   @Test
   public void testXssNoThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.addParameter("unitTestString", "abcdefghij");
+    request.addParameter("String", "abcdefghij");
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(false));
   }
@@ -41,7 +41,7 @@ public class SanwafTest {
   @Test
   public void testXssWithThreat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.addParameter("unitTestString", "<script>alert(1);</script>");
+    request.addParameter("String", "<script>alert(1);</script>");
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
   }
@@ -50,7 +50,7 @@ public class SanwafTest {
   public void testTrackIdAndGetErrorsNumbersDelimited() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
-    request.addParameter("unitTestNumericDelimited", "+foobar");
+    request.addParameter("NumericDelimited", "+foobar");
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
 
@@ -58,14 +58,14 @@ public class SanwafTest {
     assertTrue(trackId != null);
 
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"unitTestNumericDelimited\",\"value\":\"+foobar\",\"samplePoints\":[{\"start\":\"0\",\"end\":\"7\"}],\"error\":\"") >= 0);
+    assertTrue(s.indexOf("{\"key\":\"NumericDelimited\",\"value\":\"+foobar\",\"samplePoints\":[{\"start\":\"0\",\"end\":\"7\"}],\"error\":\"") >= 0);
   }
 
   @Test
   public void testTrackIdAndGetErrorsAlphanumericAndMore() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
-    request.addParameter("unitTestAlphanumericAndMore", "Some Bad! data;----?? ");
+    request.addParameter("AlphanumericAndMore", "Some Bad! data;----?? ");
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
 
@@ -73,14 +73,14 @@ public class SanwafTest {
     assertTrue(trackId != null);
 
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"unitTestAlphanumericAndMore\",\"value\":\"Some Bad! data;----?? \",\"samplePoints\"") >= 0);
+    assertTrue(s.indexOf("{\"key\":\"AlphanumericAndMore\",\"value\":\"Some Bad! data;----?? \",\"samplePoints\"") >= 0);
   }
 
   @Test
   public void testTrackIdDisabled() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
-    request.addParameter("unitTestNumericDelimited", "+foobar");
+    request.addParameter("NumericDelimited", "+foobar");
     boolean trackID = sanwaf.onErrorAddTrackId;
     boolean trackErrors = sanwaf.onErrorAddParmErrors;
 
