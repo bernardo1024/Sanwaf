@@ -26,7 +26,7 @@
 		<shield>
       <shield-settings>
 				<name>XSS</name>
-				<minLen>3</minLen>
+				<minLen>0</minLen>
 				<maxLen>9999</maxLen>
       </shield-settings>
 			<regex-config>
@@ -89,7 +89,8 @@
 						<item><name>lengthNN2_6_6</name><type>n{,}</type><max>6</max><min>6</min><msg></msg><uri></uri></item>
 						<item><name>lengthS2_0_7</name><type>s</type><max>7</max><min>0</min><msg></msg><uri></uri></item>
 						<item><name>lengthC2_1_1</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>lengthR2_0_11</name><type>r{ssn}</type><max>11</max><min>0</min><msg></msg><uri></uri></item>
+            <item><name>lengthR2_0_11</name><type>r{ssn}</type><max>11</max><min>0</min><msg></msg><uri></uri></item>
+            <item><name>length_invalid_min</name><type>s</type><max>11</max><min>-2</min><msg></msg><uri></uri></item>
             <item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimitedInvalidConfig1</name><type>n{,</type><max></max><min></min><msg></msg><uri></uri></item>

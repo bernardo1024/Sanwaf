@@ -161,7 +161,7 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "Char", "1"));
     assertEquals(false, shield.threat(req, shield.parameters, "Char", "-"));
     assertEquals(false, shield.threat(req, shield.parameters, "Char", " "));
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", "12"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Char", "12"));
     assertEquals(true, shield.threat(req, shield.parameters, "Char", "123456"));
     assertEquals(true, shield.threat(req, shield.parameters, "Char", "<asdffff."));
     assertEquals(false, shield.threat(req, shield.parameters, "Char", ""));
@@ -239,8 +239,8 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FOO"));
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", "BAR"));
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FAR"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Constant", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "Constant", ""));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "foo"));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "far"));
@@ -266,10 +266,9 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345"));
     assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345678901"));//violates max setting
+    assertEquals(true, shield.threat(req, shield.parameters, "Java", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Java", "10"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Java", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Java", null));
-
     assertEquals(false, shield.threat(req, shield.parameters, "Java", "0001"));
     assertEquals(false, shield.threat(req, shield.parameters, "Java", "0000"));
   }

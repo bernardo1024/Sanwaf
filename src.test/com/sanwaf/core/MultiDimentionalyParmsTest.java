@@ -140,6 +140,32 @@ public class MultiDimentionalyParmsTest {
     r = new MockHttpServletRequest();
     r.addParameter("notDefinedNoBrackets1", "<script>alert(1)</script>");
     assertEquals(true, sanwaf.isThreatDetected(r));
-    
+  }
+
+  @Test
+  public void testVariablenumericInvalidFormat() {
+    MockHttpServletRequest r = new MockHttpServletRequest();
+    r.addParameter("foo((0)", "1234567890");
+    r.addParameter("foo[[0]", "1234567890");
+    r.addParameter("foo( 0)", "1234567890");
+    r.addParameter("foo(0 )", "1234567890");
+    assertEquals(false, sanwaf.isThreatDetected(r));
+  }
+
+  @Test
+  public void testVariablenumericArray() {
+    MockHttpServletRequest r = new MockHttpServletRequest();
+    r.addParameter("foo0", "1234567890");
+    r.addParameter("foo1", "1234567890");
+    r.addParameter("foo2", "1234567890");
+    r.addParameter("foo3", "1234567890");
+    r.addParameter("foo4", "1234567890");
+    r.addParameter("foo5", "1234567890");
+    r.addParameter("foo6", "1234567890");
+    r.addParameter("foo7", "1234567890");
+    r.addParameter("foo8", "1234567890");
+    r.addParameter("foo9", "1234567890");
+    r.addParameter("foo10", "1234567890");
+    assertEquals(false, sanwaf.isThreatDetected(r));
   }
 }

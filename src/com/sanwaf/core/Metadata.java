@@ -66,9 +66,7 @@ final class Metadata {
         }
         int end = key.indexOf(s.charAt(1), start + 1);
         last = end + 1;
-        if (end > 0) {
-          key = key.substring(0, start + 1) + key.substring(end, key.length());
-        }
+        key = key.substring(0, start + 1) + key.substring(end, key.length());
       }
     }
     return key;
@@ -115,7 +113,7 @@ final class Metadata {
       String[] names = namesString.split(SEPARATOR);
       for (String name : names) {
         name = refineName(name, index);
-        if (name == null || name.length() == 0) {
+        if (name == null) {
           continue;
         }
         if (!caseSensitive) {
@@ -126,10 +124,12 @@ final class Metadata {
     }
     else {
       item.name = refineName(item.name, index);
-      if (!caseSensitive) {
-        item.name = item.name.toLowerCase();
+      if (item.name != null) {
+        if (!caseSensitive) {
+          item.name = item.name.toLowerCase();
+        }
+        items.put(item.name, item);
       }
-      items.put(item.name, item);
     }
   }
 
@@ -143,10 +143,10 @@ final class Metadata {
 
     int max = Integer.MAX_VALUE;
     int min = 0;
-    if (sMax != null && sMax.length() > 0) {
+    if (sMax.length() > 0) {
       max = Integer.parseInt(sMax);
     }
-    if (sMin != null && sMin.length() > 0) {
+    if (sMin.length() > 0) {
       min = Integer.parseInt(sMin);
     }
     if (max == -1) {
@@ -154,6 +154,9 @@ final class Metadata {
     }
     if (min == -1) {
       min = Integer.MAX_VALUE;
+    }
+    if(min < -1) {
+      min = 0;
     }
     return Item.getItem(name, type, min, max, msg, uri);
   }

@@ -35,6 +35,13 @@ final class ItemConstant extends Item {
     return errorMsg;
   }
 
+  @Override
+  List<Point> getErrorPoints(Shield shield, String value) {
+    List<Point> points = new ArrayList<>();
+    points.add(new Point(0, value.length()));
+    return points;
+  }
+
   private void setConstants(String value) {
     int start = value.indexOf(CONSTANT);
     if (start >= 0) {

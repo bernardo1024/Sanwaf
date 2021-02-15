@@ -90,7 +90,7 @@ public class ItemLengthsTest {
     assertEquals(false, shield.threat(req, shield.parameters, "lengthC_1_1", "1"));
     assertEquals(false, shield.threat(req, shield.parameters, "lengthC_1_1", "-"));
     assertEquals(false, shield.threat(req, shield.parameters, "lengthC_1_1", " "));
-    assertEquals(false, shield.threat(req, shield.parameters, "lengthC_1_1", "12"));
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthC_1_1", "12"));
     assertEquals(true, shield.threat(req, shield.parameters, "lengthC_1_1", "12345"));
     assertEquals(true, shield.threat(req, shield.parameters, "lengthC_1_1", "<asdffff."));
 
@@ -98,7 +98,7 @@ public class ItemLengthsTest {
     assertEquals(false, shield.threat(req, shield.parameters, "lengthC2_1_1", "1"));
     assertEquals(false, shield.threat(req, shield.parameters, "lengthC2_1_1", "-"));
     assertEquals(false, shield.threat(req, shield.parameters, "lengthC2_1_1", " "));
-    assertEquals(false, shield.threat(req, shield.parameters, "lengthC2_1_1", "12"));
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthC2_1_1", "12"));
     assertEquals(true, shield.threat(req, shield.parameters, "lengthC2_1_1", "12345"));
     assertEquals(true, shield.threat(req, shield.parameters, "lengthC2_1_1", "<asdffff."));
   }
@@ -131,6 +131,13 @@ public class ItemLengthsTest {
     assertEquals(true, shield.threat(req, shield.parameters, "lengthS2_0_7", "12345678"));
   }
 
+  @Test
+  public void testStringTypeMinSetNoValue() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthNN2_6_6", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "lengthNN2_6_6", null));
+  }
+  
   @Test
   public void TestMaxMinLength() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "ParmLength");

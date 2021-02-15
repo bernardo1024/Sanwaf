@@ -62,7 +62,14 @@
 				</caseSensitive>
 				<secured>
 					<parameters>
-						<item><name>foo*</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+					  <!-- invalid format -->
+            <item><name>*</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>invalid[1*]</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>invalid((*)</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>*:::invalid[1*]:::invalid((*)</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <!-- end invalid format -->
+
+            <item><name>foo*</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>a['*'].b['*']</name><type>n{,}</type><max>10</max><min>10</min><msg></msg><uri></uri></item>
 						<item><name>b[*].c[*]</name><type>n</type><max>10</max><min>6</min><msg></msg><uri></uri></item>
 						<item><name>c('*').d('*')</name><type>a{,}</type><max>10</max><min>10</min><msg></msg><uri></uri></item>

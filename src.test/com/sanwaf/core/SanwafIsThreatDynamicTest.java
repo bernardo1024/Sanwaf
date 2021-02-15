@@ -245,6 +245,18 @@ public class SanwafIsThreatDynamicTest {
   }
 
   @Test
+  public void testSanWafIsThreatViolateMin() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foobar");
+    boolean result = sanwaf.isThreat(null, "XSS", true, request, "<item><name>invalidMin</name><type>n</type><max>5</max><min>2</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>");
+    assertTrue(result == true);
+    String trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    String s = Sanwaf.getErrors(request);
+    assertTrue(s != null);
+  }
+
+  @Test
   public void testSanWafIsThreatDynamicXmlInvalidShieldName() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", "INVALID", true, request, "<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>");

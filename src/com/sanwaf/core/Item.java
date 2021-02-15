@@ -1,6 +1,5 @@
 package com.sanwaf.core;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
@@ -38,6 +37,7 @@ abstract class Item {
   }
 
   abstract boolean inError(ServletRequest req, Shield shield, String value);
+  abstract List<Point> getErrorPoints(Shield shield, String value);
 
 
   static Item getItem(String name, Item item) {
@@ -88,12 +88,6 @@ abstract class Item {
     return type;
   }
 
-  List<Point> getErrorPoints(Shield shield, String value) {
-    List<Point> points = new ArrayList<>();
-    points.add(new Point(0, value.length()));
-    return points;
-  }
-
   boolean isUriValid(ServletRequest req) {
     if (uri == null) {
       return true;
@@ -109,7 +103,7 @@ abstract class Item {
 
   boolean isSizeError(String value) {
     if (value == null) {
-      return min > 0;
+      return min != 0;
     } else {
       return (value.length() < min || value.length() > max);
     }
