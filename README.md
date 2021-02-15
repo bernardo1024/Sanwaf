@@ -39,8 +39,18 @@ Create an authentication filter to validate all the incoming request objects.
 		throw new SecurityException("Security Violation.  Put your message here.");
 	}
 
-Alternatively, use can use Sanwaf inline anywhere in your code.
+*Alternatively*, use can use Sanwaf in-line anywhere in your code:
+  //isThreat methods
+  public boolean isThreat(String value)
+  public boolean isThreat(String value, String shieldName)
+  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req)
+  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml)
 
+  //For example, to test a parameter if it is safe...
+  if(sanwaf.isThreat(request.getParameter("parameter_name")){
+    //handle error condition
+  }
+  
 When/If an error is detected, you pull the error info with these methods:
 
 	String sanwafTrackId = sanwaf.getTrackId(request);

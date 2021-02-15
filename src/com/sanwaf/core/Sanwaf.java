@@ -227,15 +227,15 @@ public final class Sanwaf {
    * @param shieldName
    *          the shields name that you want to execute the autoRunPatterns from (String data type only)
    *          or use the custom regex's specified (regex data type only) 
-   * @param xml
-   *          XML String to configure the data type.  See sanwaf.xml shield/metadata/secured section for configuration details
    * @param setErrorAttributes
    *          boolean to indicate whether to set the tracking id and error json to the request's attributes 
    * @param req
    *          calling ServletRequest object used to test URIs
+   * @param xml
+   *          XML String to configure the data type.  See sanwaf.xml shield/metadata/secured section for configuration details
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreat(String value, String shieldName, String xml, boolean setErrorAttributes, ServletRequest req) {
+  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml) {
     Item item = Metadata.parseItem(new Xml(xml));
     Shield sh = getShield(shieldName);
     if(sh == null) {
