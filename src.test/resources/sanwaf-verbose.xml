@@ -7,9 +7,11 @@
 	</global-settings>
 	<shields>
 		<shield>
-			<name>XSS</name>
-			<minLen>4</minLen>
-			<maxLen>9999</maxLen>
+      <shield-settings>
+				<name>XSS</name>
+				<minLen>4</minLen>
+				<maxLen>9999</maxLen>
+      </shield-settings>
 			<regex-config>
 				<minLen>4</minLen>
 				<alwaysPerformRegex>

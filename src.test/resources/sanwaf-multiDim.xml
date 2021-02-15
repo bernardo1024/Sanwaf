@@ -24,12 +24,11 @@
 	</global-settings>
 	<shields>
 		<shield>
-			<name>MultiDimTest</name>
-			<parameterEnabled>true</parameterEnabled>
-			<headerEnabled>true</headerEnabled>
-			<cookieEnabled>true</cookieEnabled>
-			<minLen>4</minLen>
-			<maxLen>9999</maxLen>
+      <shield-settings>
+  			<name>MultiDimTest</name>
+	      <minLen>4</minLen>
+	      <maxLen>9999</maxLen>
+      </shield-settings>
 			<regex-config>
 				<minLen>5</minLen>
 				<alwaysPerformRegex>

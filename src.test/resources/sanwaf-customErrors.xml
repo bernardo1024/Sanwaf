@@ -24,20 +24,22 @@
 	
 	<shields>
 		<shield>
-			<name>XSS</name>
-			<minLen>1</minLen>
-			<maxLen>9999</maxLen>
-			<errorMessages>
-				<numeric> XSS CUSTOM Numeric error msg</numeric>
-				<numericDelimited> XSS CUSTOM Numeric delimited error msg {0}</numericDelimited>
-				<alphanumeric> XSS CUSTOM Alphanumeric error msg</alphanumeric>
-				<alphanumericAndMore> XSS CUSTOM Alphanumeric and more error msg {0}</alphanumericAndMore>
-				<char> XSS CUSTOM Character error msg</char>
-				<string> XSS CUSTOM String error msg</string>
-				<regex> XSS CUSTOM Regex error msg</regex>
-				<java> XSS CUSTOM Java error msg</java>
-				<constant> XSS CUSTOM Constant error msg {0}</constant>
-			</errorMessages>
+      <shield-settings>
+				<name>XSS</name>
+				<minLen>1</minLen>
+				<maxLen>9999</maxLen>
+				<errorMessages>
+					<numeric> XSS CUSTOM Numeric error msg</numeric>
+					<numericDelimited> XSS CUSTOM Numeric delimited error msg {0}</numericDelimited>
+					<alphanumeric> XSS CUSTOM Alphanumeric error msg</alphanumeric>
+					<alphanumericAndMore> XSS CUSTOM Alphanumeric and more error msg {0}</alphanumericAndMore>
+					<char> XSS CUSTOM Character error msg</char>
+					<string> XSS CUSTOM String error msg</string>
+					<regex> XSS CUSTOM Regex error msg</regex>
+					<java> XSS CUSTOM Java error msg</java>
+					<constant> XSS CUSTOM Constant error msg {0}</constant>
+				</errorMessages>
+      </shield-settings>
 			<regex-config>
 				<minLen>5</minLen>
 				<alwaysPerformRegex>
@@ -95,13 +97,15 @@
 			</metadata>
 		</shield>
 		<shield>
-			<name>BadPlaceholders</name>
-			<minLen>1</minLen>
-			<maxLen>9999</maxLen>
-			<errorMessages>
-				<numericDelimited> Contains non-numeric characters. Number can be delimited by the "0" character.</numericDelimited>
-				<alphanumericAndMore> Contains non-alphanumeric-more. More characters are [0].</alphanumericAndMore>
-			</errorMessages>
+      <shield-settings>
+				<name>BadPlaceholders</name>
+				<minLen>1</minLen>
+				<maxLen>9999</maxLen>
+				<errorMessages>
+					<numericDelimited> Contains non-numeric characters. Number can be delimited by the "0" character.</numericDelimited>
+					<alphanumericAndMore> Contains non-alphanumeric-more. More characters are [0].</alphanumericAndMore>
+				</errorMessages>
+      </shield-settings>
 			<regex-config>
 				<minLen>5</minLen>
 				<alwaysPerformRegex>

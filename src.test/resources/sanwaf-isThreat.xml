@@ -24,9 +24,11 @@
 	
 	<shields>
 		<shield>
-			<name>XSS</name>
-			<minLen>3</minLen>
-			<maxLen>9999</maxLen>
+      <shield-settings>
+				<name>XSS</name>
+				<minLen>3</minLen>
+				<maxLen>9999</maxLen>
+      </shield-settings>
 			<regex-config>
 				<minLen>0</minLen>
 				<alwaysPerformRegex>
@@ -66,9 +68,11 @@
 	</shields>
   <shields>
     <shield>
-      <name>OTHER</name>
-      <minLen>3</minLen>
-      <maxLen>9999</maxLen>
+      <shield-settings>
+	      <name>OTHER</name>
+	      <minLen>3</minLen>
+	      <maxLen>9999</maxLen>
+      </shield-settings>
       <regex-config>
         <minLen>5</minLen>
         <alwaysPerformRegex>

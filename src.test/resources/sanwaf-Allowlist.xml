@@ -14,7 +14,9 @@
 	
 	<shields>
 		<shield>
-			<name>Allowlist</name>
+      <shield-settings>
+  			<name>Allowlist</name>
+      </shield-settings>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>

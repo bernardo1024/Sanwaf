@@ -226,18 +226,19 @@ final class Shield {
 
   // XML LOAD CODE
   private void load(Xml xml) {
-    name = String.valueOf(xml.get(Metadata.XML_NAME));
-    maxLen = parseInt(xml.get(Metadata.XML_MAX_LEN), maxLen);
+    Xml settingsBlockXml = new Xml(xml.get(Metadata.XML_SHIELD_SETTINGS));
+    name = String.valueOf(settingsBlockXml.get(Metadata.XML_NAME));
+    maxLen = parseInt(settingsBlockXml.get(Metadata.XML_MAX_LEN), maxLen);
     if (maxLen == -1) {
       maxLen = Integer.MAX_VALUE;
     }
-    minLen = parseInt(xml.get(Metadata.XML_MIN_LEN), minLen);
+    minLen = parseInt(settingsBlockXml.get(Metadata.XML_MIN_LEN), minLen);
     if (minLen == -1) {
       minLen = Integer.MAX_VALUE;
     }
+    Error.setErrorMessages(errorMessages, settingsBlockXml);
 
-    String regexBlock = xml.get(Metadata.XML_REGEX_CONFIG);
-    Xml regexBlockXml = new Xml(regexBlock);
+    Xml regexBlockXml = new Xml(xml.get(Metadata.XML_REGEX_CONFIG));
     loadPatterns(regexBlockXml);
     regexMinLen = parseInt(regexBlockXml.get(Metadata.XML_MIN_LEN), regexMinLen);
     if (regexMinLen == -1) {
@@ -262,7 +263,6 @@ final class Shield {
     parameters = new Metadata(xml, Metadata.XML_PARAMETERS);
     cookies = new Metadata(xml, Metadata.XML_COOKIES);
     headers = new Metadata(xml, Metadata.XML_HEADERS);
-    Error.setErrorMessages(errorMessages, xml);
   }
 
   private void loadPatterns(Xml xml) {

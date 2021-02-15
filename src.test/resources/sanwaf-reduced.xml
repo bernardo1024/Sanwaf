@@ -7,7 +7,9 @@
 	
 	<shields>
 		<shield>
-			<name>XSS</name>
+      <shield-settings>
+  			<name>XSS</name>
+      </shield-settings>
 			<metadata>
 				<enabled>
 					<parameters>true</parameters>

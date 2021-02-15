@@ -24,9 +24,11 @@
 	
 	<shields>
 		<shield>
-			<name>XSS</name>
-			<minLen>0</minLen>
-			<maxLen>-1</maxLen>
+      <shield-settings>
+				<name>XSS</name>
+				<minLen>0</minLen>
+				<maxLen>-1</maxLen>
+      </shield-settings>
 			<regex-config>
 				<minLen>0</minLen>
 				<alwaysPerformRegex>
@@ -82,9 +84,11 @@
 		</shield>
 		
 		<shield>
-			<name>ParmLength</name>
-			<minLen>-1</minLen>
-			<maxLen>-1</maxLen>
+      <shield-settings>
+				<name>ParmLength</name>
+				<minLen>-1</minLen>
+				<maxLen>-1</maxLen>
+      </shield-settings>
 			<regex-config>
 				<minLen>-1</minLen>
 				<alwaysPerformRegex>
