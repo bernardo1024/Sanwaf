@@ -266,8 +266,14 @@ You will need to create your own logger and pass it to Sanwaf's constructor othe
 
 Here is a simple example of creating a custom logger.  
 
-The log4j.properties is not specified in this readme, so consult the documentation https://logging.apache.org/log4j/2.x/ 
+	//add the dependency to your pom
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.17</version>
+	</dependency>
 
+	//implement the code
 	import org.apache.log4j.Logger;
 
 	public class TestLogger implements com.sanwaf.log.Logger {
@@ -286,7 +292,7 @@ The log4j.properties is not specified in this readme, so consult the documentati
 		}
 	}
 
-
+The log4j.properties is not specified in this readme, so consult the documentation https://logging.apache.org/log4j/2.x/ 
 
 
 ## License
