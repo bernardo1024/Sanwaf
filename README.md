@@ -260,6 +260,33 @@ Sample Filter Code:
 	}
 
 
+### Create a custom Logger
+
+You will need to create your own logger and pass it to Sanwaf for use, otherwise the System.out.printl() method will be used which is not performant, nor production facing.
+
+Here is an example of creating a custom logger.  The log4j.properties is not specified in this readme, so consult the documentation https://logging.apache.org/log4j/2.x/ 
+
+	import org.apache.log4j.Logger;
+
+	public class TestLogger implements com.sanwaf.log.Logger {
+		static Logger log = Logger.getLogger(TestLogger.class);
+
+		@Override
+		public void error(String msg) {
+			log.error(msg);
+		}
+
+		@Override
+		public void info(String msg) {
+			if(log.isInfoEnabled()) {
+				log.info(msg);
+			}
+		}
+	}
+
+
+
+
 ## License
 
 Copyright 2019 Bernardo Sanchez
