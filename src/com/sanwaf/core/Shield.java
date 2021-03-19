@@ -19,6 +19,7 @@ final class Shield {
   Sanwaf sanwaf = null;
   Logger logger = null;
   String name = null;
+  Shield childShield = null;
   int minLen = 0;
   int maxLen = Integer.MAX_VALUE;
   int regexMinLen = 0;
@@ -31,10 +32,10 @@ final class Shield {
   Metadata cookies = null;
   Metadata headers = null;
 
-  Shield(Sanwaf sanwaf, Xml xml, Logger logger) {
+  Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger) {
     this.sanwaf = sanwaf;
     this.logger = logger;
-    load(xml);
+    load(sanwaf, xml, shieldXml, logger);
     logStartup();
   }
 
@@ -94,7 +95,7 @@ final class Shield {
     }
     int len = value.length();
     if (len < minLen || len > maxLen) {
-      return false;
+      return handleChildShield(req, value);
     }
     Item parm;
     if (meta != null) {
@@ -113,6 +114,18 @@ final class Shield {
       parm = new ItemString();
     }
     return parm.inError(req, this, value);
+  }
+
+  private boolean handleChildShield(ServletRequest req, String value) {
+    if(childShield != null) {
+      if(req == null) {
+        return childShield.threat(value);
+      }
+      else {
+        return childShield.threatDetected(req);
+      }
+    }
+    return false;
   }
 
   private Item getParameterFromMetadata(Metadata meta, String key) {
@@ -225,8 +238,8 @@ final class Shield {
   }
 
   // XML LOAD CODE
-  private void load(Xml xml) {
-    Xml settingsBlockXml = new Xml(xml.get(Metadata.XML_SHIELD_SETTINGS));
+  private void load(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger) {
+    Xml settingsBlockXml = new Xml(shieldXml.get(Metadata.XML_SHIELD_SETTINGS));
     name = String.valueOf(settingsBlockXml.get(Metadata.XML_NAME));
     maxLen = parseInt(settingsBlockXml.get(Metadata.XML_MAX_LEN), maxLen);
     if (maxLen == -1) {
@@ -236,16 +249,22 @@ final class Shield {
     if (minLen == -1) {
       minLen = Integer.MAX_VALUE;
     }
+    
+    String childShieldName = settingsBlockXml.get(Metadata.XML_CHILD);
+    if(childShieldName.length() > 0) {
+      loadChildShield(sanwaf, xml, childShieldName, logger);
+    }
+    
     Error.setErrorMessages(errorMessages, settingsBlockXml);
 
-    Xml regexBlockXml = new Xml(xml.get(Metadata.XML_REGEX_CONFIG));
+    Xml regexBlockXml = new Xml(shieldXml.get(Metadata.XML_REGEX_CONFIG));
     loadPatterns(regexBlockXml);
     regexMinLen = parseInt(regexBlockXml.get(Metadata.XML_MIN_LEN), regexMinLen);
     if (regexMinLen == -1) {
       regexMinLen = Integer.MAX_VALUE;
     }
 
-    String alwaysBlock = xml.get(Metadata.XML_REGEX_ALWAYS_REGEX);
+    String alwaysBlock = shieldXml.get(Metadata.XML_REGEX_ALWAYS_REGEX);
     Xml alwaysBlockXml = new Xml(alwaysBlock);
     regexAlways = Boolean.parseBoolean(alwaysBlockXml.get(Metadata.XML_ENABLED));
     regexAlwaysExclusions = new ArrayList<>();
@@ -260,9 +279,21 @@ final class Shield {
         }
       }
     }
-    parameters = new Metadata(xml, Metadata.XML_PARAMETERS);
-    cookies = new Metadata(xml, Metadata.XML_COOKIES);
-    headers = new Metadata(xml, Metadata.XML_HEADERS);
+    parameters = new Metadata(shieldXml, Metadata.XML_PARAMETERS);
+    cookies = new Metadata(shieldXml, Metadata.XML_COOKIES);
+    headers = new Metadata(shieldXml, Metadata.XML_HEADERS);
+  }
+
+  private void loadChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger) {
+    String[] children = xml.getAll(Metadata.XML_CHILD_SHIELD);
+    for (String child : children) {
+      Xml childXml = new Xml(child);
+      Xml settings = new Xml(childXml.get(Metadata.XML_SHIELD_SETTINGS));
+      if(settings.get(Metadata.XML_NAME).equals(childShieldName)) {
+        childShield = new Shield(sanwaf, xml, new Xml(child), logger);
+        break;
+      }
+    }
   }
 
   private void loadPatterns(Xml xml) {
@@ -298,6 +329,9 @@ final class Shield {
       sb.append("\nSettings:\n");
       sb.append("\t").append(Metadata.XML_MAX_LEN).append("=").append(maxLen).append("\n");
       sb.append("\t").append(Metadata.XML_MIN_LEN).append("=").append(minLen).append("\n");
+      if(childShield != null) {
+        sb.append("\t").append(Metadata.XML_CHILD_SHIELD).append("=").append(childShield.name).append("\n");
+      }
       sb.append("\t").append("regex ").append(Metadata.XML_MIN_LEN).append("=").append(regexMinLen).append("\n");
       sb.append("\t").append(Metadata.XML_PARAMETERS).append(".").append(Metadata.XML_ENABLED).append("=").append(parameters.enabled).append("\n");
       sb.append("\t").append(Metadata.XML_PARAMETERS).append(".").append(Metadata.XML_CASE_SENSITIVE).append("=").append(parameters.caseSensitive).append("\n");

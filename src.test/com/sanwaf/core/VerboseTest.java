@@ -68,4 +68,11 @@ public class VerboseTest {
     assertTrue(s.contains("customPatterns"));
     assertTrue(s.contains("date="));
   }
+  
+  @Test
+  public void verboseChildShieldTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");
+    String s = outContent.toString();
+    assertTrue(s.contains("child-shield=XSS-CHILD"));
+  }
 }

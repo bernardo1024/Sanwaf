@@ -18,6 +18,8 @@ final class Metadata {
   static final String XML_NAME = "name";
   static final String XML_MIN_LEN = "minLen";
   static final String XML_MAX_LEN = "maxLen";
+  static final String XML_CHILD = "child";
+  static final String XML_CHILD_SHIELD = "child-shield";
   static final String XML_MAX_LEN_LOG = "maxLenLogViolation";
   static final String XML_MAX_LEN_FAIL = "maxLenFailOnViolation";
   static final String XML_REGEX = "regex";

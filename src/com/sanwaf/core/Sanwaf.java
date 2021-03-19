@@ -458,7 +458,7 @@ public final class Sanwaf {
 
     String[] xmls = xml.getAll(XML_SHIELD);
     for (String item : xmls) {
-      shields.add(new Shield(this, new Xml(item), logger));
+      shields.add(new Shield(this, xml, new Xml(item), logger));
     }
     logger.info("Started in: " + (System.currentTimeMillis() - start) + " ms.");
   }
