@@ -7,7 +7,7 @@
 	<artifactId>sanwaf</artifactId>
 	<packaging>jar</packaging>
 	<name>Sanwaf - Sanitation Web Application Filter</name>
-	<version>0.1.2</version>
+	<version>0.1.3</version>
 
 	<prerequisites>
 		<maven>3.0</maven>
