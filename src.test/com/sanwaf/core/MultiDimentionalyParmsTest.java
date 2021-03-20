@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,13 +17,11 @@ import com.sanwaf.core.Sanwaf;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MultiDimentionalyParmsTest {
   static Sanwaf sanwaf;
-  static Shield shield;
 
   @BeforeClass
   public static void setUpClass() {
     try {
       sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
-      shield = UnitTestUtil.getShield(sanwaf, "XSS");
     } catch (IOException ioe) {
       assertTrue(false);
     }
@@ -168,4 +167,19 @@ public class MultiDimentionalyParmsTest {
     r.addParameter("foo10", "1234567890");
     assertEquals(false, sanwaf.isThreatDetected(r));
   }
+  
+  @Test
+  public void testInvalidArray() throws IOException {
+    Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
+    Shield sh = UnitTestUtil.getShield(sw, "MultiDimTest");
+    sh.parameters = new Metadata(new Xml(""), "");
+    sh.parameters.enabled = true;
+    Metadata.initA2Zindex(sh.parameters.index);
+    sh.parameters.index.put("f", Arrays.asList(Metadata.INDEX_PARM_MARKER + "foo"));
+    
+    MockHttpServletRequest r = new MockHttpServletRequest();
+    r.addParameter("foo0", "<script>alert(1)</script>");
+    assertEquals(false, sw.isThreatDetected(r));
+  }
+  
 }
