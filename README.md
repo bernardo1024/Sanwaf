@@ -84,11 +84,12 @@ Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 				[regex settings]
 				[metadata settings]
 			</child-shield>
-
 		</shields>
 	</sanwaf>
 
-where
+
+	where:
+	
 	<shield>		- shields provide the mechanism to protect incoming data
 				  you must specify 1 shield, but can have many shields configured
 				  shields can specify a <child> shield that is used for performance reasons where the maxLen of the shield is encountered
