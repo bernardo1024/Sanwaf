@@ -47,8 +47,13 @@ Create an authentication filter to validate all the incoming request objects.
 	  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req)
 	  public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml)
 
-	  //For example, to test a parameter if it is safe...
+	  //For example, to test a parameter if it is safe using the configured XML...
 	  if(sanwaf.isThreat(request.getParameter("parameter_name")){
+	    //handle error condition
+	  }
+  
+	  //For example, to test a parameter if it is safe specifying the XML...
+	  if(sanwaf.isThreat(request.getParameter("parameter_name"), "XSS", true, request, "<item><name>parameter_name</name><type>s</type><max>20</max><min>0</min><msg>some custom error message</msg><uri>/some/valid/uri</uri></item>");){
 	    //handle error condition
 	  }
   
