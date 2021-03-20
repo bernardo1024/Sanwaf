@@ -78,11 +78,23 @@ Please see the sanwaf-tempalte.xml file for full details of using sanwaf.
 				[regex settings]
 				[metadata settings]
 			</shield>
+			
+			<child-shield>
+				[shield settings]
+				[regex settings]
+				[metadata settings]
+			</child-shield>
+
 		</shields>
 	</sanwaf>
 
 where
-
+	<shield>		- shields provide the mechanism to protect incoming data
+				  you must specify 1 shield, but can have many shields configured
+				  shields can specify a <child> shield that is used for performance reasons where the maxLen of the shield is encountered
+	<child-shield>		- child-shield's enhance a shields protection when the shields maxLen is encountered
+				  child-shield's are optional and ignored if the shield maxLen is set to "-1" (unlimited)
+				  child-shield's can have their own <child> shields
 	[global settings]	- settings that apply to the application being protected
 	[shield settings]	- settings for the specific shield
 	[regex settings]	- the shields regex settings
