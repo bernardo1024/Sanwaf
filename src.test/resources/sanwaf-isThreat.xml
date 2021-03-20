@@ -28,6 +28,7 @@
 				<name>XSS</name>
 				<minLen>3</minLen>
 				<maxLen>9999</maxLen>
+        <child></child>
       </shield-settings>
 			<regex-config>
 				<minLen>0</minLen>

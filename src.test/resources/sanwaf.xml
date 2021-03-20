@@ -28,6 +28,7 @@
 				<name>XSS</name>
 				<minLen>0</minLen>
 				<maxLen>9999</maxLen>
+        <child></child>
       </shield-settings>
 			<regex-config>
 				<minLen>5</minLen>
@@ -136,6 +137,7 @@
 				<name>ParmLength</name>
 				<minLen>-1</minLen>
 				<maxLen>-1</maxLen>
+        <child></child>
       </shield-settings>
 			<regex-config>
 				<minLen>-1</minLen>

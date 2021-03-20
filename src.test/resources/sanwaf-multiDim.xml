@@ -28,6 +28,7 @@
   			<name>MultiDimTest</name>
 	      <minLen>4</minLen>
 	      <maxLen>9999</maxLen>
+        <child></child>
       </shield-settings>
 			<regex-config>
 				<minLen>5</minLen>

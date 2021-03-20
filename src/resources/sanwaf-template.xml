@@ -224,6 +224,9 @@
 				
 				<!-- Maximum length of parameter to trigger this shield; Enter -1 to use max supported range or Integer.MAX_VALUE (default value) -->
 				<maxLen>-1</maxLen>
+
+        <!-- child shield to use if parameter exceeds the maxLen of the shield.  used as a secondary layer of protection -->
+        <child></child>
 		
 				<!-- Localized error messages for this shield - overrides globe values -->
 				<!-- 
@@ -331,5 +334,12 @@
 				</secured>
 			</metadata>
 		</shield>
+		
+		<!-- child-shield's have the same XML format as the shield (including <child></child> tags)-->
+		<!-- child-shield's are engaged when a shield specifies a <child></child> tag and the maxLen of the shield is violated -->
+    <!-- child-shield's are intended to be used as a secondary form of protection done for performance reasons -->
+    <child-shield>
+    </child-shield>
+
 	</shields>
 </sanwaf>

@@ -1,6 +1,7 @@
 package com.sanwaf.core;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -406,12 +407,10 @@ public final class Sanwaf {
   }
 
   static String getSortOfRandomNumber() {
-    try {
       java.security.SecureRandom srandom = new java.security.SecureRandom();
-      return String.format("%03d", srandom.nextInt(99999)) + "-" + String.format("%03d", srandom.nextInt(9999));
-    } catch (IllegalFormatException e) {
-      return String.valueOf(UUID.randomUUID());
-    }
+      DecimalFormat fStart = new DecimalFormat("00000");
+      DecimalFormat fEnd = new DecimalFormat("0000");
+      return fStart.format(srandom.nextInt(99999)) + "-" + fEnd.format(srandom.nextInt(9999)); 
   }
   
   Shield getShield(String name) {
