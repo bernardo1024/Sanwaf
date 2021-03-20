@@ -1,5 +1,5 @@
 # SanWaf
-Sanwaf, short for Sanitation Web Application Filter, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. 
+Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. 
 
 Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server.  A hacker can try to send malicious payloads to compromise your applications.  Sanwaf can be configured to detect attack payloads and will prevent submitted data from impacting your system.  
 	
