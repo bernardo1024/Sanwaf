@@ -5,41 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class Metadata {
-  static final String XML_ITEM = "item";
-  static final String XML_ITEM_NAME = "name";
-  static final String XML_ITEM_TYPE = "type";
-  static final String XML_ITEM_MAX = "max";
-  static final String XML_ITEM_MIN = "min";
-  static final String XML_ITEM_MSG = "msg";
-  static final String XML_ITEM_URI = "uri";
-  static final String XML_KEY = "key";
-  static final String XML_VALUE = "value";
-  static final String XML_NAME = "name";
-  static final String XML_MIN_LEN = "minLen";
-  static final String XML_MAX_LEN = "maxLen";
-  static final String XML_CHILD = "child";
-  static final String XML_CHILD_SHIELD = "child-shield";
-  static final String XML_MAX_LEN_LOG = "maxLenLogViolation";
-  static final String XML_MAX_LEN_FAIL = "maxLenFailOnViolation";
-  static final String XML_REGEX = "regex";
-  static final String XML_SHIELD_SETTINGS = "shield-settings";
-  static final String XML_REGEX_CONFIG = "regex-config";
-  static final String XML_REGEX_ALWAYS_REGEX = "alwaysPerformRegex";
-  static final String XML_REGEX_ALWAYS_REGEX_EXCLUSIONS = "exclusions";
-  static final String XML_REGEX_PATTERNS_AUTO = "autoRunPatterns";
-  static final String XML_REGEX_PATTERNS_CUSTOM = "customPatterns";
+class Metadata {
   static final String XML_METADATA = "metadata";
-  static final String XML_CASE_SENSITIVE = "caseSensitive";
   static final String XML_SECURED = "secured";
   static final String XML_PARAMETERS = "parameters";
   static final String XML_HEADERS = "headers";
   static final String XML_COOKIES = "cookies";
-  static final String XML_ENABLED = "enabled";
-
   static final String INDEX_PARM_MARKER = "  ";
   static final String STAR = "*";
-  static final String SEPARATOR = ":::";
 
   boolean enabled = false;
   boolean caseSensitive = true;
@@ -48,6 +21,10 @@ final class Metadata {
 
   Metadata(Xml xml, String type) {
     load(xml, type);
+  }
+
+  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
+    load(itemsString, caseSensitive, includeEndpointAttributes);
   }
 
   String getFromIndex(String key) {
@@ -90,29 +67,41 @@ final class Metadata {
     String securedBlock = metadataBlockXml.get(XML_SECURED);
     Xml securedBlockXml = new Xml(securedBlock);
 
-    String enabledViewBlock = metadataBlockXml.get(XML_ENABLED);
+    String enabledViewBlock = metadataBlockXml.get(Shield.XML_ENABLED);
     Xml enabledViewdBlockXml = new Xml(enabledViewBlock);
     enabled = Boolean.parseBoolean(enabledViewdBlockXml.get(type));
 
-    String caseBlock = metadataBlockXml.get(XML_CASE_SENSITIVE);
+    String caseBlock = metadataBlockXml.get(Shield.XML_CASE_SENSITIVE);
     Xml caseBlockXml = new Xml(caseBlock);
     caseSensitive = Boolean.parseBoolean(caseBlockXml.get(type));
 
     String subBlock = securedBlockXml.get(type);
     Xml subBlockXml = new Xml(subBlock);
-    String[] xmlItems = subBlockXml.getAll(XML_ITEM);
+    String[] xmlItems = subBlockXml.getAll(Item.XML_ITEM);
     for (String itemString : xmlItems) {
-      loadItem(itemString);
+      loadItem(itemString, false);
     }
   }
 
-  private void loadItem(String itemString) {
+  void load(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
+    initA2Zindex(index);
+    enabled = true;
+    this.caseSensitive = caseSensitive;
+
+    Xml itemsXml = new Xml(itemsString);
+    String[] xmlItems = itemsXml.getAll(Item.XML_ITEM);
+    for (String itemString : xmlItems) {
+      loadItem(itemString, includeEndpointAttributes);
+    }
+  }
+
+  private void loadItem(String itemString, boolean includeEnpointAttributes) {
     Xml xml = new Xml(itemString);
-    Item item = parseItem(xml);
-    String namesString = xml.get(XML_ITEM_NAME);
+    Item item = Item.parseItem(xml, includeEnpointAttributes);
+    String namesString = xml.get(Item.XML_ITEM_NAME);
     
-    if(namesString.contains(SEPARATOR)) {
-      String[] names = namesString.split(SEPARATOR);
+    if(namesString.contains(Shield.SEPARATOR)) {
+      String[] names = namesString.split(Shield.SEPARATOR);
       for (String name : names) {
         name = refineName(name, index);
         if (name == null) {
@@ -121,7 +110,7 @@ final class Metadata {
         if (!caseSensitive) {
           name = name.toLowerCase();
         }
-        items.put(name, Item.getItem(name, item));
+        items.put(name, Item.getNewItem(name, item));
       }
     }
     else {
@@ -133,34 +122,6 @@ final class Metadata {
         items.put(item.name, item);
       }
     }
-  }
-
-  static Item parseItem(Xml xml) {
-    String name = xml.get(XML_ITEM_NAME);
-    String type = xml.get(XML_ITEM_TYPE);
-    String msg = xml.get(XML_ITEM_MSG);
-    String uri = xml.get(XML_ITEM_URI);
-    String sMax = xml.get(XML_ITEM_MAX);
-    String sMin = xml.get(XML_ITEM_MIN);
-
-    int max = Integer.MAX_VALUE;
-    int min = 0;
-    if (sMax.length() > 0) {
-      max = Integer.parseInt(sMax);
-    }
-    if (sMin.length() > 0) {
-      min = Integer.parseInt(sMin);
-    }
-    if (max == -1) {
-      max = Integer.MAX_VALUE;
-    }
-    if (min == -1) {
-      min = Integer.MAX_VALUE;
-    }
-    if(min < -1) {
-      min = 0;
-    }
-    return Item.getItem(name, type, min, max, msg, uri);
   }
   
   static void initA2Zindex(Map<String, List<String>> map) {

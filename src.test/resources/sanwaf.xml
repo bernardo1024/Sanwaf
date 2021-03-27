@@ -65,16 +65,77 @@
 			</regex-config>
 			<metadata>
 				<enabled>
-					<parameters>true</parameters>
+          <endpoints>true</endpoints>
+          <parameters>true</parameters>
 					<headers>true</headers>
 					<cookies>true</cookies>
 				</enabled>
 				<caseSensitive>
+          <endpoints>true</endpoints>
 					<parameters>true</parameters>
 					<headers>true</headers>
 					<cookies>true</cookies>
 				</caseSensitive>
 				<secured>
+					<endpoints>
+					  <endpoint>
+					    <uri>/foo/bar/test.jsp</uri>
+					    <items>
+					      <item><name>char</name><type>c</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					      <item><name>numeric</name><type>n</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					      <item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					      <item><name>alphanumeric</name><type>a</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					      <item><name>alphanumericandmore</name><type>a{'\s!}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					      <item><name>constant</name><type>k{y,n}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					      <item><name>regex</name><type>r{^[^\s@]+@[^\s@]+$}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg>Must be a proper email address</msg><req></req><related></related><format></format></item>
+                <item><name>required</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related><format></format></item>
+                <item><name>max-min-value</name><type>n</type><max></max><min></min><max-value>100</max-value><min-value>10</min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>format</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format>(###) ###-#### aaa AAA</format></item>
+
+                <item><name>related-invalidX-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-invalidX1-parent) && (related-invalidX2-parent)</related><format></format></item>
+                <item><name>related-invalidX1-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-invalidX1)(related-invalidX2)</related><format></format></item>
+                <item><name>related-invalidX2-parent]</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-invalidX1)(related-invalidX2)</related><format></format></item>
+
+                <item><name>related-invalid-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-invalid</related><format></format></item>
+
+                <item><name>related-simple-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-simple-parent</related><format></format></item>
+                <item><name>related-simple-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+                <item><name>related-equals-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-equals-parent:=</related><format></format></item>
+                <item><name>related-equals-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+                <item><name>related-equals-req-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-equals-req-parent:=</related><format></format></item>
+                <item><name>related-equals-req-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related><format></format></item>
+
+                <item><name>related-simple-or-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-simple-or-parent:aaa||bbb</related><format></format></item>
+                <item><name>related-simple-or-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+                <item><name>related-or-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-or-parent1:aaa||bbb)||(related-or-parent2:ccc||ddd)</related><format></format></item>
+                <item><name>related-or-parent1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-or-parent2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+                <item><name>related-and-or-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-and-or-parent1:aaa||bbb)||(related-and-or-parent2:ccc||ddd)&&(related-and-or-parent3:eee||fff)</related><format></format></item>
+                <item><name>related-and-or-parent1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parent2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parent3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+                <item><name>related-and-or-childX</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-and-or-parentX1:aaa||bbb)&&(related-and-or-parentX2:ccc||ddd)||(related-and-or-parentX3:eee||fff)||(related-and-or-parentX4)</related><format></format></item>
+                <item><name>related-and-or-parentX1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentX2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentX3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentX4</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+                <item><name>related-and-or-childY</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-and-or-parentY1:aaa||bbb)||(related-and-or-parentY2:ccc||ddd)&&(related-and-or-parentY3:eee||fff)||(related-and-or-parentY4:ggg||hhh)&&(related-and-or-parentY5:iii||jjj)</related><format></format></item>
+                <item><name>related-and-or-parentY1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentY2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentY3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentY4</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>related-and-or-parentY5</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+
+					    </items>
+					  </endpoint>
+					</endpoints>
+					
 					<parameters>
 						<item><name>aParameterNumber</name><type>n</type><max></max><min></min><msg></msg><uri>/foo/bar</uri></item>
 						<item><name>lengthA_0_3</name><type>a</type><max>3</max><min>0</min><msg></msg><uri></uri></item>
@@ -90,9 +151,9 @@
 						<item><name>lengthNN2_6_6</name><type>n{,}</type><max>6</max><min>6</min><msg></msg><uri></uri></item>
 						<item><name>lengthS2_0_7</name><type>s</type><max>7</max><min>0</min><msg></msg><uri></uri></item>
 						<item><name>lengthC2_1_1</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>lengthR2_0_11</name><type>r{ssn}</type><max>11</max><min>0</min><msg></msg><uri></uri></item>
-            <item><name>length_invalid_min</name><type>s</type><max>11</max><min>-2</min><msg></msg><uri></uri></item>
-            <item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>lengthR2_0_11</name><type>r{ssn}</type><max>11</max><min>0</min><msg></msg><uri></uri></item>
+						<item><name>length_invalid_min</name><type>s</type><max>11</max><min>-2</min><msg></msg><uri></uri></item>
+						<item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimitedInvalidConfig1</name><type>n{,</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimitedInvalidConfig2</name><type>n,}</type><max></max><min></min><msg></msg><uri></uri></item>
@@ -104,8 +165,8 @@
 						<item><name>AlphanumericAndMoreCurlyBraces</name><type>a{{}}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>AlphanumericAndMoreInvalidConfig1</name><type>a{? :</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>AlphanumericAndMoreInvalidConfig2</name><type>a?} :</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>AlphanumericAndMoreInvalidConfig3</name><type>a? :</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>AlphanumericAndMoreInvalidConfig4</name><type>a{}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>AlphanumericAndMoreInvalidConfig3</name><type>a? :</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>AlphanumericAndMoreInvalidConfig4</name><type>a{}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>String</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>Char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>CustomTel</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>
@@ -114,11 +175,11 @@
 						<item><name>Constant</name><type>k{FOO,BAR,FAR}</type><max>3</max><min>3</min><msg></msg><uri></uri></item>
 						<item><name>Java</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max>10</max><min>0</min><msg></msg><uri></uri></item>
 						<item><name>JavaMultiParm</name><type>j{com.sanwaf.core.JavaClass.multiParmsNotEqual()}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>JavaInvalidClass</name><type>j{com.sanwaf.core.JavaClassFOOBAR.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>JavaInvalidClass2</name><type>j{</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>JavaInvalidMethod2</name><type>j{com.sanwaf.core.JavaClass.foobar()}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>JavaInvalidMethod3</name><type>j{com.sanwaf.core.JavaClass.foobar(}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><name>JavaInvalidMethod3</name><type>j{com.sanwaf.core.JavaClass.foobar)}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>JavaInvalidClass</name><type>j{com.sanwaf.core.JavaClassFOOBAR.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>JavaInvalidClass2</name><type>j{</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>JavaInvalidMethod2</name><type>j{com.sanwaf.core.JavaClass.foobar()}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>JavaInvalidMethod3</name><type>j{com.sanwaf.core.JavaClass.foobar(}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>JavaInvalidMethod3</name><type>j{com.sanwaf.core.JavaClass.foobar)}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>JavaInvalidClassEmpty</name><type>j{}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>JavaInvalidClassNoPackage</name><type>j{foobar()}</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>

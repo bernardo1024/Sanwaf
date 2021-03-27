@@ -300,21 +300,33 @@
 			<metadata>
 				<!-- Indicate what request portions are protected -->
 				<enabled>
-					<parameters>true</parameters>
+          <endpoints>true</endpoints>
+          <parameters>true</parameters>
 					<headers>true</headers>
 					<cookies>true</cookies>
 				</enabled>
 				
 				<!-- Specify if the request portion is to be treated with case sensitivity -->
 				<caseSensitive>
-					<parameters>true</parameters>
+          <endpoints>true</endpoints>
+          <parameters>true</parameters>
 					<headers>true</headers>
 					<cookies>true</cookies>
 				</caseSensitive>
 				
 				<!-- Secured section is where you specify parameters/headers/cookies to be protected by Sanwaf -->
 				<secured>
-					<parameters>
+          <endpoints>
+          <!-- 
+            <endpoint>
+              <uri></uri>
+              <items>
+                <item><name></name><type></type><max></max><min></min><msg></msg></item>
+              </items>
+            </endpoint>
+          -->
+          </endpoints>
+  				<parameters>
 					<!-- 
 						<item><name>char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>

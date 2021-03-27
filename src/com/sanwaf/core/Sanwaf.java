@@ -235,7 +235,7 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml) {
-    Item item = Metadata.parseItem(new Xml(xml));
+    Item item = Item.parseItem(new Xml(xml));
     Shield sh = getShield(shieldName);
     if(sh == null) {
       logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
