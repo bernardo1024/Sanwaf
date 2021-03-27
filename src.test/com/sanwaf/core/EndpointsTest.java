@@ -502,5 +502,42 @@ public class EndpointsTest {
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
+    
+    @Test
+    public void testEndpointStrictTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+      //related-simple-child<related>related-simple-parent</related>
+      MockHttpServletRequest request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/test.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      boolean isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(!isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strict.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strict.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      request.addParameter("parm3", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(!isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strict.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      request.addParameter("parm3", "aaa");
+      request.addParameter("parmEXTRA", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+}
+
+
 
 }

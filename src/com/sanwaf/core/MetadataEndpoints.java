@@ -1,6 +1,7 @@
 package com.sanwaf.core;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.servlet.ServletRequest;
 public class MetadataEndpoints {
   static final String XML_ENDPOINTS = "endpoints";
   static final String XML_ENDPOINT = "endpoint";
+  static final String XML_STRICT = "strict";
 
   boolean enabled = false;
   boolean caseSensitive = true;
@@ -40,10 +42,35 @@ public class MetadataEndpoints {
     for (String endpointString : xmlEndpoints) {
       Xml endpointXml = new Xml(endpointString);
       String uri = endpointXml.get(Item.XML_ITEM_URI);
+      boolean strict = Boolean.parseBoolean(endpointXml.get(XML_STRICT));
+      
       String items = endpointXml.get(Item.XML_ITEMS);
-      Metadata parameters = new Metadata(items, caseSensitive, true);
+      Metadata parameters = new Metadata(items, caseSensitive, true, strict);
       endpointParameters.put(uri, parameters);
     }
+  }
+
+  static boolean isStrictError( ServletRequest req, Metadata meta) {
+    if(meta.endpointIsStrict) {
+      for(String name : meta.items.keySet() ) {
+        String s = req.getParameter(name);
+        if(s == null) {
+          return true;
+        }
+      }
+      
+      Enumeration<?> names = req.getParameterNames();
+      while (names.hasMoreElements()) {
+        String k = (String) names.nextElement();
+        if(meta.items.get(k) == null) {
+          return true;
+        }
+      }
+        
+      
+      
+    }
+    return false;
   }
 
   static boolean isFormatError(String format, String value) {

@@ -16,6 +16,7 @@ class Metadata {
 
   boolean enabled = false;
   boolean caseSensitive = true;
+  boolean endpointIsStrict = false;
   Map<String, Item> items = new HashMap<>();
   Map<String, List<String>> index = new HashMap<>();
 
@@ -23,8 +24,9 @@ class Metadata {
     load(xml, type);
   }
 
-  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
+  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, boolean endpointIsStrict) {
     load(itemsString, caseSensitive, includeEndpointAttributes);
+    this.endpointIsStrict = endpointIsStrict;
   }
 
   String getFromIndex(String key) {

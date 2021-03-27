@@ -177,6 +177,10 @@ final class Shield {
   }
   
   private boolean isEndpointThreat(Item item, String value, ServletRequest req, Metadata meta) {
+    if(MetadataEndpoints.isStrictError(req, meta)) {
+      return true;
+    }
+    
     if(item.required && value.length() == 0) { 
       return true; 
     }
