@@ -66,9 +66,6 @@ public class MetadataEndpoints {
           return true;
         }
       }
-        
-      
-      
     }
     return false;
   }
