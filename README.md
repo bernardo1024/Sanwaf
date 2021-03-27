@@ -1,4 +1,4 @@
-# SanWaf-Server
+# Sanwaf-Server
 Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. 
 
 Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server.  A hacker can try to send malicious payloads to compromise your applications.  Sanwaf can be configured to detect attack payloads and will prevent submitted data from impacting your system.  
@@ -122,7 +122,7 @@ You configure how submitted data (parameters/headers/cookies) get processed in t
 
 Note the **enabled** and **caseSensitive** sections that control if the specific section will be enabled and how they will handle the caseSensitivy of parameters/headers/cookies.
  
-Also note the **secured section** contains the following groups: parameters, headers, cookies.
+Also note the **secured section** contains the following groups: endpoints, parameters, headers, cookies.
 
 	<metadata>
 
@@ -139,6 +139,12 @@ Also note the **secured section** contains the following groups: parameters, hea
 		</caseSensitive>
 
 		<secured>
+			<endpoints>
+				<endpoint>
+					<uri></uri>
+					<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+				</endpoint>
+			</endpoints>
 			<parameters>
 				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</parameters>
@@ -151,23 +157,41 @@ Also note the **secured section** contains the following groups: parameters, hea
 		</secured>
 
 	</metadata>						
+
+where <secured> section are:
+	<endpoints></endpoints>		- list of endpoints to secure
+					- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
+					- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
+	<parameters></parameters>	- list of parameters to secure
+	<headers></headers>		- list of headers to secure
+	<cookies></cookies>		- list of cookies to secure
+	
 ### Item Format of the Secured Section
 
 	<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 	
 where
-
-	<name></name>	- parameter/header/cookie name
-			- specify multiple 'names' in one item tag by using the ':::' delimiter.  
-			- for example:
-				- <name>parameter1</name>
-				- <name>parameter1:::parameter2:::parameter3</name> 
-	<type></type>	- the parameter datatype (see Custom Datatypes above) (defaults to 's' if not specified)
-	<max></max>	- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
-	<min></min>	- the min length allowed for this parameter (defaults to 0 if not specified) 
-	<msg></msg>	- the error message for the parameter(s) (uses the shield or global error message is not specified)
-	<uri></uri>	- the uri that must match for the parameter evaluation to occur 
-			- to specify multiple uri's for one item, use the ':::' delimiter.  
+	<name></name>		- parameter/header/cookie name
+				- specify multiple 'names' in one item tag by using the ':::' delimiter.  
+				- for example:
+					- <name>parameter1</name>
+					- <name>parameter1:::parameter2:::parameter3</name> 
+	<type></type>		- the parameter datatype (see Custom Datatypes above) (defaults to 's' if not specified)
+	<max></max>		- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
+	<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
+	<max-value></max-value>	- the max value allowed for numeric parameters
+	<min-value></min-value>	- the min value allowed for numeric parameters
+	<msg></msg>		- the error message for the parameter(s) (uses the shield or global error message is not specified)
+	<uri></uri>		- the uri that must match for the parameter evaluation to occur 
+				- to specify multiple uri's for one item, use the ':::' delimiter.  
+				- For "endpoints" the uri indicates a grouping of items to be evaulated together
+	<req></req>		- Used in endpoints only (see Sanwaf-ui project for details)
+				- Indicates if a parameter is required
+	<related></related>	- Used in endpoints only (see Sanwaf-ui project for details)
+				- Establishes a relationship that must be met between parameters
+	<format></format>	- Used in endpoints only (see Sanwaf-ui project for details)
+				- Establishes a format that the parameter must meet to be valid
+	
 
 #### Example
 
