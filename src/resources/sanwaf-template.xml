@@ -321,7 +321,7 @@
             <endpoint>
               <uri></uri>
               <items>
-                <item><name></name><type></type><max></max><min></min><msg></msg></item>
+                <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
               </items>
             </endpoint>
           -->
