@@ -141,6 +141,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 		<secured>
 			<endpoints>
 				<endpoint>
+					<strict></strict>
 					<uri></uri>
 					<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
 				</endpoint>
@@ -159,9 +160,11 @@ Also note the **secured section** contains the following groups: endpoints, para
 	</metadata>						
 
 
-	where <secured> section are:
+	where <secured> sections are:
 	<endpoints></endpoints>		- list of endpoints to secure
 					- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
+					- <uri></uri> defines the endpoint
+					- <strict></strict> indicates to fail if any items specfied are missing or if non-defined items are in the request (missing or extra parms cause failure)
 					- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
 	<parameters></parameters>	- list of parameters to secure
 	<headers></headers>		- list of headers to secure
