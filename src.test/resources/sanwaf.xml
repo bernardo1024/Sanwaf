@@ -153,7 +153,8 @@
 						<item><name>lengthC2_1_1</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>lengthR2_0_11</name><type>r{ssn}</type><max>11</max><min>0</min><msg></msg><uri></uri></item>
 						<item><name>length_invalid_min</name><type>s</type><max>11</max><min>-2</min><msg></msg><uri></uri></item>
-						<item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>Numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>Numeric-maxval10-minval2</name><type>n</type><max></max><min></min><max-value>10</max-value><min-value>2</min-value><msg></msg><uri></uri></item>
 						<item><name>NumericDelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimitedInvalidConfig1</name><type>n{,</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>NumericDelimitedInvalidConfig2</name><type>n,}</type><max></max><min></min><msg></msg><uri></uri></item>

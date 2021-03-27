@@ -37,12 +37,12 @@ abstract class Item {
   String type = null;
   int max = Integer.MAX_VALUE;
   int min = 0;
+  double maxValue;
+  double minValue;
   String msg = null;
   String[] uri = null;
   
   boolean required = false;
-  double maxValue;
-  double minValue;
   String related;
   String format;
 
@@ -91,17 +91,6 @@ abstract class Item {
       min = 0;
     }
     Item item = Item.getNewItem(name, type, min, max, msg, uri);
-    if(includeEnpointAttributes) {
-      setEndpointAttributes(xml, item);
-    }
-    return item;
-  }
-  
-  static void setEndpointAttributes(Xml xml, Item item) {
-    item.required =  Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
-    item.related = xml.get(XML_ITEM_RELATED);
-    item.format = xml.get(XML_ITEM_FORMAT);
-
     item.maxValue = Integer.MIN_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
     if(sMaxVal.length() > 0) {
@@ -113,6 +102,18 @@ abstract class Item {
     if(sMinVal.length() > 0) {
       item.minValue = Double.valueOf(sMinVal);
     }
+    
+    if(includeEnpointAttributes) {
+      setEndpointAttributes(xml, item);
+    }
+    return item;
+  }
+  
+  static void setEndpointAttributes(Xml xml, Item item) {
+    item.required =  Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
+    item.related = xml.get(XML_ITEM_RELATED);
+    item.format = xml.get(XML_ITEM_FORMAT);
+
   }
   
   static Item getNewItem(String name, Item item) {

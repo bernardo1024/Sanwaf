@@ -50,15 +50,27 @@ class ItemNumeric extends Item {
     }
     return errStart;
   }
+  
+  private boolean isMaxMinValueError(String value) {
+    try {
+      if(maxValue > Integer.MIN_VALUE && Double.parseDouble(value) > maxValue) {
+        return true;
+      }
+      if(minValue > Integer.MIN_VALUE &&  Double.parseDouble(value) < minValue) {
+        return true;
+      }
+    }catch(NumberFormatException nfe) {
+      return true;
+    }
+    return false;
+  }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req)) {
+    if (!isUriValid(req) || isSizeError(value) || isMaxMinValueError(value)) {
       return true;
     }
-    if (isSizeError(value)) {
-      return true;
-    }
+    
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);

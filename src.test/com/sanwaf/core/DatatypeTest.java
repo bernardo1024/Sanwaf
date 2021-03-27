@@ -37,7 +37,12 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.34.56.78"));
     assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "- 12345.67"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "-12345..67"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "10"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "2"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "5"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "11"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "abc"));
   }
 
   @Test

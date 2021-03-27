@@ -180,16 +180,6 @@ final class Shield {
     if(item.required && value.length() == 0) { 
       return true; 
     }
-    try {
-      if(item.maxValue > Integer.MIN_VALUE && Double.parseDouble(value) > item.maxValue) {
-        return true;
-      }
-      if(item.minValue > Integer.MIN_VALUE &&  Double.parseDouble(value) < item.minValue) {
-        return true;
-      }
-    }catch(NumberFormatException nfe) {
-      return true;
-    }
     
     if(item.format.length() > 0 && MetadataEndpoints.isFormatError(item.format, value)) {
       return true;
