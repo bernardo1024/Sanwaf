@@ -159,7 +159,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	</metadata>						
 
 
-where <secured> section are:
+	where <secured> section are:
 	<endpoints></endpoints>		- list of endpoints to secure
 					- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
 					- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
@@ -173,7 +173,7 @@ where <secured> section are:
 	<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 	
 
-where
+	where
 	<name></name>		- parameter/header/cookie name
 				- specify multiple 'names' in one item tag by using the ':::' delimiter.  
 				- for example:
