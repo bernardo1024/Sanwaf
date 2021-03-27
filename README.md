@@ -158,6 +158,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 
 	</metadata>						
 
+
 where <secured> section are:
 	<endpoints></endpoints>		- list of endpoints to secure
 					- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
@@ -166,10 +167,12 @@ where <secured> section are:
 	<headers></headers>		- list of headers to secure
 	<cookies></cookies>		- list of cookies to secure
 	
+
 ### Item Format of the Secured Section
 
 	<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 	
+
 where
 	<name></name>		- parameter/header/cookie name
 				- specify multiple 'names' in one item tag by using the ':::' delimiter.  
