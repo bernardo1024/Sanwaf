@@ -263,7 +263,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 								return true for threat found, else false
 			FORMAT: 	j{fully_qualified_className.methodName()}
 
-### <format></format> Guide
+### &lt;format&gt;&lt;/format&gt; Guide
 
 	A Sanwaf format is a mechanism used to ensure that data entering a system is formated to a specified format.
 	The sanwaf format has 3 special characters:
