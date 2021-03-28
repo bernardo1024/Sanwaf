@@ -17,6 +17,7 @@ class Metadata {
   boolean enabled = false;
   boolean caseSensitive = true;
   boolean endpointIsStrict = false;
+  boolean endpointIsStrictAllowLess = false;
   Map<String, Item> items = new HashMap<>();
   Map<String, List<String>> index = new HashMap<>();
 
@@ -24,9 +25,15 @@ class Metadata {
     load(xml, type);
   }
 
-  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, boolean endpointIsStrict) {
+  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict) {
     load(itemsString, caseSensitive, includeEndpointAttributes);
-    this.endpointIsStrict = endpointIsStrict;
+
+    if(endpointIsStrict.length() > 0 && !"false".equalsIgnoreCase(endpointIsStrict)) {
+      this.endpointIsStrict = true;
+      if(endpointIsStrict.contains("<")) {
+        this.endpointIsStrictAllowLess = true;
+      }
+    }
   }
 
   String getFromIndex(String key) {
@@ -184,6 +191,25 @@ class Metadata {
       }
     }
     return true;
+  }
+  
+  static boolean isFormatError(String format, String value) {
+    int formatLen = format.length();
+    if (value.length() != formatLen) {
+      return true;
+    }
+
+    for (int i = 0; i < value.length(); i++) {
+      char f = format.charAt(i);
+      char c = value.charAt(i);
+      if ((f == '#' && c >= '0' && c <= '9') || (f == 'A' && c >= 'A' && c <= 'Z') || (f == 'a' && c >= 'a' && c <= 'z')) {
+        continue;
+      }
+      if (c != f) {
+        return true;
+      }
+    }
+    return false;
   }
 
   static String jsonEncode(String s) {

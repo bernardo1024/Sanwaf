@@ -316,15 +316,22 @@
 				
 				<!-- Secured section is where you specify parameters/headers/cookies to be protected by Sanwaf -->
 				<secured>
+				  <!-- endpoint's group parameters for given endpoint uri's allowing more complex processing such as required, and relationships -->
+				  <!-- see the Sanwaf-ui-2-server project for automating this section in your build pipeline -->
           <endpoints>
-          <!-- 
             <endpoint>
+              <!-- URI must be unique -->
               <uri></uri>
+              <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" (less than) to not fail if there are less parameters than specified. -->
+              <strict></strict>
+              <!-- list of parameters for the URI -->
               <items>
+                <!--  note the additional attributes: <req> & <related>.  See the Sanwaf-ui project for details on using these paramters -->
+                <!-- 
                 <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                 -->
               </items>
             </endpoint>
-          -->
           </endpoints>
   				<parameters>
 					<!-- 

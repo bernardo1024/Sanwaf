@@ -138,14 +138,34 @@
 					  </endpoint>
 
             <endpoint>
-              <strict>true</strict>
-              <uri>/foo/bar/strict.jsp</uri>
+              <uri>/foo/bar/notstrictNoTag.jsp</uri>
               <items>
                 <item><name>parm1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
                 <item><name>parm2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
                 <item><name>parm3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
               </items>
             </endpoint>
+
+            <endpoint>
+              <strict>true</strict>
+              <uri>/foo/bar/strictTrue.jsp</uri>
+              <items>
+                <item><name>parm1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>parm2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>parm3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+              </items>
+            </endpoint>
+
+            <endpoint>
+              <strict><</strict>
+              <uri>/foo/bar/strictWithLess.jsp</uri>
+              <items>
+                <item><name>parm1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>parm2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name>parm3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+              </items>
+            </endpoint>
+
 					</endpoints>
 					
 					<parameters>

@@ -42,8 +42,7 @@ public class MetadataEndpoints {
     for (String endpointString : xmlEndpoints) {
       Xml endpointXml = new Xml(endpointString);
       String uri = endpointXml.get(Item.XML_ITEM_URI);
-      boolean strict = Boolean.parseBoolean(endpointXml.get(XML_STRICT));
-      
+      String strict = endpointXml.get(XML_STRICT);
       String items = endpointXml.get(Item.XML_ITEMS);
       Metadata parameters = new Metadata(items, caseSensitive, true, strict);
       endpointParameters.put(uri, parameters);
@@ -52,10 +51,12 @@ public class MetadataEndpoints {
 
   static boolean isStrictError( ServletRequest req, Metadata meta) {
     if(meta.endpointIsStrict) {
-      for(String name : meta.items.keySet() ) {
-        String s = req.getParameter(name);
-        if(s == null) {
-          return true;
+      if(!meta.endpointIsStrictAllowLess) {
+        for(String name : meta.items.keySet() ) {
+          String s = req.getParameter(name);
+          if(s == null) {
+            return true;
+          }
         }
       }
       
@@ -65,25 +66,6 @@ public class MetadataEndpoints {
         if(meta.items.get(k) == null) {
           return true;
         }
-      }
-    }
-    return false;
-  }
-
-  static boolean isFormatError(String format, String value) {
-    int formatLen = format.length();
-    if (value.length() != formatLen) {
-      return true;
-    }
-
-    for (int i = 0; i < value.length(); i++) {
-      char f = format.charAt(i);
-      char c = value.charAt(i);
-      if ((f == '#' && c >= '0' && c <= '9') || (f == 'A' && c >= 'A' && c <= 'Z') || (f == 'a' && c >= 'a' && c <= 'z')) {
-        continue;
-      }
-      if (c != f) {
-        return true;
       }
     }
     return false;

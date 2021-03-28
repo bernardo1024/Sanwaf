@@ -185,7 +185,7 @@ final class Shield {
       return true; 
     }
     
-    if(item.format.length() > 0 && MetadataEndpoints.isFormatError(item.format, value)) {
+    if(item.format.length() > 0 && Metadata.isFormatError(item.format, value)) {
       return true;
     }
     

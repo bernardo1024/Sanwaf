@@ -514,14 +514,14 @@ public class EndpointsTest {
       assertTrue(!isThreat);
 
       request = new MockHttpServletRequest();
-      request.setRequestURI("/foo/bar/strict.jsp");
+      request.setRequestURI("/foo/bar/strictTrue.jsp");
       request.addParameter("parm1", "aaa");
       request.addParameter("parm2", "aaa");
       isThreat = sanwaf.isThreatDetected(request);
       assertTrue(isThreat);
 
       request = new MockHttpServletRequest();
-      request.setRequestURI("/foo/bar/strict.jsp");
+      request.setRequestURI("/foo/bar/strictTrue.jsp");
       request.addParameter("parm1", "aaa");
       request.addParameter("parm2", "aaa");
       request.addParameter("parm3", "aaa");
@@ -529,15 +529,48 @@ public class EndpointsTest {
       assertTrue(!isThreat);
 
       request = new MockHttpServletRequest();
-      request.setRequestURI("/foo/bar/strict.jsp");
+      request.setRequestURI("/foo/bar/strictTrue.jsp");
       request.addParameter("parm1", "aaa");
       request.addParameter("parm2", "aaa");
       request.addParameter("parm3", "aaa");
       request.addParameter("parmEXTRA", "aaa");
       isThreat = sanwaf.isThreatDetected(request);
       assertTrue(isThreat);
-}
 
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/notstrictNoTag.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      request.addParameter("parm3", "aaa");
+      request.addParameter("parmEXTRA", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(!isThreat);
 
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictTrue.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      request.addParameter("parm3", "aaa");
+      request.addParameter("parmEXTRA", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictWithLess.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      request.addParameter("parm3", "aaa");
+      request.addParameter("parmEXTRA", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictWithLess.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(!isThreat);
+
+    }
 
 }

@@ -41,10 +41,10 @@ abstract class Item {
   double minValue;
   String msg = null;
   String[] uri = null;
-  
+  String format;
+
   boolean required = false;
   String related;
-  String format;
 
   Item() {
   }
@@ -103,6 +103,8 @@ abstract class Item {
       item.minValue = Double.valueOf(sMinVal);
     }
     
+    item.format = xml.get(XML_ITEM_FORMAT);
+
     if(includeEnpointAttributes) {
       setEndpointAttributes(xml, item);
     }
@@ -112,8 +114,6 @@ abstract class Item {
   static void setEndpointAttributes(Xml xml, Item item) {
     item.required =  Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
     item.related = xml.get(XML_ITEM_RELATED);
-    item.format = xml.get(XML_ITEM_FORMAT);
-
   }
   
   static Item getNewItem(String name, Item item) {
