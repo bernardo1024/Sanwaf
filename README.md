@@ -187,6 +187,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
 	<max-value></max-value>	- the max value allowed for numeric parameters
 	<min-value></min-value>	- the min value allowed for numeric parameters
+	<format></format>	- Establishes a format that the parameter must meet to be valid
 	<msg></msg>		- the error message for the parameter(s) (uses the shield or global error message is not specified)
 	<uri></uri>		- the uri that must match for the parameter evaluation to occur 
 				- to specify multiple uri's for one item, use the ':::' delimiter.  
@@ -195,8 +196,6 @@ Also note the **secured section** contains the following groups: endpoints, para
 				- Indicates if a parameter is required
 	<related></related>	- Used in endpoints only (see Sanwaf-ui project for details)
 				- Establishes a relationship that must be met between parameters
-	<format></format>	- Used in endpoints only (see Sanwaf-ui project for details)
-				- Establishes a format that the parameter must meet to be valid
 	
 
 #### Example
@@ -263,6 +262,20 @@ Also note the **secured section** contains the following groups: endpoints, para
 							public static boolean methodName(String s, ServletRequest request)
 								return true for threat found, else false
 			FORMAT: 	j{fully_qualified_className.methodName()}
+
+### <format></format> Guide
+
+	A Sanwaf format is a mechanism used to ensure that data entering a system is formated to a specified format.
+	The sanwaf format has 3 special characters:
+	  #  - represents a number
+	  A  - represents an Uppercase charater
+	  a  - represents a lowercase charater
+	Use use a combination of the characters to create formats.
+	For example:
+	  Telephone number: (###) ###-####
+	  Postal Code:      A#A #A#
+	
+	the sanwaf format is best used in conjunction with sanwaf-ui where when specified, will automatically format the data entered into the proper format.  See the sanwaf-ui guide for  implmention details.
 
 
 ## Sample code
