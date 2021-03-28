@@ -270,7 +270,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	  #  - represents a number
 	  A  - represents an Uppercase charater
 	  a  - represents a lowercase charater
-	Use use a combination of the characters to create formats.
+	Use a combination of the characters to create formats.
 	For example:
 	  Telephone number: (###) ###-####
 	  Postal Code:      A#A #A#
