@@ -6,7 +6,7 @@
 	<groupId>com.sanwaf</groupId>
 	<artifactId>sanwaf</artifactId>
 	<packaging>jar</packaging>
-	<name>Sanwaf - Sanitation Web Application Filter</name>
+	<name>Sanwaf - Sanitation Web Application Firewall</name>
 	<version>0.1.3</version>
 
 	<prerequisites>
