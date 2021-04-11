@@ -252,10 +252,6 @@ public final class Sanwaf {
       if (setErrorAttributes) {
         addErrorAttributes(req, getSortOfRandomNumber(), Arrays.asList(error));
       }
-      // if(verbose) {
-      // logger.error("from Sanwaf.isThreat(...): " +
-      // Error.toJson(Arrays.asList(error)));
-      // }
       return true;
     }
     return false;

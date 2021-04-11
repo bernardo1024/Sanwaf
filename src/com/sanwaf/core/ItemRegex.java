@@ -41,9 +41,6 @@ final class ItemRegex extends Item {
     if (isSizeError(value)) {
       return true;
     }
-    if (value.length() == 0) {
-      return false;
-    }
     return !pattern.matcher(value).find();
   }
 

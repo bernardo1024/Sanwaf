@@ -106,6 +106,8 @@
                 <item><name>related-simple-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-simple-parent</related></item>
                 <item><name>related-simple-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
+                <item><name>related-simple-required-parent-child</name><type>s</type><related>related-simple-required-parent-parent</related></item>
+
                 <item><name>related-equals-child</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>related-equals-parent:=</related></item>
                 <item><name>related-equals-parent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 

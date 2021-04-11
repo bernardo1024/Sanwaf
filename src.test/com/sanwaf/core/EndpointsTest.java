@@ -61,7 +61,7 @@ public class EndpointsTest {
 
   @Test
   public void testEndpointMaxMinValue() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
-/*
+
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "10");
@@ -97,11 +97,11 @@ public class EndpointsTest {
     request.addParameter("max-min-value", "aa");
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
-*/
-    MockHttpServletRequest request = new MockHttpServletRequest();
+
+    request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "");
-    boolean isThreat = sanwaf.isThreatDetected(request);
+    isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
 

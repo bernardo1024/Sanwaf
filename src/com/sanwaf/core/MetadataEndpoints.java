@@ -168,7 +168,6 @@ public class MetadataEndpoints {
       return false;
     }
 
-    System.out.println("no parent item found. parentLen: "+parentLen+", value.len="+value.length()+" returing: " + (parentLen > 0 && value.length() == 0));
     return parentLen > 0 && value.length() == 0;
   }
 
