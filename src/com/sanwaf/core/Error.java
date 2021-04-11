@@ -125,6 +125,7 @@ final class Error {
   static final String XML_ERROR_MSG_REGEX = "regex";
   static final String XML_ERROR_MSG_JAVA = "java";
   static final String XML_ERROR_MSG_CONSTANT = "constant";
+  static final String XML_ERROR_MSG_FORMAT = "format";
   static final String XML_ERROR_MSG_PLACEHOLDER = "{0}";
 
   static void setErrorMessages(Map<String, String> map, Xml xmlString) {
@@ -138,5 +139,6 @@ final class Error {
     map.put(Item.REGEX, xml.get(XML_ERROR_MSG_REGEX));
     map.put(Item.JAVA, xml.get(XML_ERROR_MSG_JAVA));
     map.put(Item.CONSTANT, xml.get(XML_ERROR_MSG_CONSTANT));
+    map.put(Item.FORMAT, xml.get(XML_ERROR_MSG_FORMAT));
   }
 }

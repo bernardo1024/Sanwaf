@@ -145,7 +145,7 @@ public class ItemLengthsTest {
     assertTrue(shield.minLen == Integer.MAX_VALUE);
     assertTrue(shield.regexMinLen == Integer.MAX_VALUE);
 
-    Item p = shield.getParameter(shield.parameters, "MaxMinLen");
+    Item p = shield.getItem(shield.parameters, "MaxMinLen");
     assertTrue(p.max == Integer.MAX_VALUE);
     assertTrue(p.min == Integer.MAX_VALUE);
   }

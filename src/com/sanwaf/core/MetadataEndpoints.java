@@ -49,21 +49,21 @@ public class MetadataEndpoints {
     }
   }
 
-  static boolean isStrictError( ServletRequest req, Metadata meta) {
-    if(meta.endpointIsStrict) {
-      if(!meta.endpointIsStrictAllowLess) {
-        for(String name : meta.items.keySet() ) {
+  static boolean isStrictError(ServletRequest req, Metadata meta) {
+    if (meta.endpointIsStrict) {
+      if (!meta.endpointIsStrictAllowLess) {
+        for (String name : meta.items.keySet()) {
           String s = req.getParameter(name);
-          if(s == null) {
+          if (s == null) {
             return true;
           }
         }
       }
-      
+
       Enumeration<?> names = req.getParameterNames();
       while (names.hasMoreElements()) {
         String k = (String) names.nextElement();
-        if(meta.items.get(k) == null) {
+        if (meta.items.get(k) == null) {
           return true;
         }
       }
@@ -77,16 +77,16 @@ public class MetadataEndpoints {
     List<Boolean> orRequired = new ArrayList<>();
     List<Boolean> andRequired = new ArrayList<>();
     setAndOrConditions(value, req, meta, andOrBlocks, orRequired, andRequired);
-    
+
     int andTrueCount = 0;
-    for(boolean and : andRequired) {
-      if(and) {
+    for (boolean and : andRequired) {
+      if (and) {
         andTrueCount++;
       }
     }
     boolean orFoundTrue = false;
-    for(boolean or : orRequired) {
-      if(or) {
+    for (boolean or : orRequired) {
+      if (or) {
         orFoundTrue = true;
         break;
       }
@@ -104,8 +104,7 @@ public class MetadataEndpoints {
       }
       if (isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req, meta)) {
         setAndOrCondition(orRequired, andRequired, nextIsAnd, true);
-      }
-      else {
+      } else {
         setAndOrCondition(orRequired, andRequired, nextIsAnd, false);
       }
       nextIsAnd = false;
@@ -154,21 +153,22 @@ public class MetadataEndpoints {
     }
 
     Item parentItem = meta.items.get(tagKeyValuePair[0]);
-    if (parentItem != null) {
-      if (tagKeyValuePair.length > 1 && tagKeyValuePair[1].equals("=")) {
+
+    if (tagKeyValuePair.length > 1) {
+      if(tagKeyValuePair[1].equals("=")) {
         return isRelatedEqual(value, parentValue, parentLen, parentItem);
       }
 
-      if (tagKeyValuePair.length > 1) {
-        String[] ors = tagKeyValuePair[1].split("\\|\\|");
-        for (String or : ors) {
-          if (or.equals(parentValue)) {
-            return true;
-          }
+      String[] ors = tagKeyValuePair[1].split("\\|\\|");
+      for (String or : ors) {
+        if (or.equals(parentValue)) {
+          return true;
         }
-        return false;
       }
+      return false;
     }
+
+    System.out.println("no parent item found. parentLen: "+parentLen+", value.len="+value.length()+" returing: " + (parentLen > 0 && value.length() == 0));
     return parentLen > 0 && value.length() == 0;
   }
 
@@ -179,7 +179,7 @@ public class MetadataEndpoints {
       if (parentLen > 0) {
         return true;
       }
-      return parentItem.required && value.length() == 0;
+      return parentItem != null && parentItem.required && value.length() == 0;
     }
   }
 

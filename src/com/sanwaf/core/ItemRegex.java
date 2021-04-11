@@ -41,13 +41,20 @@ final class ItemRegex extends Item {
     if (isSizeError(value)) {
       return true;
     }
+    if (value.length() == 0) {
+      return false;
+    }
     return !pattern.matcher(value).find();
   }
 
   private void setPattern(String value) {
-    int start = value.indexOf(REGEX);
-    if (start >= 0) {
-      patternName = value.substring(start + REGEX.length(), value.length() - 1).toLowerCase();
+    if (value.startsWith(INLINE_REGEX)) {
+      pattern = Pattern.compile(value.substring(INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
+    } else {
+      int start = value.indexOf(REGEX);
+      if (start >= 0) {
+        patternName = value.substring(start + REGEX.length(), value.length() - 1).toLowerCase();
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sanwaf.log.LoggerSystemOut;
+import com.sanwaf.log.SimpleLogger;
 
 public class OtherClassesTest {
   static Sanwaf sanwaf;
@@ -37,7 +37,7 @@ public class OtherClassesTest {
 
   @Test
   public void TestLoggerSystemOut() {
-    LoggerSystemOut logger = new LoggerSystemOut();
+    SimpleLogger logger = new SimpleLogger();
     logger.error("foobar-error");
     logger.info("foobar-info");
 

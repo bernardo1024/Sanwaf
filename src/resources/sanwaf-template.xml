@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-<!-- Sanwaf - Sanitation Web Application Filter, Configuration file -->
+<!-- Sanwaf-Server - Sanitation Web Application Firewall, Configuration file -->
 
 <!-- 
 	OVERVIEW
@@ -14,7 +14,7 @@
 	Sanwaf works on the basis of sanitizing, or pre-validating data prior to application code execution.
 
 	IMPLEMENTATION
-	*************
+	**************
 		Create an Filter or Interceptor to and call the Sanwaf.isThreatDetected() method to validate incoming requests.
 		For examples:
 	
@@ -55,24 +55,34 @@
 	SUMMARY: (see below for guide)
 	********
 		c		- Character
-		n 		- Number
-		n{} 	- Delimited list of Numbers
+		n 	- Number
+		n{} - Delimited list of Numbers
 		a		- Alphanumeric
-		a{}		- Alphanumeric and stated additional characters
+		a{}	- Alphanumeric and stated additional characters
 		s		- String (uses regex's - most expensive - try to use sparingly)
-		k{}		- Must be equal to the of if the Constant values provided
-		r{}		- Custom regex expression (reusable per field regex capabilities)
-		j{}		- Java Class.method - returns true/false for pass/fail
+		k{}	- Must be equal to the of if the Constant values provided
+    r{} - Custom regex expression (reusable per field regex capabilities)
+    x{} - Inline regex expression specified for single parameter/header/cookie only
+		j{}	- Java Class.method - returns true/false for pass/fail
+		f{} - The Format data type sets the element to use a specified Format 
 		
 		See below for specifying max/min and parameter level error messages
 
 
 	CONFIGURATION:
 	**************
-	You configure how submitted data (parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
-	The secured section contains the following groups: parameters, headers, cookies. 
+	You configure how submitted data (endpoints/parameters/headers/cookies) get processed in the shields/shield/metadata/secured section of this XML file.
+	The secured section contains the following groups: endpoints, parameters, headers, cookies. 
 						
 		<secured>
+      <endpoints>
+        <endpoint>
+          <uri></uri>
+          <items>
+            <item><name></name><type></type><max></max><min></min><msg></msg></item>
+          </items>
+        </endpoint>
+      </endpoints>
 			<parameters>
 				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</parameters>
@@ -89,17 +99,21 @@
 		<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
 	where
 	
-		<name></name>	- parameter/header/cookie name
-						- to specify many 'names' in one item tag by using the ':::' delimiter.  
-						- for example:
-							- <name>parameter1</name>
-							- <name>parameter1:::parameter2:::parameter3</name> 
-		<type></type>	- the parameter data type (see Custom Data types above) (defaults to 's' if not specified)
-		<max></max>		- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
-		<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
-		<msg></msg>		- the error message for the parameter(s) (uses the shield or global error message is not specified)
-		<uri></uri>	- the path that must exist for the parameter evaluation to occur 
-					- to specify many uri's for one item use the ':::' delimiter.
+		<name></name>	          - parameter/header/cookie name
+														- to specify many 'names' in one item tag by using the ':::' delimiter.  
+                            - for example:
+														  - <name>parameter1</name>
+														  - <name>parameter1:::parameter2:::parameter3</name> 
+		<type></type>	          - the parameter data type (see Custom Data types above) (defaults to 's' if not specified)
+		<max></max>		          - the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
+		<min></min>		          - the min length allowed for this parameter (defaults to 0 if not specified) 
+    <max-value></max-value> - the max value allowed for a numeric or numeric delimited parameter
+    <min-value></min-value> - the min value allowed for a numeric or numeric delimited parameter 
+		<msg></msg>		          - the error message for the parameter(s) (uses the shield or global error message is not specified)
+		<uri></uri>	            - the path that must exist for the parameter evaluation to occur 
+					                     - to specify many uri's for one item use the ':::' delimiter.
+		<req></req>             - true/false - specify that the parameter is required (used with max & min values)
+		                          - if you want a parameter to be between 4-10 char in length, but not required, this req to false
 		
 	EXAMPLE:
 	********
@@ -107,7 +121,7 @@
 			<item><name>telephone</name><type>r{telephone}</type><max>1</max><min>12</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
 			<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
 			<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
-			<item><name>count</name><type>n</type><max>0</max><min>1</min></item>
+			<item><name>count</name><type>n</type><max>0</max><min>1</min><req>true</req></item>
 		</parameters>
 
 
@@ -154,22 +168,39 @@
 				FORMAT: 		k{<comma separated list of strings>}
 				EXAMPLE: 		using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
 
-	(Custom Regex)
-		r{}		DESCRIPTION: 	Custom Regex Expression in this file (for reuse)
-								Custom Regex's are specified in the Shield's customPatterns section
-								Regex must not include the '/' markers nor any flags.  
-								For example, only provide the value for <regex>:
-									/<regex>/gimsuy  
-				FORMAT: 		r{CustomRegexName}
-	
-	(Java)
-		j{}		DESCRIPTION: 	Java, call java class for processing
-								-The key value and the ServletRequest object is passed to the method
-								-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-									For example:
-										public static boolean methodName(String s, ServletRequest request)
-											return true for threat found, else false
-				FORMAT: 		j{fully_qualified_className.methodName()}
+  (Custom Regex)
+    r{}   DESCRIPTION:  Custom Regex Expression in this file (for reuse)
+                Custom Regex's are specified in the Shield's customPatterns section
+                Regex must not include the '/' markers nor any flags.  
+                For example, only provide the value for "<regex>" below:
+                  /<regex>/gimsuy  
+        FORMAT:     r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns xml section
+  
+  (Inline Regex)
+    x{}   DESCRIPTION:  Inline Regex Expression in this file (not for reuse, specified in the type)
+                Regex must not include the '/' markers nor any flags.  
+                For example, only provide the value for "<regex>" below:
+                  /<regex>/gimsuy
+        FORMAT:     x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
+  
+  (Java)
+    j{}   DESCRIPTION:  Java, call java class for processing
+                -The key value and the ServletRequest object is passed to the method
+                -The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+                  For example:
+                    public static boolean methodName(String s, ServletRequest request)
+                      return true for threat found, else false
+        FORMAT:     j{fully_qualified_className.methodName()}
+
+  (Format)
+    f{}   DESCRIPTION:  The Format data type sets the element to use a Format 
+								-Three special characters are provided to be used in formats:  
+								  # - represents a number 
+								  A - represents an Uppercase character 
+								  a - represents an lowercase character 
+								  Use a combination of the special and non-special characters to create formats 
+  								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
+        FORMAT:     f{format-string}
 
  -->
 
@@ -209,6 +240,7 @@
 			<string><![CDATA[ <b>Invalid text provided.</b>&nbsp;<i>Recommended Correction: Add a space before any special characters, such as: <b>&nbsp;&lt;&nbsp;&gt;&nbsp;:</b></i>]]></string>
 			<regex><![CDATA[ Invalid value provided, please try again.]]></regex>
 			<java><![CDATA[ Invalid value provided.]]></java>
+      <format><![CDATA[  Failed to conform to format: {0}]]></format>
 		</errorMessages>
 	</global-settings>
 	
@@ -240,6 +272,7 @@
 					<string></string>
 					<regex></regex>
 					<java></java>
+					<format></format>
 				</errorMessages>
 				-->
 	      </shield-settings>
@@ -316,34 +349,35 @@
 				
 				<!-- Secured section is where you specify parameters/headers/cookies to be protected by Sanwaf -->
 				<secured>
-				  <!-- endpoint's group parameters for given endpoint uri's allowing more complex processing such as required, and relationships -->
-				  <!-- see the Sanwaf-ui-2-server project for automating this section in your build pipeline -->
+				  <!-- endpoint's group parameters for given endpoint uri's allowing more complex processing such as required, and relationships
+				       see the Sanwaf-ui-2-server project for automating this section in your build pipeline -->
           <endpoints>
             <endpoint>
               <!-- URI must be unique -->
               <uri></uri>
-              <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" (less than) to not fail if there are less parameters than specified. -->
+              <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" or "less" to not fail if there are less parameters than specified. -->
               <strict></strict>
               <!-- list of parameters for the URI -->
               <items>
                 <!--  note the additional attributes: <req> & <related>.  See the Sanwaf-ui project for details on using these paramters -->
                 <!-- 
-                <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+                <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                  -->
               </items>
             </endpoint>
           </endpoints>
   				<parameters>
 					<!-- 
-						<item><name>char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>parms:::use:::the:::same:::settings</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>alphanumericandmore</name><type>a{'}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>regex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
+						<item><name>char</name><type>c</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>parms:::use:::the:::same:::settings</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>alphanumericandmore</name><type>a{'}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+						<item><name>regex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+            <item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+            <item><name>format</name><type>f{###-###-####}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
 					-->
 					</parameters>
 					<headers>
@@ -354,9 +388,9 @@
 			</metadata>
 		</shield>
 		
-		<!-- child-shield's have the same XML format as the shield (including <child></child> tags)-->
-		<!-- child-shield's are engaged when a shield specifies a <child></child> tag and the maxLen of the shield is violated -->
-    <!-- child-shield's are intended to be used as a secondary form of protection done for performance reasons -->
+		<!-- child-shield's have the same XML format as the shield (including <child></child> tags)
+		     child-shield's are engaged when a shield specifies a <child></child> tag and the maxLen of the shield is violated 
+         child-shield's are intended to be used as a secondary form of protection done for performance reasons -->
     <child-shield>
     </child-shield>
 

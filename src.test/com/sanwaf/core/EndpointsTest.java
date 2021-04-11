@@ -45,7 +45,23 @@ public class EndpointsTest {
   }
 
   @Test
+  public void testEndpointRegex() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("endpointRegex", "a");
+    Boolean isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("endpointRegex", "foo@bar.com");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(!isThreat);
+  }
+
+  @Test
   public void testEndpointMaxMinValue() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+/*
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "10");
@@ -81,11 +97,11 @@ public class EndpointsTest {
     request.addParameter("max-min-value", "aa");
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
-
-    request = new MockHttpServletRequest();
+*/
+    MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "");
-    isThreat = sanwaf.isThreatDetected(request);
+    boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
 
@@ -207,6 +223,12 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("format", "");
     isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(!isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("formatRequired", "");
+    isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
 
@@ -314,6 +336,32 @@ public class EndpointsTest {
     assertTrue(isThreat);
   }
 
+
+  @Test
+  public void testEndpointRelatedNoParentDefined() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    //related-simple-or-no-parent-parent:Yes<
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-simple-or-no-parent-child", "");
+    request.addParameter("related-simple-or-no-parent-parent", "No");
+    boolean isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(!isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-simple-or-no-parent-child", "");
+    request.addParameter("related-simple-or-no-parent-parent", "Yes");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-simple-or-no-parent-child", "abcdefg");
+    request.addParameter("related-simple-or-no-parent-parent", "Yes");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(!isThreat);
+  }
+  
   @Test
   public void testEndpointRelatedSimpleOr() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     //related-simple-or-child<related>related-simple-or-parent:aaa||bbb</related>
@@ -571,6 +619,21 @@ public class EndpointsTest {
       isThreat = sanwaf.isThreatDetected(request);
       assertTrue(!isThreat);
 
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictWithLessWord.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      request.addParameter("parm3", "aaa");
+      request.addParameter("parmEXTRA", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictWithLessWord.jsp");
+      request.addParameter("parm1", "aaa");
+      request.addParameter("parm2", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(!isThreat);
     }
 
 }

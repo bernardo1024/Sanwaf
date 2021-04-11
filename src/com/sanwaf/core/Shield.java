@@ -27,7 +27,7 @@ final class Shield {
   static final String XML_REGEX_ALWAYS_REGEX_EXCLUSIONS = "exclusions";
   static final String XML_REGEX_PATTERNS_AUTO = "autoRunPatterns";
   static final String XML_REGEX_PATTERNS_CUSTOM = "customPatterns";
-  
+
   static final String XML_KEY = "key";
   static final String XML_VALUE = "value";
   static final String XML_CASE_SENSITIVE = "caseSensitive";
@@ -59,17 +59,17 @@ final class Shield {
   }
 
   boolean threatDetected(ServletRequest req) {
-    return ((endpoints.enabled && endpointsThreatDetected(req)) ||
-            (parameters.enabled && parameterThreatDetected(req)) || 
-            (headers.enabled && headerThreatDetected(req)) || 
-            (cookies.enabled && cookieThreatDetected(req)));
+    return ((endpoints.enabled && endpointsThreatDetected(req)) || (parameters.enabled && parameterThreatDetected(req)) || (headers.enabled && headerThreatDetected(req))
+        || (cookies.enabled && cookieThreatDetected(req)));
   }
 
   private boolean endpointsThreatDetected(ServletRequest req) {
-    HttpServletRequest hreq = (HttpServletRequest)req;
+    HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
-    Metadata parms = endpoints.endpointParameters.get(uri);
-    if(parms == null) { return false; }
+    Metadata metadata = endpoints.endpointParameters.get(uri);
+    if (metadata == null) {
+      return false;
+    }
 
     String k = null;
     String[] values = null;
@@ -78,14 +78,14 @@ final class Shield {
       k = (String) names.nextElement();
       values = req.getParameterValues(k);
       for (String v : values) {
-        if (threat(req, parms, k, v, true)) {
+        if (threat(req, metadata, k, v, true)) {
           return true;
         }
       }
     }
     return false;
   }
-  
+
   private boolean parameterThreatDetected(ServletRequest req) {
     String k = null;
     String[] values = null;
@@ -106,9 +106,9 @@ final class Shield {
     Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
     while (names.hasMoreElements()) {
       String s = String.valueOf(names.nextElement());
-      Enumeration<?> items = ((HttpServletRequest) req).getHeaders(s);
-      while (items.hasMoreElements()) {
-        if (threat(req, headers, s, (String) items.nextElement())) {
+      Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
+      while (headerEnumeration.hasMoreElements()) {
+        if (threat(req, headers, s, (String) headerEnumeration.nextElement())) {
           return true;
         }
       }
@@ -117,9 +117,9 @@ final class Shield {
   }
 
   private boolean cookieThreatDetected(ServletRequest req) {
-    Cookie[] items = ((HttpServletRequest) req).getCookies();
-    if (items != null) {
-      for (Cookie c : items) {
+    Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
+    if (cookieArray != null) {
+      for (Cookie c : cookieArray) {
         if (threat(req, cookies, c.getName(), c.getValue())) {
           return true;
         }
@@ -137,80 +137,82 @@ final class Shield {
   }
 
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint) {
-    if (key == null || value == null) {
+    return threat(req, meta, key, value, isEndpoint, false);
+  }
+
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceRegexAlways) {
+    if (value == null) {
       return false;
     }
     int len = value.length();
     if (len < minLen || len > maxLen) {
       return handleChildShield(req, value);
     }
-    Item parm;
+    Item item;
     if (meta != null) {
-      parm = getParmFromMetaOrIndex(meta, key);
-      if(parm == null) {
-        return false;
+      item = getItemFromMetaOrIndex(meta, key);
+      if (item == null) {
+        if (forceRegexAlways) {
+          item = new ItemString();
+        } else {
+          return false;
+        }
       }
     } else {
-      parm = new ItemString();
+      item = new ItemString();
     }
 
-    if(isEndpoint && isEndpointThreat(parm, value, req, meta)) {
+    return isInError(req, meta, value, isEndpoint, item);
+  }
+
+  private boolean isInError(ServletRequest req, Metadata meta, String value, boolean isEndpoint, Item item) {
+    if (item.required && (value == null ||value.length() == 0)) {
       return true;
     }
-
-    return parm.inError(req, this, value);
+    return (isEndpoint && isEndpointThreat(item, value, req, meta)) || item.inError(req, this, value);
   }
-  
-  private Item getParmFromMetaOrIndex(Metadata meta, String key) {
-    Item parm =  getParameterFromMetadata(meta, key);
-    if(parm == null) {
+
+  private Item getItemFromMetaOrIndex(Metadata meta, String key) {
+    Item item = getItemFromMetadata(meta, key);
+    if (item == null) {
       String a = meta.getFromIndex(key);
       if (a == null) {
         return null;
       }
-      parm = getParameterFromMetadata(meta, a);
-      if (parm == null) {
+      item = getItemFromMetadata(meta, a);
+      if (item == null) {
         return null;
       }
     }
-    return parm;
+    return item;
   }
-  
+
   private boolean isEndpointThreat(Item item, String value, ServletRequest req, Metadata meta) {
-    if(MetadataEndpoints.isStrictError(req, meta)) {
+    if (MetadataEndpoints.isStrictError(req, meta)) {
       return true;
     }
-    
-    if(item.required && value.length() == 0) { 
-      return true; 
-    }
-    
-    if(item.format.length() > 0 && Metadata.isFormatError(item.format, value)) {
-      return true;
-    }
-    
+
     return item.related.length() > 0 && !endpoints.isRelateValid(item.related, value, req, meta);
   }
 
   private boolean handleChildShield(ServletRequest req, String value) {
-    if(childShield != null) {
-      if(req == null) {
+    if (childShield != null) {
+      if (req == null) {
         return childShield.threat(value);
-      }
-      else {
+      } else {
         return childShield.threatDetected(req);
       }
     }
     return false;
   }
 
-  private Item getParameterFromMetadata(Metadata meta, String key) {
-    Item parm;
-    parm = getParameter(meta, key);
-    if (parm == null && regexAlways && !regexAlwaysExclusions.contains(key)) {
-      parm = new ItemString();
+  private Item getItemFromMetadata(Metadata meta, String key) {
+    Item item;
+    item = getItem(meta, key);
+    if (item == null && regexAlways && !regexAlwaysExclusions.contains(key)) {
+      item = new ItemString();
     }
-    return parm;
+    return item;
   }
 
   String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
@@ -230,7 +232,7 @@ final class Shield {
   }
 
   String getAllowListedHeader(String name, HttpServletRequest req) {
-    Item item = getParameterFromMetadata(headers, name);
+    Item item = getItemFromMetadata(headers, name);
     if (item != null) {
       return req.getHeader(name);
     }
@@ -238,7 +240,7 @@ final class Shield {
   }
 
   String getAllowListedCookie(String name, HttpServletRequest req) {
-    Item item = getParameterFromMetadata(cookies, name);
+    Item item = getItemFromMetadata(cookies, name);
     if (item != null) {
       Cookie[] cookieValues = req.getCookies();
       if (cookieValues != null) {
@@ -253,33 +255,46 @@ final class Shield {
   }
 
   String getAllowListedParameter(String name, HttpServletRequest req) {
-    Item item = getParameterFromMetadata(parameters, name);
+    Item item = getItemFromMetadata(parameters, name);
     if (item != null) {
       return req.getParameter(name);
     }
     return null;
   }
 
-  Item getParameter(Metadata meta, String key) {
-    Item parm;
+  Item getItem(Metadata meta, String key) {
+    Item item;
     if (meta.caseSensitive) {
-      parm = meta.items.get(key);
+      item = meta.items.get(key);
     } else {
-      parm = meta.items.get(key.toLowerCase());
+      item = meta.items.get(key.toLowerCase());
     }
-    return parm;
+    return item;
   }
 
   List<Error> getErrors(ServletRequest req, String key, String value) {
     return getErrors(req, key, value, false);
   }
-  
+
   List<Error> getErrors(ServletRequest req, String key, String value, boolean forceRegexAlways) {
     List<Error> errors = new ArrayList<>();
-    Error err = getErrorForMetadata(req, parameters, key, value, forceRegexAlways);
+
+    if (req != null) {
+      HttpServletRequest hreq = (HttpServletRequest) req;
+      String uri = hreq.getRequestURI();
+      Metadata endpointsMeta = endpoints.endpointParameters.get(uri);
+      if (endpointsMeta != null) {
+        Error err = getErrorForMetadata(req, endpointsMeta, key, value, forceRegexAlways, true);
+        if (err != null) {
+          errors.add(err);
+        }
+      }
+    }
+
+    Error err = getErrorForMetadata(req, parameters, key, value, forceRegexAlways, false);
     if (err != null) {
       errors.add(err);
-      if(forceRegexAlways) {
+      if (forceRegexAlways) {
         return errors;
       }
     }
@@ -293,24 +308,25 @@ final class Shield {
     }
     return errors;
   }
-  
+
   private Error getErrorForMetadata(ServletRequest req, Metadata meta, String key, String value) {
-    return getErrorForMetadata(req, meta, key, value, false);
+    return getErrorForMetadata(req, meta, key, value, false, false);
   }
-  
-  private Error getErrorForMetadata(ServletRequest req, Metadata meta, String key, String value, boolean forceRegexAlways) {
-    Item p = getParameter(meta, key);
-    if (p == null) {
+
+  private Error getErrorForMetadata(ServletRequest req, Metadata meta, String key, String value, boolean forceRegexAlways, boolean isEndpoint) {
+    if (!threat(req, meta, key, value, isEndpoint, forceRegexAlways)) {
+      return null;
+    }
+
+    Item item = getItem(meta, key);
+    if (item == null) {
       if (regexAlways || forceRegexAlways) {
-        p = new ItemString();
+        item = new ItemString();
       } else {
         return null;
       }
     }
-    if (p.inError(req, this, value)) {
-      return new Error(this, p, key, value);
-    }
-    return null;
+    return new Error(this, item, key, value);
   }
 
   // XML LOAD CODE
@@ -325,12 +341,12 @@ final class Shield {
     if (minLen == -1) {
       minLen = Integer.MAX_VALUE;
     }
-    
+
     String childShieldName = settingsBlockXml.get(XML_CHILD);
-    if(childShieldName.length() > 0) {
+    if (childShieldName.length() > 0) {
       loadChildShield(sanwaf, xml, childShieldName, logger);
     }
-    
+
     Error.setErrorMessages(errorMessages, settingsBlockXml);
 
     Xml regexBlockXml = new Xml(shieldXml.get(XML_REGEX_CONFIG));
@@ -366,7 +382,7 @@ final class Shield {
     for (String child : children) {
       Xml childXml = new Xml(child);
       Xml settings = new Xml(childXml.get(XML_SHIELD_SETTINGS));
-      if(settings.get(XML_NAME).equals(childShieldName)) {
+      if (settings.get(XML_NAME).equals(childShieldName)) {
         childShield = new Shield(sanwaf, xml, new Xml(child), logger);
         break;
       }
@@ -406,7 +422,7 @@ final class Shield {
       sb.append("\nSettings:\n");
       sb.append("\t").append(XML_MAX_LEN).append("=").append(maxLen).append("\n");
       sb.append("\t").append(XML_MIN_LEN).append("=").append(minLen).append("\n");
-      if(childShield != null) {
+      if (childShield != null) {
         sb.append("\t").append(XML_CHILD_SHIELD).append("=").append(childShield.name).append("\n");
       }
       sb.append("\t").append("regex ").append(XML_MIN_LEN).append("=").append(regexMinLen).append("\n");
@@ -447,6 +463,7 @@ final class Shield {
         appendPItemMapToSB(headers.items, sb, "\tHeaders");
         appendPItemMapToSB(cookies.items, sb, "\tCookies");
         appendPItemMapToSB(parameters.items, sb, "\tParameters");
+        appendEndpoints(endpoints, sb, "\tEndpoints\t");
       }
     }
     logger.info(sb.toString());
@@ -458,6 +475,16 @@ final class Shield {
     } catch (NumberFormatException nfe) {
       return d;
     }
+  }
+
+  static void appendEndpoints(MetadataEndpoints endpoints, StringBuilder sb, String label) {
+    Iterator<Map.Entry<String, Metadata>> it = endpoints.endpointParameters.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry<String, Metadata> pair = it.next();
+      appendPItemMapToSB(pair.getValue().items, sb, label + pair.getKey());
+      // it.remove(); // avoids a ConcurrentModificationException
+    }
+
   }
 
   static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label) {

@@ -151,6 +151,7 @@ public class DatatypeTest {
   public void testAlphanumericAndMoreTypeSpecialChars() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a b\tc\nd\re"));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a \\"));
   }
 
   @Test
@@ -340,4 +341,37 @@ public class DatatypeTest {
     boolean b = shield.threat(req, shield.parameters, "JavaInvalidMethod", "0000");
     assertEquals(false, b);
   }
+
+  @Test
+  public void testFormatType() {
+    ItemFormat p = new ItemFormat("", "f{(###) ###-####", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.formatString != null);
+    assertTrue(p.formatString.length() > 0);
+  }
+
+  @Test
+  public void testInvalidFormatType() {
+    ItemFormat p = new ItemFormat("", "f {(###) ###-####", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.formatString == null);
+  }
+
+  @Test
+  public void testFormat() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", "(123) 456-7890 abc ABC"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat", "BAR"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", null));
+  }
+
+  @Test
+  public void testFormatRequired() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", "(123) 456-7890 abc ABC"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired", "BAR"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", null));
+  }
+
+
 }

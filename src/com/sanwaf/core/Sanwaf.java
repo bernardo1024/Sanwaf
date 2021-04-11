@@ -13,7 +13,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import com.sanwaf.log.Logger;
-import com.sanwaf.log.LoggerSystemOut;
+import com.sanwaf.log.SimpleLogger;
 
 public final class Sanwaf {
   private static final String STANDALONE_XML_FILENAME = "sanwaf.xml";
@@ -48,8 +48,9 @@ public final class Sanwaf {
    * @return void
    */
   public Sanwaf() throws IOException {
-    this(new LoggerSystemOut(), "/" + STANDALONE_XML_FILENAME);
-    logger.info("NOTE: Sanwaf is NOT configured with a valid Logger and is using the LoggerSystemOut class which uses System.out.println(...).  To correct this, implement the com.sanwaf.log.Logger Interface and provide in the Sanwaf constructor");
+    this(new SimpleLogger(), "/" + STANDALONE_XML_FILENAME);
+    logger.info(
+        "NOTE: Sanwaf is NOT configured with a valid Logger and is using the Default \"SimpleLogger\" class.  To correct this, implement the com.sanwaf.log.Logger Interface and provide your logger in the Sanwaf constructor.");
   }
 
   /**
@@ -155,7 +156,7 @@ public final class Sanwaf {
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
-   *          the shields name that you want to execute the autoRunPatterns from 
+   *          the shields name that you want to execute the autoRunPatterns from
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName) {
@@ -183,23 +184,25 @@ public final class Sanwaf {
    * </pre>
    * 
    * @param value
-   *         the string you want to scan for threats
+   *          the string you want to scan for threats
    * @param shieldName
-   *          The shields name that you want to execute the autoRunPatterns from 
+   *          The shields name that you want to execute the autoRunPatterns from
    * @param setErrorAttributes
-   *          boolean to indicate whether to set the tracking id and error json to the request's attributes 
+   *          boolean to indicate whether to set the tracking id and error json
+   *          to the request's attributes
    * @param req
-   *          ServletRequest to add the error attributes to (can be null if setErrorAttributes is false)
+   *          ServletRequest to add the error attributes to (can be null if
+   *          setErrorAttributes is false)
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req) {
     boolean foundThreat = checkForThreats(value, shieldName);
-    if(foundThreat && setErrorAttributes) {
+    if (foundThreat && setErrorAttributes) {
       addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(value));
     }
     return foundThreat;
   }
-  
+
   /**
    * Test if a threat is detected in a value using XML provided
    *
@@ -224,28 +227,35 @@ public final class Sanwaf {
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
-   *          the shields name that you want to execute the autoRunPatterns from (String data type only)
-   *          or use the custom regex's specified (regex data type only) 
+   *          the shields name that you want to execute the autoRunPatterns from
+   *          (String data type only) or use the custom regex's specified (regex
+   *          data type only)
    * @param setErrorAttributes
-   *          boolean to indicate whether to set the tracking id and error json to the request's attributes 
+   *          boolean to indicate whether to set the tracking id and error json
+   *          to the request's attributes
    * @param req
    *          calling ServletRequest object used to test URIs
    * @param xml
-   *          XML String to configure the data type.  See sanwaf.xml shield/metadata/secured section for configuration details
+   *          XML String to configure the data type. See sanwaf.xml
+   *          shield/metadata/secured section for configuration details
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml) {
     Item item = Item.parseItem(new Xml(xml));
     Shield sh = getShield(shieldName);
-    if(sh == null) {
+    if (sh == null) {
       logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
       return false;
     }
-    if(item.inError(req, sh, value)) {
-      if(setErrorAttributes) {
-        Error error = new Error(sh, item, null, value);
+    if (item.inError(req, sh, value)) {
+      Error error = new Error(sh, item, null, value);
+      if (setErrorAttributes) {
         addErrorAttributes(req, getSortOfRandomNumber(), Arrays.asList(error));
       }
+      // if(verbose) {
+      // logger.error("from Sanwaf.isThreat(...): " +
+      // Error.toJson(Arrays.asList(error)));
+      // }
       return true;
     }
     return false;
@@ -253,13 +263,13 @@ public final class Sanwaf {
 
   private boolean checkForThreats(String value, String shieldName) {
     for (Shield sh : shields) {
-      if((shieldName == null || shieldName.contains(sh.name)) && sh.threat(null, null, "", value)) {
-          return true;
+      if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(null, null, "", value)) {
+        return true;
       }
     }
     return false;
   }
-  
+
   /**
    * Retrieve an allow-listed parameter/header/cookie
    * 
@@ -309,8 +319,8 @@ public final class Sanwaf {
    * Get the Sanwaf Tracking ID
    * 
    * <pre>
-   *  useful for displaying to your users in case they call support. this allows
-   *  you to pull the exact exception from the log file
+   * useful for displaying to your users in case they call support. this allows
+   * you to pull the exact exception from the log file
    * 
    * <pre>
    * 
@@ -377,17 +387,8 @@ public final class Sanwaf {
   }
 
   private void getShieldErrors(ServletRequest req, List<Error> errors, String key, String value) {
-    if(req == null) {
-      for (Shield sh : shields) {
-        errors.addAll(sh.getErrors(req, key, value, true));
-      }
-    }
-    else {
-      for (Shield sh : shields) {
-        if (sh.threatDetected(req)) {
-          errors.addAll(sh.getErrors(req, key, value));
-        }
-      }
+    for (Shield sh : shields) {
+      errors.addAll(sh.getErrors(req, key, value, (req == null ? true : false)));
     }
   }
 
@@ -405,12 +406,12 @@ public final class Sanwaf {
   }
 
   static String getSortOfRandomNumber() {
-      java.security.SecureRandom srandom = new java.security.SecureRandom();
-      DecimalFormat fStart = new DecimalFormat("00000");
-      DecimalFormat fEnd = new DecimalFormat("0000");
-      return fStart.format(srandom.nextInt(99999)) + "-" + fEnd.format(srandom.nextInt(9999)); 
+    java.security.SecureRandom srandom = new java.security.SecureRandom();
+    DecimalFormat fStart = new DecimalFormat("00000");
+    DecimalFormat fEnd = new DecimalFormat("0000");
+    return fStart.format(srandom.nextInt(99999)) + "-" + fEnd.format(srandom.nextInt(9999));
   }
-  
+
   Shield getShield(String name) {
     for (Shield shield : shields) {
       if (shield.name.equalsIgnoreCase(name)) {

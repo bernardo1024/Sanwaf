@@ -18,7 +18,7 @@ class ItemNumeric extends Item {
     int errStart = -1;
     boolean foundDot = false;
     int start = 0;
-    if (value.charAt(0) == '-') {
+    if (len > 0 && value.charAt(0) == '-') {
       start = 1;
     }
 
@@ -32,10 +32,7 @@ class ItemNumeric extends Item {
           errStart = checkErrStart(errStart, i);
         }
       } else {
-        if (errStart >= 0) {
-          points.add(new Point(errStart, i));
-          errStart = -1;
-        }
+        errStart = checkToAddPoint(points, errStart, i);
       }
     }
     if (errStart >= 0) {
@@ -43,23 +40,31 @@ class ItemNumeric extends Item {
     }
     return points;
   }
-  
+
+  private int checkToAddPoint(List<Point> points, int errStart, int i) {
+    if (errStart >= 0) {
+      points.add(new Point(errStart, i));
+      errStart = -1;
+    }
+    return errStart;
+  }
+
   private int checkErrStart(int errStart, int i) {
     if (errStart < 0) {
       errStart = i;
     }
     return errStart;
   }
-  
+
   private boolean isMaxMinValueError(String value) {
     try {
-      if(maxValue > Integer.MIN_VALUE && Double.parseDouble(value) > maxValue) {
+      if (maxValue > Integer.MIN_VALUE && Double.parseDouble(value) > maxValue) {
         return true;
       }
-      if(minValue > Integer.MIN_VALUE &&  Double.parseDouble(value) < minValue) {
+      if (minValue > Integer.MIN_VALUE && Double.parseDouble(value) < minValue) {
         return true;
       }
-    }catch(NumberFormatException nfe) {
+    } catch (NumberFormatException nfe) {
       return true;
     }
     return false;
@@ -70,7 +75,10 @@ class ItemNumeric extends Item {
     if (!isUriValid(req) || isSizeError(value) || isMaxMinValueError(value)) {
       return true;
     }
-    
+    if (value == null) {
+      return false;
+    }
+
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);

@@ -165,6 +165,52 @@ public class SanwafIsThreatDynamicTest {
     assertTrue(trackId == null);
     s = Sanwaf.getErrors(request);
     assertTrue(s == null);
+
+  }
+
+  @Test
+  public void testSanWafIsThreatXRegex() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    boolean result = sanwaf.isThreat("noName", "XSS", true, request, "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == true);
+    String trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    String s = Sanwaf.getErrors(request);
+    assertTrue(s.indexOf("{\"key\":\"null\",\"value\":\"") >= 0);
+
+    result = sanwaf.isThreat("abc123!!!", "XSS", true, request, "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == true);
+    trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    s = Sanwaf.getErrors(request);
+    assertTrue(s.indexOf("{\"key\":\"null\",\"value\":\"") >= 0);
+
+    result = sanwaf.isThreat("abc123!!!", "XSS", true, request, "<item><name>noXmldefined</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == true);
+    trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    s = Sanwaf.getErrors(request);
+    assertTrue(s.indexOf("{\"key\":\"null\",\"value\":\"") >= 0);
+
+    result = sanwaf.isThreat("abc123!!!", "XSS", true, request, "<item><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == true);
+    trackId = Sanwaf.getTrackingId(request);
+    assertTrue(trackId != null);
+    s = Sanwaf.getErrors(request);
+    assertTrue(s.indexOf("{\"key\":\"null\",\"value\":\"") >= 0);
+
+    request = new MockHttpServletRequest();
+    result = sanwaf.isThreat("123.123.1234", "XSS", true, request, "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == false);
+
+    result = sanwaf.isThreat("123.123.1234", "XSS", true, request, "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == false);
+
+    result = sanwaf.isThreat("123.123.1234", "XSS", true, request, "<item><name>noXmldefined</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == false);
+
+    result = sanwaf.isThreat("123.123.1234", "XSS", true, request, "<item><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    assertTrue(result == false);
   }
 
   @Test
@@ -248,7 +294,7 @@ public class SanwafIsThreatDynamicTest {
   public void testSanWafIsThreatViolateMin() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foobar");
-    boolean result = sanwaf.isThreat(null, "XSS", true, request, "<item><name>invalidMin</name><type>n</type><max>5</max><min>2</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>");
+    boolean result = sanwaf.isThreat("3", "XSS", true, request, "<item><name>invalidMin</name><type>n</type><max>5</max><min>2</min><msg>max(5)min(5)uri(</msg><uri>/foobar</uri></item>");
     assertTrue(result == true);
     String trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);

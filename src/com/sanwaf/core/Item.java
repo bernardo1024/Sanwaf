@@ -13,8 +13,10 @@ abstract class Item {
   static final String STRING = "s";
   static final String CHAR = "c";
   static final String REGEX = "r{";
+  static final String INLINE_REGEX = "x{";
   static final String JAVA = "j{";
   static final String CONSTANT = "k{";
+  static final String FORMAT = "f{";
   static final String SEP_START = "{";
   static final String SEP_END = "}";
 
@@ -26,13 +28,12 @@ abstract class Item {
   static final String XML_ITEM_MIN = "min";
   static final String XML_ITEM_MSG = "msg";
   static final String XML_ITEM_URI = "uri";
-  
+
   static final String XML_ITEM_REQUIRED = "req";
   static final String XML_ITEM_MAX_VAL = "max-value";
   static final String XML_ITEM_MIN_VAL = "min-value";
   static final String XML_ITEM_RELATED = "related";
-  static final String XML_ITEM_FORMAT = "format";
-  
+
   String name;
   String type = null;
   int max = Integer.MAX_VALUE;
@@ -41,7 +42,6 @@ abstract class Item {
   double minValue;
   String msg = null;
   String[] uri = null;
-  String format;
 
   boolean required = false;
   String related;
@@ -58,9 +58,9 @@ abstract class Item {
   }
 
   abstract boolean inError(ServletRequest req, Shield shield, String value);
+
   abstract List<Point> getErrorPoints(Shield shield, String value);
 
-  
   static Item parseItem(Xml xml) {
     return parseItem(xml, false);
   }
@@ -87,35 +87,31 @@ abstract class Item {
     if (min == -1) {
       min = Integer.MAX_VALUE;
     }
-    if(min < -1) {
+    if (min < -1) {
       min = 0;
     }
     Item item = Item.getNewItem(name, type, min, max, msg, uri);
+
+    item.required = Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
+
     item.maxValue = Integer.MIN_VALUE;
     String sMaxVal = xml.get(XML_ITEM_MAX_VAL);
-    if(sMaxVal.length() > 0) {
+    if (sMaxVal.length() > 0) {
       item.maxValue = Double.valueOf(sMaxVal);
     }
-    
+
     item.minValue = Integer.MIN_VALUE;
     String sMinVal = xml.get(XML_ITEM_MIN_VAL);
-    if(sMinVal.length() > 0) {
+    if (sMinVal.length() > 0) {
       item.minValue = Double.valueOf(sMinVal);
     }
-    
-    item.format = xml.get(XML_ITEM_FORMAT);
 
-    if(includeEnpointAttributes) {
-      setEndpointAttributes(xml, item);
+    if (includeEnpointAttributes) {
+      item.related = xml.get(XML_ITEM_RELATED);
     }
     return item;
   }
-  
-  static void setEndpointAttributes(Xml xml, Item item) {
-    item.required =  Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
-    item.related = xml.get(XML_ITEM_RELATED);
-  }
-  
+
   static Item getNewItem(String name, Item item) {
     item.name = name;
     return item;
@@ -132,32 +128,35 @@ abstract class Item {
     if (t.equals(NUMERIC)) {
       item = new ItemNumeric(name, max, min, msg, uri);
     } else if (t.equals(NUMERIC_DELIMITED)) {
-      type = ensureTypeFormat(type);
+      type = ensureComplexTypeFormat(type);
       item = new ItemNumericDelimited(name, type, max, min, msg, uri);
     } else if (t.equals(ALPHANUMERIC)) {
       item = new ItemAlphanumeric(name, max, min, msg, uri);
     } else if (t.equals(ALPHANUMERIC_AND_MORE)) {
-      type = ensureTypeFormat(type);
+      type = ensureComplexTypeFormat(type);
       item = new ItemAlphanumericAndMore(name, type, max, min, msg, uri);
     } else if (t.equals(CHAR)) {
       item = new ItemChar(name, max, min, msg, uri);
-    } else if (t.equals(REGEX)) {
-      type = ensureTypeFormat(type);
+    } else if (t.equals(REGEX) || t.equals(INLINE_REGEX)) {
+      type = ensureComplexTypeFormat(type);
       item = new ItemRegex(name, type, max, min, msg, uri);
     } else if (t.equals(JAVA)) {
-      type = ensureTypeFormat(type);
+      type = ensureComplexTypeFormat(type);
       item = new ItemJava(name, type, max, min, msg, uri);
     } else if (t.equals(CONSTANT)) {
-      type = ensureTypeFormat(type);
+      type = ensureComplexTypeFormat(type);
       item = new ItemConstant(name, type, max, min, msg, uri);
+    } else if (t.equals(FORMAT)) {
+      type = ensureComplexTypeFormat(type);
+      item = new ItemFormat(name, type, max, min, msg, uri);
     } else {
       item = new ItemString(name, max, min, msg, uri);
     }
     return item;
   }
-  
-  private static String ensureTypeFormat(String type) {
-    if(!type.endsWith(SEP_END)){
+
+  private static String ensureComplexTypeFormat(String type) {
+    if (!type.endsWith(SEP_END)) {
       return type + SEP_END;
     }
     return type;
@@ -177,7 +176,9 @@ abstract class Item {
   }
 
   boolean isSizeError(String value) {
-    if (value == null) {
+    if (!required && (value == null || value.length() == 0)) {
+      return false;
+    } else if (value == null) {
       return min != 0;
     } else {
       return (value.length() < min || value.length() > max);
@@ -206,7 +207,6 @@ abstract class Item {
     sb.append(", max-value: ").append(maxValue);
     sb.append(", min-value: ").append(minValue);
     sb.append(", related: ").append(related);
-    sb.append(", format: ").append(format);
     return sb.toString();
   }
 }

@@ -28,15 +28,18 @@ class Metadata {
   Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict) {
     load(itemsString, caseSensitive, includeEndpointAttributes);
 
-    if(endpointIsStrict.length() > 0 && !"false".equalsIgnoreCase(endpointIsStrict)) {
+    if ("true".equalsIgnoreCase(endpointIsStrict)) {
       this.endpointIsStrict = true;
-      if(endpointIsStrict.contains("<")) {
-        this.endpointIsStrictAllowLess = true;
-      }
+    } else if ("<".equals(endpointIsStrict) || "less".equalsIgnoreCase(endpointIsStrict)) {
+      this.endpointIsStrict = true;
+      this.endpointIsStrictAllowLess = true;
     }
   }
 
   String getFromIndex(String key) {
+    if (key == null) {
+      return "";
+    }
     List<String> list = index.get(key.substring(0, 1));
     if (list == null) {
       return null;
@@ -108,8 +111,8 @@ class Metadata {
     Xml xml = new Xml(itemString);
     Item item = Item.parseItem(xml, includeEnpointAttributes);
     String namesString = xml.get(Item.XML_ITEM_NAME);
-    
-    if(namesString.contains(Shield.SEPARATOR)) {
+
+    if (namesString.contains(Shield.SEPARATOR)) {
       String[] names = namesString.split(Shield.SEPARATOR);
       for (String name : names) {
         name = refineName(name, index);
@@ -121,8 +124,7 @@ class Metadata {
         }
         items.put(name, Item.getNewItem(name, item));
       }
-    }
-    else {
+    } else {
       item.name = refineName(item.name, index);
       if (item.name != null) {
         if (!caseSensitive) {
@@ -132,7 +134,7 @@ class Metadata {
       }
     }
   }
-  
+
   static void initA2Zindex(Map<String, List<String>> map) {
     for (char ch = 'a'; ch <= 'z'; ++ch) {
       map.put(String.valueOf(ch), null);
@@ -191,25 +193,6 @@ class Metadata {
       }
     }
     return true;
-  }
-  
-  static boolean isFormatError(String format, String value) {
-    int formatLen = format.length();
-    if (value.length() != formatLen) {
-      return true;
-    }
-
-    for (int i = 0; i < value.length(); i++) {
-      char f = format.charAt(i);
-      char c = value.charAt(i);
-      if ((f == '#' && c >= '0' && c <= '9') || (f == 'A' && c >= 'A' && c <= 'Z') || (f == 'a' && c >= 'a' && c <= 'z')) {
-        continue;
-      }
-      if (c != f) {
-        return true;
-      }
-    }
-    return false;
   }
 
   static String jsonEncode(String s) {

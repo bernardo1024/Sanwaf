@@ -6,8 +6,8 @@
 	<groupId>com.sanwaf</groupId>
 	<artifactId>sanwaf</artifactId>
 	<packaging>jar</packaging>
-	<name>Sanwaf - Sanitation Web Application Firewall</name>
-	<version>0.1.3</version>
+	<name>Sanwaf-Server</name>
+	<version>0.1.4</version>
 
 	<prerequisites>
 		<maven>3.0</maven>

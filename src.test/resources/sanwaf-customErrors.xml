@@ -19,6 +19,7 @@
 			<regex><![CDATA[  Regex error msg]]></regex>
 			<java><![CDATA[  Java error msg]]></java>
 			<constant><![CDATA[  Constant error msg {0}]]></constant>
+      <format><![CDATA[  Failed to conform to format: {0}]]></format>
 		</errorMessages>
 	</global-settings>
 	
@@ -38,6 +39,7 @@
 					<regex> XSS CUSTOM Regex error msg</regex>
 					<java> XSS CUSTOM Java error msg</java>
 					<constant> XSS CUSTOM Constant error msg {0}</constant>
+          <format>XSS CUSTOM Format error msg {0}</format>
 				</errorMessages>
       </shield-settings>
 			<regex-config>
@@ -85,7 +87,8 @@
 						<item><name>Char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>Constant</name><type>k{foo,bar,far}</type><max></max><min></min><msg></msg><uri></uri></item>
 						<item><name>Regex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
-						<item><name>Java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>Java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>Format</name><type>f{###-###-####}</type><max></max><min></min><msg></msg><uri></uri></item>
 					</parameters>
 					<headers>
 						<item><name>aHeaderNumber</name><type>n</type></item>

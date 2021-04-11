@@ -109,7 +109,7 @@ public class SanwafTest {
   @Test
   public void testSanwafInstatiateLoggerOnly() {
     try {
-      Sanwaf sw = new Sanwaf(new com.sanwaf.log.LoggerSystemOut());
+      Sanwaf sw = new Sanwaf(new com.sanwaf.log.SimpleLogger());
       assertTrue(sw != null);
       sw.reLoad();
     } catch (IOException ioe) {
