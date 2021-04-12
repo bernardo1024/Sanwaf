@@ -274,15 +274,15 @@ Also note the **secured section** contains the following groups: endpoints, para
 							return true for threat found, else false
 			FORMAT: 	j{fully_qualified_className.methodName()}
 
-  	(Format)
-    	f{}   		DESCRIPTION:  	The Format data type sets the element to use a Format 
+	(Format)
+	f{}		DESCRIPTION:	The Format data type sets the element to use a Format 
 					-Three special characters are provided to be used in formats:  
-					  # - represents a number 
-					  A - represents an Uppercase character 
-					  a - represents an lowercase character 
-					  Use a combination of the special and non-special characters to create formats 
-  					  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
-        		FORMAT:     	f{format-string}
+						# - represents a number 
+						A - represents an Uppercase character 
+						a - represents an lowercase character 
+					Use a combination of the special and non-special characters to create formats 
+					For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
+			FORMAT:		f{format-string}
 
 
 ## Sample code
