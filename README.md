@@ -115,6 +115,7 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		s	- String (uses regex's - most expensive - try to use sparingly)
 		k{}	- Must be equal to the of if the Constant values provided
 		r{}	- Custom regex expression (reusable per field regex capabilities)
+		x{}	- Inline regex expression specified for single parameter/header/cookie only
 		j{}	- Java Class.method - returns true/false for pass/fail
 		f{} 	- The Format data type sets the element to use a specified Format 
 
@@ -255,8 +256,15 @@ Also note the **secured section** contains the following groups: endpoints, para
 					Regex must not include the '/' markers nor any flags.  
 					For example, only provide the value for <regex>:
 						/<regex>/gimsuy  
-			FORMAT: 	r{CustomRegexName}
-	
+			FORMAT: 	r{CustomRegexName}   - for example: r{telephone}
+
+	(Inline Regex)
+    	x{}   		DESCRIPTION:  	Inline Regex Expression in this file (not for reuse, specified in the type)
+					Regex must not include the '/' markers nor any flags.  
+					For example, only provide the value for "<regex>" below:
+					  /<regex>/gimsuy
+		        FORMAT:     	x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
+
 	(Java)
 	j{}		DESCRIPTION: 	Java, call java class for processing
 					-The key value and the ServletRequest object is passed to the method
