@@ -165,7 +165,10 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<endpoints></endpoints>		- list of endpoints to secure
 					- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
 					- <uri></uri> defines the endpoint
-					- <strict></strict> indicates to fail if any items specfied are missing or if non-defined items are in the request (missing or extra parms cause failure)
+					- <strict></strict> indicates to fail if any items specfied are missing 
+					   or if non-defined items are in the request (missing or extra parms cause failure)
+					   if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  
+					   Use "<" or "less" to not fail if there are less parameters than specified.
 					- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
 	<parameters></parameters>	- list of parameters to secure
 	<headers></headers>		- list of headers to secure
