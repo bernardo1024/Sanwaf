@@ -49,8 +49,8 @@ public final class Sanwaf {
    */
   public Sanwaf() throws IOException {
     this(new SimpleLogger(), "/" + STANDALONE_XML_FILENAME);
-    logger.info(
-        "NOTE: Sanwaf is NOT configured with a valid Logger and is using the Default \"SimpleLogger\" class.  To correct this, implement the com.sanwaf.log.Logger Interface and provide your logger in the Sanwaf constructor.");
+    logger.info("NOTE: Sanwaf is using the Default \"SimpleLogger\" logger." 
+        + " To correct this, implement the com.sanwaf.log.Logger Interface and provide your logger in the Sanwaf constructor.");
   }
 
   /**
