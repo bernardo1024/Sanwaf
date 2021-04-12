@@ -259,11 +259,11 @@ Also note the **secured section** contains the following groups: endpoints, para
 			FORMAT: 	r{CustomRegexName}   - for example: r{telephone}
 
 	(Inline Regex)
-    	x{}   		DESCRIPTION:  	Inline Regex Expression in this file (not for reuse, specified in the type)
+	x{}		DESCRIPTION:	Inline Regex Expression in this file (not for reuse, specified in the type)
 					Regex must not include the '/' markers nor any flags.  
 					For example, only provide the value for "<regex>" below:
-					  /<regex>/gimsuy
-		        FORMAT:     	x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
+						/<regex>/gimsuy
+			FORMAT:		x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
 
 	(Java)
 	j{}		DESCRIPTION: 	Java, call java class for processing
