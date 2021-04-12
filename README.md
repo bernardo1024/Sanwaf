@@ -116,6 +116,7 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		k{}	- Must be equal to the of if the Constant values provided
 		r{}	- Custom regex expression (reusable per field regex capabilities)
 		j{}	- Java Class.method - returns true/false for pass/fail
+		f{} 	- The Format data type sets the element to use a specified Format 
 
 ### Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section of this XML file.  
@@ -143,7 +144,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 				<endpoint>
 					<strict></strict>
 					<uri></uri>
-					<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related><format></format></item>
+					<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 				</endpoint>
 			</endpoints>
 			<parameters>
@@ -187,13 +188,12 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
 	<max-value></max-value>	- the max value allowed for numeric parameters
 	<min-value></min-value>	- the min value allowed for numeric parameters
-	<format></format>	- Establishes a format that the parameter must meet to be valid
 	<msg></msg>		- the error message for the parameter(s) (uses the shield or global error message is not specified)
 	<uri></uri>		- the uri that must match for the parameter evaluation to occur 
 				- to specify multiple uri's for one item, use the ':::' delimiter.  
 				- For "endpoints" the uri indicates a grouping of items to be evaulated together
-	<req></req>		- Used in endpoints only (see Sanwaf-ui project for details)
-				- Indicates if a parameter is required
+	<req></req>		- Indicates if a parameter is required thus will enforce the max & min values
+	
 	<related></related>	- Used in endpoints only (see Sanwaf-ui project for details)
 				- Establishes a relationship that must be met between parameters
 	
@@ -258,24 +258,20 @@ Also note the **secured section** contains the following groups: endpoints, para
 	j{}		DESCRIPTION: 	Java, call java class for processing
 					-The key value and the ServletRequest object is passed to the method
 					-The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-						For example:
-							public static boolean methodName(String s, ServletRequest request)
-								return true for threat found, else false
+					For example:
+						public static boolean methodName(String s, ServletRequest request)
+							return true for threat found, else false
 			FORMAT: 	j{fully_qualified_className.methodName()}
 
-### &lt;format&gt;&lt;/format&gt; Guide
-
-	A Sanwaf format is a mechanism used to ensure that data entering a system is formated to a specified format.
-	The sanwaf format has 3 special characters:
-	  #  - represents a number
-	  A  - represents an Uppercase charater
-	  a  - represents a lowercase charater
-	Use a combination of the characters to create formats.
-	For example:
-	  Telephone number: (###) ###-####
-	  Postal Code:      A#A #A#
-	
-	the sanwaf format is best used in conjunction with sanwaf-ui where when specified, will automatically format the data entered into the proper format.  See the sanwaf-ui guide for  implmention details.
+  	(Format)
+    	f{}   		DESCRIPTION:  	The Format data type sets the element to use a Format 
+					-Three special characters are provided to be used in formats:  
+					  # - represents a number 
+					  A - represents an Uppercase character 
+					  a - represents an lowercase character 
+					  Use a combination of the special and non-special characters to create formats 
+  					  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
+        		FORMAT:     	f{format-string}
 
 
 ## Sample code
@@ -288,7 +284,7 @@ Add Sanwaf as a dependency to your code:
 	<dependency>
 		<groupId>com.sanwaf</groupId>
 		<artifactId>sanwaf</artifactId>
-		<version>0.1.1</version>
+		<version>0.1.5</version>
 		<scope>compile</scope>
 	</dependency>
 
