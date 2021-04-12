@@ -75,6 +75,9 @@ class ItemNumeric extends Item {
     if (!isUriValid(req) || isSizeError(value) || isMaxMinValueError(value)) {
       return true;
     }
+    if(value.length() == 0) {
+      return false;
+    }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);

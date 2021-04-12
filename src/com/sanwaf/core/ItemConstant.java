@@ -23,6 +23,9 @@ final class ItemConstant extends Item {
     if (isSizeError(value)) {
       return true;
     }
+    if(value.length() == 0) {
+      return false;
+    }
     return !constants.contains(value);
   }
 

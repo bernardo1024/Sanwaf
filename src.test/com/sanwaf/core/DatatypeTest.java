@@ -37,6 +37,10 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.34.56.78"));
     assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "- 12345.67"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "NumericRequired", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "NumericRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "10"));
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "2"));
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "5"));
@@ -66,6 +70,10 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.a"));
     assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.a...."));
     assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.abc"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericRequired", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericRequired", ""));
   }
 
   @Test
@@ -104,6 +112,8 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMore", "123_456"));
     assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreRequired", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMoreRequired", ""));
   }
 
   @Test
@@ -120,7 +130,6 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{,}", Integer.MAX_VALUE, 0, "", "");
     assertEquals(false, p.inError(req, shield, ""));
-    assertEquals(false, p.inError(req, shield, null));
     assertEquals(false, p.inError(req, shield, "abcde"));
     assertEquals(true, p.inError(req, shield, "abcde?fg"));
 
@@ -172,6 +181,8 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "Char", "<asdffff."));
     assertEquals(false, shield.threat(req, shield.parameters, "Char", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Char", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "CharRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "CharRequired", null));
 
     ItemChar p = new ItemChar("", 1, 0, "", "");
     assertTrue(p.inError(req, shield, "12345"));
@@ -209,7 +220,12 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "abc-de-fghi"));
     assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-55"));
     assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-5555-55"));
-  }
+
+    assertEquals(false, shield.threat(req, shield.parameters, "Regex", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "Regex", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "RegexRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "RegexRequired", null));
+}
 
   @Test
   public void testRegexType() {
@@ -246,7 +262,9 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", "BAR"));
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FAR"));
     assertEquals(false, shield.threat(req, shield.parameters, "Constant", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "Constant", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "Constant", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "ConstantRequired", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "ConstantRequired", ""));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "foo"));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "bar"));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "far"));
@@ -272,7 +290,9 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345"));
     assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345678901"));//violates max setting
-    assertEquals(true, shield.threat(req, shield.parameters, "Java", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "Java", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "JavaRequired", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "JavaRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Java", "10"));
     assertEquals(false, shield.threat(req, shield.parameters, "Java", null));
     assertEquals(false, shield.threat(req, shield.parameters, "Java", "0001"));

@@ -39,6 +39,9 @@ class ItemAlphanumeric extends Item {
     if (isSizeError(value)) {
       return true;
     }
+    if(value.length() == 0) {
+      return false;
+    }
     int i = 0;
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);

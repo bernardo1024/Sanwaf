@@ -22,8 +22,11 @@ final class Error {
 
     if (value != null) {
       this.errorPoints.addAll(p.getErrorPoints(shield, value));
+      if(p.required && value.length() == 0) {
+        this.message += "<br/>Is a Required field";
+      }
       if (value.length() < p.min || value.length() > p.max) {
-        this.message += "<br>Invalid length. Must be between " + p.min + " and " + p.max + " characters";
+        this.message += "<br/>Invalid length. Must be between " + p.min + " and " + p.max + " characters";
       }
     }
   }

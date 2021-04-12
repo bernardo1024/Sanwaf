@@ -41,6 +41,9 @@ final class ItemString extends Item {
     if (isSizeError(value)) {
       return true;
     }
+    if(value.length() == 0) {
+      return false;
+    }
     for (Pattern p : shield.patterns) {
       if (p.matcher(value).find()) {
         return true;

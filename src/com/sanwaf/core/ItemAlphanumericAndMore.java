@@ -71,7 +71,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     if (isSizeError(value)) {
       return true;
     }
-    if (value == null) {
+    if (value.length() == 0) {
       return false;
     }
     for (int i = 0; i < value.length(); i++) {
