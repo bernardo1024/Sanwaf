@@ -172,7 +172,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	   Use "<" or "less" to not fail if there are less parameters than specified.
 	- Endpoints have a list of Items to secure for the specific URI
 	- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
-	- See the Sanwaf-ui-2-server project for instructions on automatically generating endpoint entries from annotated html/jsp files.
+	- Sanwaf-ui-2-server can  automatically generate endpoint entries from annotated html/jsp files.
 		- for example, the Sanwaf-UI project allows you to add attributes to html elements that perform validation on the browser
 			the Sanwaf-ui-2-server scans your files looking for the attributes and automatically generates the XML
 	<endpoints>
