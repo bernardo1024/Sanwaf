@@ -142,11 +142,6 @@ Also note the **secured section** contains the following groups: endpoints, para
 
 		<secured>
 			<endpoints>
-				<endpoint>
-					<strict></strict>
-					<uri></uri>
-					<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-				</endpoint>
 			</endpoints>
 			<parameters>
 				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
@@ -163,18 +158,33 @@ Also note the **secured section** contains the following groups: endpoints, para
 
 
 	where <secured> sections are:
-	<endpoints></endpoints>		- list of endpoints to secure
-					- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
-					- <uri></uri> defines the endpoint
-					- <strict></strict> indicates to fail if any items specfied are missing 
-					   or if non-defined items are in the request (missing or extra parms cause failure)
-					   if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  
-					   Use "<" or "less" to not fail if there are less parameters than specified.
-					- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
+	<endpoints></endpoints>		- list of endpoints to secure see below for details
 	<parameters></parameters>	- list of parameters to secure
 	<headers></headers>		- list of headers to secure
 	<cookies></cookies>		- list of cookies to secure
 	
+#### Endpoint Structure
+	- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
+	- <uri></uri> defines the endpoint
+	- <strict></strict> indicates to fail if any items specfied are missing 
+	   or if non-defined items are in the request (missing or extra parms cause failure)
+	   if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  
+	   Use "<" or "less" to not fail if there are less parameters than specified.
+	- Endpoints have a list of Items to secure for the specific URI
+	- See the Sanwaf-ui & Sanwaf-ui-2-server projects for more information on declaritive data validation
+	- See the Sanwaf-ui-2-server project for instructions on automatically generating endpoint entries from annotated html/jsp files.
+		- for example, the Sanwaf-UI project allows you to add attributes to html elements that perform validation on the browser
+			the Sanwaf-ui-2-server scans your files looking for the attributes and automatically generates the XML
+	<endpoints>
+		<endpoint>
+			<uri></uri>
+			<strict></strict>
+			<items>
+				<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+			</items>
+		</endpoint>
+	</endpoints>
+
 
 ### Item Format of the Secured Section
 
