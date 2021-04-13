@@ -305,7 +305,7 @@ Add Sanwaf as a dependency to your code:
 	<dependency>
 		<groupId>com.sanwaf</groupId>
 		<artifactId>sanwaf</artifactId>
-		<version>0.1.5</version>
+		<version>0.1.4</version>
 		<scope>compile</scope>
 	</dependency>
 
