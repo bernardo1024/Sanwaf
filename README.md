@@ -164,7 +164,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<cookies></cookies>		- list of cookies to secure
 	
 #### Endpoint Structure
-	- Endpoints are groupings of parameters so additional validation can occur, such as if a paremeter is required
+	- Endpoints are groupings of parameters so additional validation can occur, such as strict parameters values and simple to complex relationships
 	- <uri></uri> defines the endpoint
 	- <strict></strict> indicates to fail if any items specfied are missing 
 	   or if non-defined items are in the request (missing or extra parms cause failure)
