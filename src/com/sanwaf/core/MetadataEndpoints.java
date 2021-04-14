@@ -72,11 +72,16 @@ public class MetadataEndpoints {
   }
 
   boolean isRelateValid(String related, String value, ServletRequest req, Metadata meta) {
+    //check if simple equals condition
+    if(related.endsWith(":=")) {
+      return isRelatedEqual(related, value, req, meta);
+    }
+
     List<String> andBlocks = parseBlocks(related, 0, "AND", ")&&(", "(", ")");
     List<String> andOrBlocks = parseOrBlocksFromAndBlocks(andBlocks);
     List<Boolean> orRequired = new ArrayList<>();
     List<Boolean> andRequired = new ArrayList<>();
-    setAndOrConditions(value, req, meta, andOrBlocks, orRequired, andRequired);
+    setAndOrConditions(value, req, andOrBlocks, orRequired, andRequired);
 
     int andTrueCount = 0;
     for (boolean and : andRequired) {
@@ -94,7 +99,7 @@ public class MetadataEndpoints {
     return !(andTrueCount == andRequired.size() && orFoundTrue && value.length() == 0);
   }
 
-  private void setAndOrConditions(String value, ServletRequest req, Metadata meta, List<String> andOrBlocks, List<Boolean> orRequired, List<Boolean> andRequired) {
+  private void setAndOrConditions(String value, ServletRequest req, List<String> andOrBlocks, List<Boolean> orRequired, List<Boolean> andRequired) {
     boolean nextIsAnd = false;
     boolean skipIteration = false;
     for (int i = 0; i < andOrBlocks.size(); i++) {
@@ -102,7 +107,7 @@ public class MetadataEndpoints {
         skipIteration = false;
         continue;
       }
-      if (isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req, meta)) {
+      if (isRelatedBlockMakingChildRequired(andOrBlocks.get(i), value, req)) {
         setAndOrCondition(orRequired, andRequired, nextIsAnd, true);
       } else {
         setAndOrCondition(orRequired, andRequired, nextIsAnd, false);
@@ -144,21 +149,16 @@ public class MetadataEndpoints {
     return andOrBlocks;
   }
 
-  private boolean isRelatedBlockMakingChildRequired(String block, String value, ServletRequest req, Metadata meta) {
+  private boolean isRelatedBlockMakingChildRequired(String block, String value, ServletRequest req) {
     String[] tagKeyValuePair = block.split(":");
     String parentValue = req.getParameter(tagKeyValuePair[0]);
+
     int parentLen = 0;
     if (parentValue != null) {
       parentLen = parentValue.length();
     }
 
-    Item parentItem = meta.items.get(tagKeyValuePair[0]);
-
     if (tagKeyValuePair.length > 1) {
-      if(tagKeyValuePair[1].equals("=")) {
-        return isRelatedEqual(value, parentValue, parentLen, parentItem);
-      }
-
       String[] ors = tagKeyValuePair[1].split("\\|\\|");
       for (String or : ors) {
         if (or.equals(parentValue)) {
@@ -171,15 +171,19 @@ public class MetadataEndpoints {
     return parentLen > 0 && value.length() == 0;
   }
 
-  private boolean isRelatedEqual(String value, String parentValue, int parentLen, Item parentItem) {
-    if (value.length() > 0 && value.equals(parentValue)) {
-      return false;
-    } else {
-      if (parentLen > 0) {
-        return true;
-      }
-      return parentItem != null && parentItem.required && value.length() == 0;
+  private boolean isRelatedEqual(String related, String value, ServletRequest req, Metadata meta) {
+    String[] tagKeyValuePair = related.split(":");
+    String parentValue = req.getParameter(tagKeyValuePair[0]);
+    if (value.equals(parentValue)) {
+      return true;
     }
+
+    int parentLen = 0;
+    if (parentValue != null) {
+      parentLen = parentValue.length();
+    }
+    Item parentItem = meta.items.get(tagKeyValuePair[0]);
+    return (parentLen == 0 && parentItem != null && !parentItem.required);
   }
 
   private List<String> parseBlocks(String s, int start, String andOr, String match, String reverseMatch, String forwardMatch) {

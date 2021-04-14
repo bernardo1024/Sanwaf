@@ -309,6 +309,27 @@ public class EndpointsTest {
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-equals-child", "1111");
+    request.addParameter("related-equals-parent", "2222");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-equals-child", "11111");
+    request.addParameter("related-equals-parent", "2222");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-equals-child", "1111");
+    request.addParameter("related-equals-parent", "22222");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-equals-child", "aaa");
     request.addParameter("related-equals-parent", "");
     isThreat = sanwaf.isThreatDetected(request);
