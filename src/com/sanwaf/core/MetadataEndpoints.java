@@ -178,12 +178,8 @@ public class MetadataEndpoints {
       return true;
     }
 
-    int parentLen = 0;
-    if (parentValue != null) {
-      parentLen = parentValue.length();
-    }
     Item parentItem = meta.items.get(tagKeyValuePair[0]);
-    return (parentLen == 0 && parentItem != null && !parentItem.required);
+    return (parentValue != null && parentValue.length() == 0 && parentItem != null && !parentItem.required);
   }
 
   private List<String> parseBlocks(String s, int start, String andOr, String match, String reverseMatch, String forwardMatch) {

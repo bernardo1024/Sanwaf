@@ -256,7 +256,7 @@ public class EndpointsTest {
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
 }
-
+  
   @Test
   public void testEndpointRelatedInvalidConfig() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     //related-invalid-child<related>related-invalid</related>
@@ -309,8 +309,20 @@ public class EndpointsTest {
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-equals-req-child", "");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-equals-child", "1111");
     request.addParameter("related-equals-parent", "2222");
+    isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("related-equals-child", "1111");
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
 
@@ -364,7 +376,6 @@ public class EndpointsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-simple-or-no-parent-child", "");
-    request.addParameter("related-simple-or-no-parent-parent", "No");
     boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(!isThreat);
 

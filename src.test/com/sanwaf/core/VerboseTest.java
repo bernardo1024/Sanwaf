@@ -55,6 +55,7 @@ public class VerboseTest {
     assertTrue(s.contains("customPatterns:"));
     assertTrue(s.contains("Configured/Secured Entries:"));
     assertTrue(s.contains("date="));
+    assertTrue(s.contains("Endpoints"));
   }
 
   @Test

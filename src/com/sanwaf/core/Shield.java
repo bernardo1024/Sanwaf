@@ -166,7 +166,7 @@ final class Shield {
   }
 
   private boolean isInError(ServletRequest req, Metadata meta, String value, boolean isEndpoint, Item item) {
-    if (item.required && (value == null ||value.length() == 0)) {
+    if (item.required && value.length() == 0) {
       return true;
     }
     return (isEndpoint && isEndpointThreat(item, value, req, meta)) || item.inError(req, this, value);

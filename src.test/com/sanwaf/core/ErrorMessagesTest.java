@@ -146,4 +146,15 @@ public class ErrorMessagesTest {
     }
   }
 
+  @Test
+  public void formatMessageTest() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "Format", "some invalid format");
+    for (Error error : errors) {
+      if (!error.toJson().contains("XSS CUSTOM Format")) {
+        fail("XSS - Test FAILED.\n" + error.toJson());
+      }
+    }
+  }
+
 }

@@ -17,22 +17,19 @@ final class ItemFormat extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if (value == null || value.length() == 0) {
+    if (value.length() == 0) {
       return points;
     }
-
-    if (inError(null, shield, value)) {
-      points.add(new Point(0, value.length()));
-    }
+    points.add(new Point(0, value.length()));
     return points;
   }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!required && (value == null || value.length() == 0)) {
+    if (!required && value.length() == 0) {
       return false;
     }
-    if (value == null || value.length() != formatString.length()) {
+    if (value.length() != formatString.length()) {
       return true;
     }
 

@@ -20,7 +20,7 @@
 			<regex><![CDATA[  Regex error msg]]></regex>
 			<java><![CDATA[  Java error msg]]></java>
 			<constant><![CDATA[  Constant error msg {0}]]></constant>
-      <format><![CDATA[  Failed to conform to format: {0}]]></format>
+      <format><![CDATA[  Failed to conform to format]]></format>
 		</errorMessages>
 	</global-settings>
 	

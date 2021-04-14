@@ -178,11 +178,8 @@ abstract class Item {
   boolean isSizeError(String value) {
     if (!required && (value == null || value.length() == 0)) {
       return false;
-    } else if (value == null) {
-      return min != 0;
-    } else {
-      return (value.length() < min || value.length() > max);
-    }
+    } 
+    return (value.length() < min || value.length() > max);
   }
 
   String modifyErrorMsg(String errorMsg) {
