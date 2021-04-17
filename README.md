@@ -1,3 +1,28 @@
+# Sanwaf Framework Overview
+ Sanwaf is a declarative data validation framework that secures your UI & Server without writing any code
+
+- [Sanwaf-UI](https://github.com/bernardo1024/Sanwaf-UI) is a Sanitation Web Application Firewall that runs on the Browser
+        
+        - Uses a declarative mechanism to add validation to HTML pages
+        - Add validation to a UI elements by including custom Sanwaf-UI Attributes
+        - Fully configurable look and feel
+        - No custom code is required to perform validation on web pages
+
+-  [Sanwaf-Server](https://github.com/bernardo1024/Sanwaf-Server) is a Sanitation Web Application Firewall that runs on the Server
+        
+        - Sanwaf-Server secures parameters, cookies, headers and endpoints prior to entering your application code
+        - Sanwaf-Server is configured with an XML file
+        - Can be used independently of Sanwaf-UI
+        - No custom code is required to perform validation on the server
+
+- [Sanwaf-UI-2-Server](https://github.com/bernardo1024/Sanwaf-UI-2-Server) Utility converts the Sanwaf-UI declarative validation into the server XML format
+        
+        - Provides for effortless Sanwaf-Server configuration using Sanwaf-UI attributes
+        - Converts the Sanwaf-UI declarative Attributes into a Sanwaf-Server consumable form
+        - Automate Sanwaf-Server configuration using this utility
+  
+See the [Sanwaf-Sample](https://github.com/bernardo1024/Sanwaf-Sample) project for an end-2-end sample of using Sanwaf-UI & Sanwaf-Server
+
 # Sanwaf-Server
 Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. 
 
