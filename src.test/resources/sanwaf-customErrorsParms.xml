@@ -76,7 +76,9 @@
 						<item><name>constant</name><type>k{C1,C2}</type><msg>constant error message </msg></item>
 						<item><name>regex</name><type>r{date}</type><msg>custom regex error message</msg></item>
 						<item><name>char</name><type>c</type><msg>char error message</msg><uri></uri></item>
-						<item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><msg>java error message</msg></item>
+            <item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><msg>java error message</msg></item>
+            <item><name>format</name><type>f{###-###-####}</type><msg>format error message</msg></item>
+            <item><name>format2</name><type>f{###-###-####}</type></item>
 					</parameters>
 					<headers>
 						<item><name>aHeaderNumber</name><type>n</type><max>2</max><min>1</min><msg>header error msg</msg><uri></uri></item>

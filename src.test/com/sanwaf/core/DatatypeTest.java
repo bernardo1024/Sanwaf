@@ -393,5 +393,43 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", null));
   }
 
+  @Test
+  public void testFormat2Required() {
+    //<item><name>parmFormatRequired2</name><type>f{\#\A\a\c #Aac}
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZzZ"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zzz"));
+    
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", " Aac 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "{Aac 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "-Aac 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "# ac 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#{ac 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#-ac 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A c 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A{c 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A-c 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa  0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa{ 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa- 0Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac zZzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac {Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac -Zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0zzz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0{zz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0-zz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 00zz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z0z"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZZz"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z{z"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z-z"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz "));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz0"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz{"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz-"));
 
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "BAR"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", null));
+  }
 }

@@ -29,21 +29,45 @@ final class ItemFormat extends Item {
     if (!required && value.length() == 0) {
       return false;
     }
-    if (value.length() != formatString.length()) {
+    String thisFormat = escapedChars(formatString);
+    if (value.length() != thisFormat.length()) {
       return true;
     }
 
     for (int i = 0; i < value.length(); i++) {
-      char f = formatString.charAt(i);
+      char f = thisFormat.charAt(i);
       char c = value.charAt(i);
-      if ((f == '#' && c >= '0' && c <= '9') || (f == 'A' && c >= 'A' && c <= 'Z') || (f == 'a' && c >= 'a' && c <= 'z')) {
+      if ((f == '#' && c >= '0' && c <= '9') || 
+          ((f == 'A' || f == 'c') && c >= 'A' && c <= 'Z') || 
+          ((f == 'a' || f == 'c')  && c >= 'a' && c <= 'z') ) {
         continue;
       }
-      if (c != f) {
+      if (c != unEscapedChar(f)) {
         return true;
       }
     }
     return false;
+  }
+
+  private String escapedChars(String s){
+    s = s.replaceAll("\\\\#", "\t");
+    s = s.replaceAll("\\\\A", "\n");
+    s = s.replaceAll("\\\\a", "\r");
+    s = s.replaceAll("\\\\c", "\f");
+    return s;
+  }
+
+  private char unEscapedChar(char c){
+    if(c == '\t') {
+      return '#';
+    } else if (c == '\n') {
+      return 'A';
+    } else if (c == '\r') {
+      return 'a';
+    } else if (c == '\f') {
+      return 'c';
+    }
+    return c;
   }
 
   @Override

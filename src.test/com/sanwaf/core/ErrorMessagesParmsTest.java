@@ -91,7 +91,17 @@ public class ErrorMessagesParmsTest {
     if (!isKeywordFound(errors, "cookie error msg")) {
       fail("Parm error failed for: aCookieNumber");
     }
-  }
+
+    errors = sanwaf.getError(req, shield, "format", "!@#$%");
+    if (!isKeywordFound(errors, "format error message")) {
+      fail("Parm error failed for: format");
+    }
+
+    errors = sanwaf.getError(req, shield, "format2", "!@#$%");
+    if (!isKeywordFound(errors, "Failed to conform to format")) {
+      fail("Parm error failed for: format2");
+    }
+}
 
   private static boolean isKeywordFound(List<Error> errors, String keyword) {
     if (errors == null || errors.size() < 1) {
