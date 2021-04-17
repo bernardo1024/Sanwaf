@@ -141,7 +141,7 @@
                 <item><name>related-and-or-parentX3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>related-and-or-parentX4</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
-                <item><name>related-and-or-childY</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related>(related-and-or-parentY1:aaa||bbb)||(related-and-or-parentY2:ccc||ddd)&&(related-and-or-parentY3:eee||fff)||(related-and-or-parentY4:ggg||hhh)&&(related-and-or-parentY5:iii||jjj)</related></item>
+                <item><name>related-and-or-childY</name><type>s</type><related>   (  related-and-or-parentY1  :  aaa  ||  bbb  )  ||  (  related-and-or-parentY2  :  ccc  ||  ddd  )  &&  (  related-and-or-parentY3  :  eee  ||  fff  )  ||  (  related-and-or-parentY4  :  ggg  ||  hhh  )   &&  (  related-and-or-parentY5:iii  ||  jjj  )  </related></item>
                 <item><name>related-and-or-parentY1</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>related-and-or-parentY2</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>related-and-or-parentY3</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>

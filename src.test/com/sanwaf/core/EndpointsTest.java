@@ -569,8 +569,12 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parentX4", "");
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
-
-    //related-and-or-childY<related>(related-and-or-parentY1:aaa||bbb)||(related-and-or-parentY2:ccc||ddd)&&(related-and-or-parentY3:eee||fff)||(related-and-or-parentY4:ggg||hhh)&&(related-and-or-parentY5:iii||jjj)</related>
+  }
+  
+  @Test
+  public void testEndpointRelatedRemoveSpace() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    //<related>   (  related-and-or-parentY1  :  aaa  ||  bbb  )  ||  (  related-and-or-parentY2  :  ccc  ||  ddd  )  &&  (  related-and-or-parentY3  :  eee  ||  fff  )  ||  (  related-and-or-parentY4  :  ggg  ||  hhh  )   &&  (  related-and-or-parentY5:iii  ||  jjj  )  </related>
+    MockHttpServletRequest request = new MockHttpServletRequest();
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("related-and-or-childY", "");
@@ -579,8 +583,9 @@ public class EndpointsTest {
     request.addParameter("related-and-or-parentY3", "eee");
     request.addParameter("related-and-or-parentY4", "");
     request.addParameter("related-and-or-parentY5", "iii");
-    isThreat = sanwaf.isThreatDetected(request);
+    boolean isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
+
   }
     
     @Test

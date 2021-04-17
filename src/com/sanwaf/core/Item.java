@@ -107,9 +107,19 @@ abstract class Item {
     }
 
     if (includeEnpointAttributes) {
-      item.related = xml.get(XML_ITEM_RELATED);
+      item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
     }
     return item;
+  }
+
+  private static String removeRelatedSpace(String related) {
+    related = related.trim();
+    related = related.replaceAll("\\)\\s+&&\\s+\\(", ")&&(");
+    related = related.replaceAll("\\s+\\|\\|\\s+", "||");
+    related = related.replaceAll("\\s+:\\s+", ":");
+    related = related.replaceAll("\\(\\s+", "(");
+    related = related.replaceAll("\\s+\\)", ")");
+    return related;
   }
 
   static Item getNewItem(String name, Item item) {
