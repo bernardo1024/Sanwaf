@@ -21,7 +21,11 @@
         - Converts the Sanwaf-UI declarative Attributes into a Sanwaf-Server consumable form
         - Automate Sanwaf-Server configuration using this utility
   
-See the [Sanwaf-Sample](https://github.com/bernardo1024/Sanwaf-Sample) project for an end-2-end sample of using Sanwaf-UI & Sanwaf-Server
+- [Sanwaf-Sample](https://github.com/bernardo1024/Sanwaf-Sample) project is a sample implementation of Sanwaf-UI and Sanwaf Server
+
+        - End-2-end sample of using Sanwaf-UI & Sanwaf-Server
+        - Dynamically configure and test Sanwaf-UI 
+        - Dynamically disable Browser Validation and run against Server (uses embedded Jetty)
 
 # Sanwaf-Server
 Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. 
