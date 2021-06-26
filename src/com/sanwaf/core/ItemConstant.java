@@ -31,9 +31,9 @@ final class ItemConstant extends Item {
 
   @Override
   String modifyErrorMsg(String errorMsg) {
-    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER);
+    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(constants.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(constants.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }

@@ -20,6 +20,8 @@
 			<java><![CDATA[  Java error msg]]></java>
 			<constant><![CDATA[  Constant error msg {0}]]></constant>
       <format><![CDATA[{0} format error]]></format>
+      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+      <requed><![CDATA[  <br/>Is a Required field]]></required>
 		</errorMessages>
 	</global-settings>
 	

@@ -55,8 +55,10 @@
 	SUMMARY: (see below for guide)
 	********
 		c		- Character
-		n 	- Number
-		n{} - Delimited list of Numbers
+    n   - Number
+    n{} - Delimited list of Numbers
+    i   - Integer
+    i{} - Delimited list of Integers
 		a		- Alphanumeric
 		a{}	- Alphanumeric and stated additional characters
 		s		- String (uses regex's - most expensive - try to use sparingly)
@@ -133,19 +135,32 @@
 		c		DESCRIPTION:	Any single character
 				FORMAT: 		c
 	
-	(Number) 		
-		n		DESCRIPTION:	Any positive or negative numeric value 
-								('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-				FORMAT:			n  
-				EXAMPLE:		-321.123, 0.0001 - are valid
-						 		+12, 12.34.56	- are invalid
-								
-	(Delimited list of Numbers)
-		n{}	    DESCRIPTION:	A character separated list of numbers
-				FORMAT:			n{<separator char>}
-								Note: the min & max settings applies per delimited value  
-				EXAMPLE: 		using n{,}, -321.123,0.000,123,45 is valid
-												  
+  (Number)    
+    n   DESCRIPTION:  Any positive or negative numeric value 
+                ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+        FORMAT:     n  
+        EXAMPLE:    -321.123, 0.0001 - are valid
+                +12, 12.34.56 - are invalid
+                
+  (Delimited list of Numbers)
+    n{}     DESCRIPTION:  A character separated list of numbers
+        FORMAT:     n{<separator char>}
+                Note: the min & max settings applies per delimited value  
+        EXAMPLE:    using n{,}, -321.123,0.000,123,45 is valid
+                          
+  (Integer)    
+    i   DESCRIPTION:  Any positive or negative integer value 
+                ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces)  
+        FORMAT:     i  
+        EXAMPLE:    -3213, 1 - are valid
+                +12, 12.34   - are invalid
+                
+  (Delimited list of Integers)
+    i{}     DESCRIPTION:  A character separated list of integers
+        FORMAT:     i{<separator char>}
+                Note: the min & max settings applies per delimited value  
+        EXAMPLE:    using i{,}, -321,0,123,45 is valid
+                          
 	(Alphanumeric)
 		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
 				FORMAT: 		a
@@ -197,11 +212,15 @@
 								-Three special characters are provided to be used in formats:  
 								  #   - represents a number 
 								  #[] - represents a number within a specified range, for example: #[1-12] 
-								  A   - represents an Uppercase character 
-								  a   - represents an lowercase character 
+								  A   - represents an upper case character 
+                  a   - represents a lower case character 
+                  c   - represents an upper or lower case character 
 								  Use a combination of the special and non-special characters to create formats 
   								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
                     Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
+                -You can set multiple formats for evaluation using the OR (||) operator 
+                    For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
+                                  to add a postal code as well: f{#####||#####-####||A#A-#A#}
         FORMAT:     f{format-string}
 
  -->
@@ -234,8 +253,10 @@
 		-->
 		<errorMessages>
 			<char><![CDATA[ <b>Only a single character is permitted.</b>&nbsp;<i>For example: <b>a</b></i>]]></char>
-			<numeric><![CDATA[ <b>Only numeric values are permitted.</b>&nbsp;<i>For example: <b>-123.456</b></i>]]></numeric>
-			<numericDelimited><![CDATA[ <b>Only numeric values and numeric values separated by &quot;{0}&quot; are permitted.</b>&nbsp;<i>For example: <b>123,-123,123.456</b></i>]]></numericDelimited>
+      <numeric><![CDATA[ <b>Only numeric values are permitted.</b>&nbsp;<i>For example: <b>-123.456</b></i>]]></numeric>
+      <numericDelimited><![CDATA[ <b>Only numeric values and numeric values separated by &quot;{0}&quot; are permitted.</b>&nbsp;<i>For example: <b>123,-123,123.456</b></i>]]></numericDelimited>
+      <integer><![CDATA[ <b>Only integer values are permitted.</b>&nbsp;<i>For example: <b>-123 or 123</b></i>]]></integer>
+      <integerDelimited><![CDATA[ <b>Only integer values and integer values separated by &quot;{0}&quot; are permitted.</b>&nbsp;<i>For example: <b>1,-1,123</b></i>]]></integerDelimited>
 			<alphanumeric><![CDATA[ <b>Only alphanumeric characters are permitted.</b>&nbsp;<i>For example: <b>abc123</b></i>]]></alphanumeric>
 			<alphanumericAndMore><![CDATA[ <b>Only alphanumeric characters and special characters: <i>{0}</i> are permitted.</b>&nbsp;<i>For example: <b>abc123{0}</b></i>]]></alphanumericAndMore>
 			<constant><![CDATA[ <b>Invalid value provided,</b>&nbsp;<i>value must be one of: <b>{0}</b></i>]]></constant>
@@ -243,6 +264,8 @@
 			<regex><![CDATA[ Invalid value provided, please try again.]]></regex>
 			<java><![CDATA[ Invalid value provided.]]></java>
       <format><![CDATA[  Failed to conform to format: {0}]]></format>
+      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+      <requed><![CDATA[  <br/>Is a Required field]]></required>
 		</errorMessages>
 	</global-settings>
 	
@@ -268,6 +291,8 @@
 					<char></char>
 					<numeric></numeric>
 					<numericDelimited></numericDelimited>
+          <integer></integer>
+          <integerDelimited></integerDelimited>
 					<alphanumeric></alphanumeric>
 					<alphanumericAndMore></alphanumericAndMore>
 					<constant></constant>
@@ -371,8 +396,10 @@
   				<parameters>
 					<!-- 
 						<item><name>char</name><type>c</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+            <item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+            <item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+            <item><name>integer</name><type>i</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
+            <item><name>integerdelimited</name><type>i{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
 						<item><name>parms:::use:::the:::same:::settings</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
 						<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
 						<item><name>alphanumericandmore</name><type>a{'}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>

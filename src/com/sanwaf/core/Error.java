@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 final class Error {
+  static String invalidLengthErrorMsg = null;
+  static String requiredErrorMsg = null;
+
   String shieldName;
   String key;
   String value;
@@ -23,10 +26,10 @@ final class Error {
     if (value != null) {
       this.errorPoints.addAll(p.getErrorPoints(shield, value));
       if(p.required && value.length() == 0) {
-        this.message += "<br/>Is a Required field";
+        this.message += requiredErrorMsg;
       }
       if (value.length() < p.min || value.length() > p.max) {
-        this.message += "<br/>Invalid length. Must be between " + p.min + " and " + p.max + " characters";
+        this.message += modifyInvalidLengthErrorMsg(invalidLengthErrorMsg, p.min, p.max);
       }
     }
   }
@@ -42,6 +45,18 @@ final class Error {
       }
     }
     return p.modifyErrorMsg(err);
+  }
+
+  static String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max ) {
+    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
+    if (i >= 0) {
+      errorMsg = errorMsg.substring(0, i) + min + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+    }
+    i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER2);
+    if (i >= 0) {
+      errorMsg = errorMsg.substring(0, i) + max + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+    }
+    return errorMsg;
   }
 
   static final String ARRAY_START = "[";
@@ -124,12 +139,17 @@ final class Error {
   static final String XML_ERROR_MSG_CHAR = "char";
   static final String XML_ERROR_MSG_NUMERIC = "numeric";
   static final String XML_ERROR_MSG_NUMERIC_DELIMITED = "numericDelimited";
+  static final String XML_ERROR_MSG_INTEGER = "integer";
+  static final String XML_ERROR_MSG_INTEGER_DELIMITED = "integerDelimited";
   static final String XML_ERROR_MSG_STRING = "string";
   static final String XML_ERROR_MSG_REGEX = "regex";
   static final String XML_ERROR_MSG_JAVA = "java";
   static final String XML_ERROR_MSG_CONSTANT = "constant";
   static final String XML_ERROR_MSG_FORMAT = "format";
-  static final String XML_ERROR_MSG_PLACEHOLDER = "{0}";
+  static final String XML_INVALID_LENGTH_MSG = "invalidLength";
+  static final String XML_REQUIRED_MSG = "required";
+  static final String XML_ERROR_MSG_PLACEHOLDER1 = "{0}";
+  static final String XML_ERROR_MSG_PLACEHOLDER2 = "{1}";
 
   static void setErrorMessages(Map<String, String> map, Xml xmlString) {
     Xml xml = new Xml(xmlString.get(XML_ERROR_MSG));
@@ -138,10 +158,21 @@ final class Error {
     map.put(Item.CHAR, xml.get(XML_ERROR_MSG_CHAR));
     map.put(Item.NUMERIC, xml.get(XML_ERROR_MSG_NUMERIC));
     map.put(Item.NUMERIC_DELIMITED, xml.get(XML_ERROR_MSG_NUMERIC_DELIMITED));
+    map.put(Item.INTEGER, xml.get(XML_ERROR_MSG_INTEGER));
+    map.put(Item.INTEGER_DELIMITED, xml.get(XML_ERROR_MSG_INTEGER_DELIMITED));
     map.put(Item.STRING, xml.get(XML_ERROR_MSG_STRING));
     map.put(Item.REGEX, xml.get(XML_ERROR_MSG_REGEX));
     map.put(Item.JAVA, xml.get(XML_ERROR_MSG_JAVA));
     map.put(Item.CONSTANT, xml.get(XML_ERROR_MSG_CONSTANT));
     map.put(Item.FORMAT, xml.get(XML_ERROR_MSG_FORMAT));
+
+    String s = xml.get(XML_INVALID_LENGTH_MSG);
+    if(s != null && s.length() > 0) {
+      invalidLengthErrorMsg = s;
+    }
+    s = xml.get(XML_REQUIRED_MSG);
+    if(s != null && s.length() > 0) {
+      requiredErrorMsg = s;
+    }
   }
 }

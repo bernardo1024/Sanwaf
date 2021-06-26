@@ -29,7 +29,7 @@ class ItemNumeric extends Item {
       char c = value.charAt(i);
       int d = c - '0';
       if (d < 0 || d > 9) {
-        if (!foundDot && c == '.') {
+        if (!isInt && !foundDot && c == '.') {
           foundDot = true;
         } else {
           errStart = checkErrStart(errStart, i);
