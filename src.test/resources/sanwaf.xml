@@ -261,6 +261,23 @@
             <item><name>parmformat</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><msg></msg></item>
             <item><name>parmFormatRequired</name><type>f{(###) ###-#### aaa AAA}</type><msg></msg><req>true</req></item>
             <item><name>parmFormatRequired2</name><type>f{\#\A\a\c #Aac}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req></item>
+            <item><name>parmformat2</name><type>f{#[1-12] / #[21-35]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformat3</name><type>f{#[1-9]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            
+            <item><name>parmbadformat1</name><type>f{#[1-]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmbadformat2</name><type>f{#[1]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmbadformat3</name><type>f{#[1-9}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmbadformat4</name><type>f{#[a-b]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            
+            <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformat2invalid1</name><type>f{\[\]#[1-]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformat2invalid2</name><type>f{\[\]#[-1]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+
+            <item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
+            <item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
+            <item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A## A###}</type></item>
+            <item><name>parmMultiFormatInvalid</name><type>f{}</type></item>
+
 					</parameters>
 					<headers>
 						<item><name>aHeaderNumber</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>

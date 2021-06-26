@@ -432,4 +432,103 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", null));
   }
+  
+  @Test
+  public void testFormat2() {
+    //<item><name>parmformat2</name><type>f{#[1-12] / #[21-35]}</type>
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 30"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "01 / 30"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 21"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 35"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "11 / 29"));
+    
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "a0 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "z0 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "/0 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", ":0 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "00 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "13 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "93 / 25"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 20"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 36"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 99"));
+    
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", null));
+  }
+
+  @Test
+  public void testFormat2brackets() {
+    //<item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]01"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]02"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]03"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]04"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]05"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]06"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]07"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]08"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]09"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]10"));
+    
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]00"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]99"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", " ]01"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[ 01"));
+
+    //<item><name>parmformat3</name><type>f{#[1-9]}</type>
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "1"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "2"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "3"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "4"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "5"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "6"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "7"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "8"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "9"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "10"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "0"));
+    
+  }
+  
+  @Test
+  public void testBadFormats() {
+    //<item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat1", "@"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat2", "@"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat3", "@"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat4", "@"));
+  }
+
+  
+  @Test
+  public void testMultiFormats() {
+    //<item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
+    //<item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
+    //<item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A## A###}</type></item>
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345-6789"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat1", "@"));
+    
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345-6789"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "A1B-2C3"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat2", "@"));
+    
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345-6789"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A1B-2C3"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B345"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
+    
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormatInvalid", "A12 B5"));
+  }
+
+  
+  
+  
 }

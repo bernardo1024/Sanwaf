@@ -195,11 +195,13 @@
   (Format)
     f{}   DESCRIPTION:  The Format data type sets the element to use a Format 
 								-Three special characters are provided to be used in formats:  
-								  # - represents a number 
-								  A - represents an Uppercase character 
-								  a - represents an lowercase character 
+								  #   - represents a number 
+								  #[] - represents a number within a specified range, for example: #[1-12] 
+								  A   - represents an Uppercase character 
+								  a   - represents an lowercase character 
 								  Use a combination of the special and non-special characters to create formats 
   								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
+                    Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
         FORMAT:     f{format-string}
 
  -->
