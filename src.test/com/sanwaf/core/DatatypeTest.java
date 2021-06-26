@@ -50,9 +50,23 @@ public class DatatypeTest {
   }
 
   @Test
+  public void testInteger() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "12345"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "0123456789"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "-12345"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "-12345.67"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "foo.12"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "12.bar"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "12.34.56.78"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "- 12345"));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", " 12345"));
+  }
+
+  @Test
   public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemNumericDelimited p = new ItemNumericDelimited("", "n{}", Integer.MAX_VALUE, 0, "", "");
+    ItemNumericDelimited p = new ItemNumericDelimited("", "n{}", Integer.MAX_VALUE, 0, "", "", false);
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
     List<Point> list = p.getErrorPoints(shield, "");
@@ -63,6 +77,19 @@ public class DatatypeTest {
     assertEquals(true, list.size() == 0);
   }
 
+  @Test
+  public void testIntegerDelimitedType() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    ItemNumericDelimited p = new ItemNumericDelimited("", "i{}", Integer.MAX_VALUE, 0, "", "", false);
+    assertEquals(true, p.inError(req, shield, "12,34,56"));
+
+    List<Point> list = p.getErrorPoints(shield, "");
+    assertEquals(true, list.size() == 0);
+    list = p.getErrorPoints(shield, null);
+    assertEquals(true, list.size() == 0);
+    list = p.getErrorPoints(shield, null);
+    assertEquals(true, list.size() == 0);
+  }
   @Test
   public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();

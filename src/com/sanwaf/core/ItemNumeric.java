@@ -6,9 +6,12 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 class ItemNumeric extends Item {
-  ItemNumeric(String name, int max, int min, String msg, String uri) {
+  boolean isInt = false;
+  
+  ItemNumeric(String name, int max, int min, String msg, String uri, boolean isInt) {
     super(name, max, min, msg, uri);
     type = NUMERIC;
+    this.isInt = isInt;
   }
 
   @Override
@@ -85,7 +88,7 @@ class ItemNumeric extends Item {
       if (d < 0 || d > 9) {
         if (i == 0 && c == '-') {
           continue;
-        } else if (c == '.' && !foundDot) {
+        } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;
         } else {
           return true;

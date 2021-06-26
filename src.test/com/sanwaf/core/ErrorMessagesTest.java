@@ -95,7 +95,7 @@ public class ErrorMessagesTest {
 
   @Test
   public void numericDelimietedDatatatypeErrorMsgTest() {
-    ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "");
+    ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "", false);
     String s = p.modifyErrorMsg("some {0} String");
     assertTrue(s.contains(","));
   }

@@ -6,6 +6,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 abstract class Item {
+  static final String INTEGER = "i";
+  static final String INTEGER_DELIMITED = "i{";
   static final String NUMERIC = "n";
   static final String NUMERIC_DELIMITED = "n{";
   static final String ALPHANUMERIC = "a";
@@ -136,10 +138,15 @@ abstract class Item {
     }
 
     if (t.equals(NUMERIC)) {
-      item = new ItemNumeric(name, max, min, msg, uri);
+      item = new ItemNumeric(name, max, min, msg, uri,false);
     } else if (t.equals(NUMERIC_DELIMITED)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemNumericDelimited(name, type, max, min, msg, uri);
+      item = new ItemNumericDelimited(name, type, max, min, msg, uri, false);
+    } else if (t.equals(INTEGER)) {
+      item = new ItemNumeric(name, max, min, msg, uri, true);
+    } else if (t.equals(INTEGER_DELIMITED)) {
+      type = ensureComplexTypeFormat(type);
+      item = new ItemNumericDelimited(name, type, max, min, msg, uri, true);
     } else if (t.equals(ALPHANUMERIC)) {
       item = new ItemAlphanumeric(name, max, min, msg, uri);
     } else if (t.equals(ALPHANUMERIC_AND_MORE)) {
