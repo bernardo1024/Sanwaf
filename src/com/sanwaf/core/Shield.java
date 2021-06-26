@@ -155,7 +155,10 @@ final class Shield {
         if (forceRegexAlways) {
           item = new ItemString();
         } else {
-          return false;
+          if (meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta)) {
+            return true;
+          }
+           return false;
         }
       }
     } else {

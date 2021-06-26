@@ -651,6 +651,18 @@ public class EndpointsTest {
 
       request = new MockHttpServletRequest();
       request.setRequestURI("/foo/bar/strictWithLess.jsp");
+      request.addParameter("foobar", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictWithLessWord.jsp");
+      request.addParameter("foobar", "aaa");
+      isThreat = sanwaf.isThreatDetected(request);
+      assertTrue(isThreat);
+
+      request = new MockHttpServletRequest();
+      request.setRequestURI("/foo/bar/strictWithLess.jsp");
       request.addParameter("parm1", "aaa");
       request.addParameter("parm2", "aaa");
       isThreat = sanwaf.isThreatDetected(request);
