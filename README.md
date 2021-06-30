@@ -139,6 +139,8 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		c	- Character
 		n 	- Number
 		n{} 	- Delimited list of Numbers
+		i 	- Integer
+		i{} 	- Delimited list of Integers
 		a	- Alphanumeric
 		a{}	- Alphanumeric and stated additional characters
 		s	- String (uses regex's - most expensive - try to use sparingly)
@@ -267,6 +269,19 @@ Also note the **secured section** contains the following groups: endpoints, para
 					Note: the min & max settings applies per delimted value  
 			EXAMPLE: 	using n{,}, -321.123,0.000,123,45 is valid
 												  
+	(Integer) 		
+	i		DESCRIPTION:	Any positive or negative Integer 
+					('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces)  
+			FORMAT:		i  
+			EXAMPLE:	-321, 1 - are valid
+					+12, 12.34.56	- are invalid
+								
+	(Delimited list of Integers)
+	i{}		DESCRIPTION:	A character separated list of integers
+			FORMAT:		i{<separator char>}
+					Note: the min & max settings applies per delimted value  
+			EXAMPLE: 	using i{,}, -321,0,123,45 is valid
+												  
 	(Alphanumeric)
 	a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
 			FORMAT: 	a
@@ -326,6 +341,9 @@ Also note the **secured section** contains the following groups: endpoints, para
 						\#  \A  \a  \c  \[  \]
 					For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
 					Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
+					-You can set multiple formats for evaluation using the OR (||) operator 
+                    				For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
+                                  			to add a postal code as well: f{#####||#####-####||A#A-#A#}
 			FORMAT:		f{format-string}
 
 
