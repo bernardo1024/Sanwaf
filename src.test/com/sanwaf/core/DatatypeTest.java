@@ -555,7 +555,12 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormatInvalid", "A12 B5"));
   }
 
-  
-  
-  
+  @Test
+  public void testFormatEscapceChars() {
+    //<item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aac[]|1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
+  }
+
 }

@@ -122,9 +122,10 @@ final class ItemFormat extends Item {
     s = s.replaceAll("\\\\c", "\f");
     s = s.replaceAll("\\\\\\[", "\b");
     s = s.replaceAll("\\\\\\]", "\0");
+    s = s.replaceAll("\\\\\\|", "\1");
     return s;
   }
-
+  
   private char unEscapedChar(char c){
     if(c == '\t') {
       return '#';
@@ -138,6 +139,8 @@ final class ItemFormat extends Item {
       return '[';
     } else if (c == '\0') {
       return ']';
+    } else if (c == '\1') {
+      return '|';
     }
     return c;
   }

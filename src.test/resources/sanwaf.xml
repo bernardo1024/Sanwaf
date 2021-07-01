@@ -276,6 +276,7 @@
             <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformat2invalid1</name><type>f{\[\]#[1-]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformat2invalid2</name><type>f{\[\]#[-1]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
             <item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
             <item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
