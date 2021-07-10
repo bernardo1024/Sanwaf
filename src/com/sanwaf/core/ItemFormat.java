@@ -102,7 +102,7 @@ final class ItemFormat extends Item {
       else{
         char cF = formatBlock.charAt(0);
         char cC = c.charAt(0);
-        if ((cF == '#' && cC >= '0' && cC <= '9') || 
+        if ((cF == 'x') || (cF == '#' && cC >= '0' && cC <= '9') || 
             ((cF == 'A' || cF == 'c') && cC >= 'A' && cC <= 'Z') || 
             ((cF == 'a' || cF == 'c')  && cC >= 'a' && cC <= 'z') ) {
           continue;
@@ -123,30 +123,26 @@ final class ItemFormat extends Item {
     s = s.replaceAll("\\\\\\[", "\b");
     s = s.replaceAll("\\\\\\]", "\0");
     s = s.replaceAll("\\\\\\|", "\1");
+    s = s.replaceAll("\\\\x", "\2");
     return s;
   }
   
   private char unEscapedChar(char c){
-    if(c == '\t') {
-      return '#';
-    } else if (c == '\n') {
-      return 'A';
-    } else if (c == '\r') {
-      return 'a';
-    } else if (c == '\f') {
-      return 'c';
-    } else if (c == '\b') {
-      return '[';
-    } else if (c == '\0') {
-      return ']';
-    } else if (c == '\1') {
-      return '|';
+    switch(c){    
+      case '\t': return '#';
+      case '\n': return 'A';
+      case '\r': return 'a';
+      case '\f': return 'c';
+      case '\b': return '[';
+      case '\0': return ']';
+      case '\1': return '|';
+      case '\2': return 'x';
+      default: return c;
     }
-    return c;
   }
 
   @Override
-  String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(ServletRequest req, String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
@@ -162,7 +158,6 @@ final class ItemFormat extends Item {
     }
   }
   
-  
   private void parseFormats(String format) {
     if(format.length() == 0) {
       return;
@@ -173,7 +168,6 @@ final class ItemFormat extends Item {
       formatsBlocks.add(parseFormat(thisFormat));
     }
   }
-  
   
   private List<String> parseFormat(String format){
     List<String> formatBlocks = new ArrayList<>();

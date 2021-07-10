@@ -326,7 +326,7 @@ final class Shield {
         return null;
       }
     }
-    return new Error(this, item, key, value);
+    return new Error(req, this, item, key, value);
   }
 
   // XML LOAD CODE

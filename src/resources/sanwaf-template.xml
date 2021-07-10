@@ -209,17 +209,19 @@
 
   (Format)
     f{}   DESCRIPTION:  The Format data type sets the element to use a Format 
-								-Three special characters are provided to be used in formats:  
+								-6 special characters are provided to be used in formats:  
 								  #   - represents a number 
 								  #[] - represents a number within a specified range, for example: #[1-12] 
-								  A   - represents an upper case character 
-                  a   - represents a lower case character 
-                  c   - represents an upper or lower case character 
+								  A   - represents an upper case alphabetic character 
+                  a   - represents a lower case alphabetic character 
+                  c   - represents an upper or lower case alphabetic character 
+                  x   - represents an upper or lower case character (any character) 
 								  Use a combination of the special and non-special characters to create formats 
   								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
                     Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
                 -You can set multiple formats for evaluation using the OR (||) operator 
                     For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
+                -To use the special characters in a format, escape them if with backslash: \# \[ \] \A \a \c \x
                                   to add a postal code as well: f{#####||#####-####||A#A-#A#}
         FORMAT:     f{format-string}
 
@@ -264,8 +266,9 @@
 			<regex><![CDATA[ Invalid value provided, please try again.]]></regex>
 			<java><![CDATA[ Invalid value provided.]]></java>
       <format><![CDATA[  Failed to conform to format: {0}]]></format>
-      <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[  <br/>Is a Required field]]></required>
+      <dependentFormat><![CDATA[ Failed to conform to dependent format: {0}]]></dependentFormat>
+      <invalidLength><![CDATA[ <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
+      <required><![CDATA[ <br/>Is a Required field]]></required>
 		</errorMessages>
 	</global-settings>
 	
@@ -288,18 +291,21 @@
 				<!-- Localized error messages for this shield - overrides globe values -->
 				<!-- 
 				<errorMessages>
-					<char></char>
-					<numeric></numeric>
-					<numericDelimited></numericDelimited>
-          <integer></integer>
-          <integerDelimited></integerDelimited>
-					<alphanumeric></alphanumeric>
-					<alphanumericAndMore></alphanumericAndMore>
-					<constant></constant>
-					<string></string>
-					<regex></regex>
-					<java></java>
-					<format></format>
+					<char><![CDATA[ ]]></char>
+					<numeric><![CDATA[ ]]></numeric>
+					<numericDelimited><![CDATA[ ]]></numericDelimited>
+          <integer><![CDATA[ ]]></integer>
+          <integerDelimited><![CDATA[ ]]></integerDelimited>
+					<alphanumeric><![CDATA[ ]]></alphanumeric>
+					<alphanumericAndMore><![CDATA[ ]]></alphanumericAndMore>
+					<constant><![CDATA[ ]]></constant>
+					<string><![CDATA[ ]]></string>
+					<regex><![CDATA[ ]]></regex>
+					<java><![CDATA[ ]]></java>
+					<format><![CDATA[ ]]></format>
+          <dependentFormat><![CDATA[ ]]></dependentFormat>
+          <invalidLength><![CDATA[ ]]></invalidLength>
+          <required><![CDATA[ ]]></required>
 				</errorMessages>
 				-->
 	      </shield-settings>

@@ -248,7 +248,7 @@ public final class Sanwaf {
       return false;
     }
     if (item.inError(req, sh, value)) {
-      Error error = new Error(sh, item, null, value);
+      Error error = new Error(req, sh, item, null, value);
       if (setErrorAttributes) {
         addErrorAttributes(req, getSortOfRandomNumber(), Arrays.asList(error));
       }

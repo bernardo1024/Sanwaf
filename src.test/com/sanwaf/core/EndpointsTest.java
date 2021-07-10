@@ -102,6 +102,12 @@ public class EndpointsTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("max-min-value", "");
     isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(!isThreat);
+
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("max-min-value-required", "");
+    isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
   }
 

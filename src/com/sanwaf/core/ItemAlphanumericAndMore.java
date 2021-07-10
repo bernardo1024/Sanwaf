@@ -93,7 +93,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   }
 
   @Override
-  String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(ServletRequest req, String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());

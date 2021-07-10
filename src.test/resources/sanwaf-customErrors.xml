@@ -20,6 +20,7 @@
 			<java><![CDATA[  Java error msg]]></java>
 			<constant><![CDATA[  Constant error msg {0}]]></constant>
       <format><![CDATA[{0} format error]]></format>
+      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
       <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
       <required><![CDATA[  <br/>Is a Required field]]></required>
 		</errorMessages>
@@ -32,16 +33,19 @@
 				<minLen>1</minLen>
 				<maxLen>9999</maxLen>
 				<errorMessages>
-					<numeric> XSS CUSTOM Numeric error msg</numeric>
-					<numericDelimited> XSS CUSTOM Numeric delimited error msg {0}</numericDelimited>
-					<alphanumeric> XSS CUSTOM Alphanumeric error msg</alphanumeric>
-					<alphanumericAndMore> XSS CUSTOM Alphanumeric and more error msg {0}</alphanumericAndMore>
-					<char> XSS CUSTOM Character error msg</char>
-					<string> XSS CUSTOM String error msg</string>
-					<regex> XSS CUSTOM Regex error msg</regex>
-					<java> XSS CUSTOM Java error msg</java>
-					<constant> XSS CUSTOM Constant error msg {0}</constant>
-          <format>XSS CUSTOM Format error msg {0}</format>
+					<numeric><![CDATA[  XSS CUSTOM Numeric error msg]]></numeric>
+					<numericDelimited><![CDATA[  XSS CUSTOM Numeric delimited error msg {0}]]></numericDelimited>
+					<alphanumeric><![CDATA[  XSS CUSTOM Alphanumeric error msg]]></alphanumeric>
+					<alphanumericAndMore><![CDATA[  XSS CUSTOM Alphanumeric and more error msg {0}]]></alphanumericAndMore>
+					<char><![CDATA[  XSS CUSTOM Character error msg]]></char>
+					<string><![CDATA[  XSS CUSTOM String error msg]]></string>
+					<regex><![CDATA[  XSS CUSTOM Regex error msg]]></regex>
+					<java><![CDATA[  XSS CUSTOM Java error msg]]></java>
+					<constant><![CDATA[  XSS CUSTOM Constant error msg {0}]]></constant>
+          <format><![CDATA[ XSS CUSTOM Format error msg {0}]]></format>
+          <dependentFormat><![CDATA[ XSS CUSTOM Dependent Format error msg {0}]]></dependentFormat>
+          <invalidLength><![CDATA[ XSS CUSTOM Invalid Length error msg {0} and {1}]]></invalidLength>
+          <required><![CDATA[ XSS CUSTOM Required error msg]]></required>
 				</errorMessages>
       </shield-settings>
 			<regex-config>

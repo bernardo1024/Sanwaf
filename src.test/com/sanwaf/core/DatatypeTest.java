@@ -41,6 +41,7 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "NumericRequired", null));
     assertEquals(true, shield.threat(req, shield.parameters, "NumericRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "10"));
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "2"));
     assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "5"));
@@ -480,7 +481,9 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 20"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 36"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 99"));
-    
+
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "0z / 9b"));
+
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", null));
   }
@@ -555,12 +558,195 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormatInvalid", "A12 B5"));
   }
 
+  
+  @Test
+  public void testDependentFormats() {
+//    <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+//    <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+//    <item><name>depformatMultiple</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+//    <item><name>depformatRequired</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
+//    <item><name>depformatInvalidFormatBadParent</name><type>d{foobar:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+//    <item><name>depformatInvalidFormat</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+//    <item><name>depformatInvalidFormat1</name><type>d{depformatParent:US=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+//    <item><name>depformatInvalidFormat2</name><type>d{depformatParent}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformat", "12345");
+    Boolean result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformat", "A1A-1A1");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(true));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "Canada");
+    req.addParameter("depformat", "A1A-1A1");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "Canada");
+    req.addParameter("depformat", "12345");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(true));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatMultiple", "12345-1234");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatMultiple", "A1A-1A1");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(true));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "xxxxx");
+    req.addParameter("depformatMultiple", "A1A-1A1");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatMultiple", "1234");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(true));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatMultiple", "12345-123");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(true));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatRequired", "12345");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatRequired", "");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(true));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormatBadParent", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat1", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat2", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat3", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+    
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat4", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat5", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat6", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat7", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat8", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+
+    req = new MockHttpServletRequest();
+    req.addParameter("depformatParent", "US");
+    req.addParameter("depformatInvalidFormat9", "aaaaa");
+    result = sanwaf.isThreatDetected(req);
+    assertTrue(result.equals(false));
+}
+  
+  @Test
+  public void testDepFormatType() {
+    ItemDependentFormat p = new ItemDependentFormat("", "d {depformatParent:US=#####;Canada=A#A-#A#", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.dependentElementName == null);
+    assertTrue(p.depFormatString == null);
+    assertTrue(p.formats.size() == 0);
+
+    p = new ItemDependentFormat("", "d{depformatParent:US=#####;Canada=A#A-#A#}", Integer.MAX_VALUE, 0, "", "");
+    assertTrue(p.dependentElementName.equals("depformatParent"));
+    assertTrue(p.depFormatString.equals("depformatParent:US=#####;Canada=A#A-#A#"));
+    assertTrue(p.formats.size() == 2);
+}
+
+
+  
+  
   @Test
   public void testFormatEscapceChars() {
-    //<item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedXchar2</name><type>f{xxx #}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedXchar3</name><type>f{xxx A}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedXchar4</name><type>f{xxx a}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedXchar5</name><type>f{xxx c}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedXchar6</name><type>f{xxx #[1-3]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aac[]|1"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aacx[]|1"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
+  
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@#"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ 9"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ A"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar4", "a9$ a"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ x"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ X"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 1"));
+
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@# "));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ a"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ a"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar4", "a9$ A"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ 0"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ 0"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 0"));
   }
 
 }

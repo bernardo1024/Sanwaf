@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.sanwaf.log.SimpleLogger;
 
@@ -46,24 +47,27 @@ public class OtherClassesTest {
 
   @Test
   public void TestErrorAddPointErrorMax() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
     Item p = new ItemString("", 5, 0, "error msg", null);
-    Error error = new Error(shield, p, "foo", "123456789");
+    Error error = new Error(req, shield, p, "foo", "123456789");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
   }
 
   @Test
   public void TestErrorWithNullValue() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
     Item p = new ItemString("", 5, 0, "error msg", null);
-    Error error = new Error(shield, p, "foo", null);
+    Error error = new Error(req, shield, p, "foo", null);
     String s = error.toJson();
     assertTrue(s.contains("{\"key\":\"foo\",\"value\":\"\",\"samplePoints\":[],"));
   }
 
   @Test
   public void TestErrorAddPointErrorMin() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
     Item p = new ItemString("", 5, 5, "error msg", null);
-    Error error = new Error(shield, p, "foo", "123");
+    Error error = new Error(req, shield, p, "foo", "123");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
   }

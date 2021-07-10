@@ -60,6 +60,9 @@ class ItemNumeric extends Item {
   }
 
   private boolean isMaxMinValueError(String value) {
+    if(value.length() == 0 && !required) {
+      return false;
+    }
     try {
       if (maxValue > Integer.MIN_VALUE && Double.parseDouble(value) > maxValue) {
         return true;

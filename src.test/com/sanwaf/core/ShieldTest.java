@@ -72,10 +72,11 @@ public class ShieldTest {
 
   @Test
   public void TestToJson() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
     Item p1 = new ItemString("key1", 3, 2, "error msg1", null);
-    Error error1 = new Error(shield, p1, "key1", "value2");
+    Error error1 = new Error(req, shield, p1, "key1", "value2");
     Item p2 = new ItemNumeric("key11", 1000, 1, "error msg2", null, false);
-    Error error2 = new Error(shield, p2, "key11", "value22");
+    Error error2 = new Error(req, shield, p2, "key11", "value22");
     System.out.println(error1.toJson());
     System.out.println(Error.toJson(null));
     List<Error> errors = new ArrayList<Error>();

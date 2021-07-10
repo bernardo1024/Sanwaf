@@ -41,7 +41,7 @@ final class ItemNumericDelimited extends ItemNumeric {
   }
 
   @Override
-  String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(ServletRequest req, String errorMsg) {
     int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
       return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());

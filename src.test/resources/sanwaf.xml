@@ -20,6 +20,7 @@
 			<java><![CDATA[  Java error msg]]></java>
       <constant><![CDATA[  Constant error msg {0}]]></constant>
       <format><![CDATA[  Failed to conform to format: {0}]]></format>
+      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
       <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
       <required><![CDATA[  <br/>Is a Required field]]></required>
 		</errorMessages>
@@ -103,6 +104,7 @@
                 <item><name>endpointRegex</name><type>x{^[^\s@]+@[^\s@]+$}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg>Must be a proper email address</msg><req></req><related></related></item>
                 <item><name>required</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
                 <item><name>max-min-value</name><type>n</type><max></max><min></min><max-value>100</max-value><min-value>10</min-value><msg></msg><req></req><related></related></item>
+                <item><name>max-min-value-required</name><type>n</type><max></max><min></min><max-value>100</max-value><min-value>10</min-value><msg></msg><req>true</req><related></related></item>
                 <item><name>format</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>formatRequired</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
 
@@ -276,12 +278,34 @@
             <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformat2invalid1</name><type>f{\[\]#[1-]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformat2invalid2</name><type>f{\[\]#[-1]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-            <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedXchar2</name><type>f{xxx #}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedXchar3</name><type>f{xxx A}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedXchar4</name><type>f{xxx a}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedXchar5</name><type>f{xxx c}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedXchar6</name><type>f{xxx #[1-3]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
             <item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
             <item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
             <item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A## A###}</type></item>
             <item><name>parmMultiFormatInvalid</name><type>f{}</type></item>
+
+            <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatMultiple</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatRequired</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req></item>
+            <item><name>depformatInvalidFormatBadParent</name><type>d{foobar:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat</name><type>d {depformatParent:US=#####||#####-####;Canada=A#A-#A#</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat1</name><type>d{depformatParent:US=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat2</name><type>d{depformatParent}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat3</name><type>d{depformatParent:}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat4</name><type>d{depformatParent:US=12345=67890}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat5</name><type>d{depformatParent:US=12345=67890:foobar}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat6</name><type>d{}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat7</name><type>depformatParent:;}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat8</name><type>depformatParent::}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+            <item><name>depformatInvalidFormat9</name><type>depformatParent:=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
 
 					</parameters>
 					<headers>

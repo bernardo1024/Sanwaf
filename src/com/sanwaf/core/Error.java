@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-final class Error {
-  static String invalidLengthErrorMsg = null;
-  static String requiredErrorMsg = null;
+import javax.servlet.ServletRequest;
 
+final class Error {
   String shieldName;
   String key;
   String value;
@@ -16,35 +15,43 @@ final class Error {
   String typeString;
   String appVersion = Sanwaf.securedAppVersion;
 
-  Error(Shield shield, Item p, String key, String value) {
+  Error(ServletRequest req, Shield shield, Item p, String key, String value) {
     this.shieldName = shield.name;
     this.key = key;
     this.value = value;
     this.typeString = p.type;
-    this.message = getErrorMessage(shield, p);
+    this.message = getErrorMessage(req, shield, p);
 
     if (value != null) {
       this.errorPoints.addAll(p.getErrorPoints(shield, value));
       if(p.required && value.length() == 0) {
-        this.message += requiredErrorMsg;
+        this.message += getErrorMessage(req, shield, p, XML_REQUIRED_MSG);
       }
       if (value.length() < p.min || value.length() > p.max) {
-        this.message += modifyInvalidLengthErrorMsg(invalidLengthErrorMsg, p.min, p.max);
+        this.message += modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, p, XML_INVALID_LENGTH_MSG), p.min, p.max);
       }
     }
   }
 
-  static String getErrorMessage(final Shield shield, final Item p) {
+  static String getErrorMessage(final ServletRequest req, final Shield shield, final Item p) {
+    return   getErrorMessage(req, shield, p, null);
+  }
+  
+  static String getErrorMessage(final ServletRequest req, final Shield shield, final Item p, String errorMsgKey) {
     String err = null;
-    if (p.msg != null && p.msg.length() > 0) {
-      err = p.msg;
-    } else {
-      err = shield.errorMessages.get(p.type);
+    if(errorMsgKey == null && p.msg != null && p.msg.length() > 0) {
+        err = p.msg;
+    }
+    if(err == null) {
+      if(errorMsgKey == null) {
+        errorMsgKey = p.type;
+      }
+      err = shield.errorMessages.get(errorMsgKey);
       if (err.length() == 0) {
-        err = shield.sanwaf.globalErrorMessages.get(p.type);
+        err = shield.sanwaf.globalErrorMessages.get(errorMsgKey);
       }
     }
-    return p.modifyErrorMsg(err);
+    return p.modifyErrorMsg(req, err);
   }
 
   static String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max ) {
@@ -146,6 +153,7 @@ final class Error {
   static final String XML_ERROR_MSG_JAVA = "java";
   static final String XML_ERROR_MSG_CONSTANT = "constant";
   static final String XML_ERROR_MSG_FORMAT = "format";
+  static final String XML_ERROR_MSG_DEPENDENT_FORMAT = "dependentFormat";
   static final String XML_INVALID_LENGTH_MSG = "invalidLength";
   static final String XML_REQUIRED_MSG = "required";
   static final String XML_ERROR_MSG_PLACEHOLDER1 = "{0}";
@@ -165,14 +173,8 @@ final class Error {
     map.put(Item.JAVA, xml.get(XML_ERROR_MSG_JAVA));
     map.put(Item.CONSTANT, xml.get(XML_ERROR_MSG_CONSTANT));
     map.put(Item.FORMAT, xml.get(XML_ERROR_MSG_FORMAT));
-
-    String s = xml.get(XML_INVALID_LENGTH_MSG);
-    if(s != null && s.length() > 0) {
-      invalidLengthErrorMsg = s;
-    }
-    s = xml.get(XML_REQUIRED_MSG);
-    if(s != null && s.length() > 0) {
-      requiredErrorMsg = s;
-    }
+    map.put(Item.DEPENDENT_FORMAT, xml.get(XML_ERROR_MSG_DEPENDENT_FORMAT));
+    map.put(XML_INVALID_LENGTH_MSG, xml.get(XML_INVALID_LENGTH_MSG));
+    map.put(XML_REQUIRED_MSG, xml.get(XML_REQUIRED_MSG));
   }
 }

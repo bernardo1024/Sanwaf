@@ -21,6 +21,7 @@
 			<java><![CDATA[  Java error msg]]></java>
 			<constant><![CDATA[  Constant error msg {0}]]></constant>
       <format><![CDATA[  Failed to conform to format]]></format>
+      <dependentFormat><![CDATA[  Failed to conform to dependent format: {0}]]></dependentFormat>
       <invalidLength><![CDATA[  <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
       <required><![CDATA[  <br/>Is a Required field]]></required>
 		</errorMessages>

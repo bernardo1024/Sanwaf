@@ -19,6 +19,11 @@ abstract class Item {
   static final String JAVA = "j{";
   static final String CONSTANT = "k{";
   static final String FORMAT = "f{";
+  static final String DEPENDENT_FORMAT = "d{";
+
+  static final String INVALID_LENGTH_MSG = "length_msg";
+  static final String REQUIRED_MSG = "r_msg";
+  
   static final String SEP_START = "{";
   static final String SEP_END = "}";
 
@@ -111,6 +116,9 @@ abstract class Item {
     if (includeEnpointAttributes) {
       item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
     }
+    if(item instanceof ItemDependentFormat) {
+      ((ItemDependentFormat)item).setAdditionalFields();
+    }
     return item;
   }
 
@@ -166,6 +174,9 @@ abstract class Item {
     } else if (t.equals(FORMAT)) {
       type = ensureComplexTypeFormat(type);
       item = new ItemFormat(name, type, max, min, msg, uri);
+    } else if (t.equals(DEPENDENT_FORMAT)) {
+      type = ensureComplexTypeFormat(type);
+      item = new ItemDependentFormat(name, type, max, min, msg, uri);
     } else {
       item = new ItemString(name, max, min, msg, uri);
     }
@@ -199,7 +210,7 @@ abstract class Item {
     return (value.length() < min || value.length() > max);
   }
 
-  String modifyErrorMsg(String errorMsg) {
+  String modifyErrorMsg(ServletRequest req, String errorMsg) {
     return errorMsg;
   }
 
