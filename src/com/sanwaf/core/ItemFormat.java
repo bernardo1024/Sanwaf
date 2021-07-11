@@ -59,44 +59,52 @@ final class ItemFormat extends Item {
       String formatBlock = formatBlocks.get(i);
       if(formatBlock.startsWith("#[")){
         formatBlock = formatBlock.substring(2, formatBlock.length() - 1);
-        String[] maxMin = formatBlock.split("-");
-        if(maxMin.length != 2) {
-          return false;
-        }
-      
-        int minNum = 0;
-        int maxNum = 0;
-        int maxLen = 0;
 
-        try {
-          minNum = Integer.parseInt(maxMin[0]);
-          maxNum = Integer.parseInt(maxMin[1]);
-          maxLen = (maxNum + "").length();
-        }catch(NumberFormatException e) {
-          return false;
-        }
- 
-        if(c.charAt(0) < '0' || c.charAt(0) > '9'){
-          return true;
-        }
- 
-        StringBuilder cBlock = new StringBuilder(c);
-        if(maxLen > 1){
-          for(int j = 1; j < maxLen; j++){
-            char n = value.charAt(i + j);
-            if(n >= '0' && n <= '9'){
-              cBlock.append(n);
-            }
-            else {
-              return true;
-            }
+        if(formatBlock.contains(",")) {
+          List<String> validNums = Arrays.asList(formatBlock.split(","));
+          if(!validNums.contains(c)) {
+            return true;
           }
         }
-        if(Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum){
-          i += maxLen - 1;
-        }
-        else{
-          return true;
+        else {
+          String[] maxMin = formatBlock.split("-");
+          if(maxMin.length != 2) {
+            return false;
+          }
+        
+          int minNum = 0;
+          int maxNum = 0;
+          int maxLen = 0;
+          try {
+            minNum = Integer.parseInt(maxMin[0]);
+            maxNum = Integer.parseInt(maxMin[1]);
+            maxLen = (maxNum + "").length();
+          }catch(NumberFormatException e) {
+            return false;
+          }
+   
+          if(c.charAt(0) < '0' || c.charAt(0) > '9'){
+            return true;
+          }
+   
+          StringBuilder cBlock = new StringBuilder(c);
+          if(maxLen > 1){
+            for(int j = 1; j < maxLen; j++){
+              char n = value.charAt(i + j);
+              if(n >= '0' && n <= '9'){
+                cBlock.append(n);
+              }
+              else {
+                return true;
+              }
+            }
+          }
+          if(Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum){
+            i += maxLen - 1;
+          }
+          else{
+            return true;
+          }
         }
       }
       else{
@@ -186,15 +194,18 @@ final class ItemFormat extends Item {
         break;
       }
       if(format.length() > pos + 1 && format.charAt(pos + 1) == '['){
-        dash = format.indexOf('-', pos);
-        if(dash > 0) {
-          end = format.indexOf(']', pos);
-          if(end > 0) {
+        end = format.indexOf(']', pos);
+        if(format.contains(",")) {
+          numDigits = 0;
+        }
+        else {
+          dash = format.indexOf('-', pos);
+          if(dash > 0 && end > 0) {
             numDigits = end - (dash + 1);
-            block = format.substring(last, end + 1);
-            last = end + 1;
           }
         }
+        block = format.substring(last, end + 1);
+        last = end + 1;
       }
       else{
         block = format.substring(last, pos + 1);

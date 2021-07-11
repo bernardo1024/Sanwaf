@@ -520,7 +520,19 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "9"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "10"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "0"));
-    
+
+    //<item><name>parmformat4</name><type>f{#[3,4,5,6]###-####-####-####}</type></item>
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "3123-1234-1234-1234"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "4123-1234-1234-1234"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "5123-1234-1234-1234"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "6123-1234-1234-1234"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "1123-1234-1234-1234"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "2123-1234-1234-1234"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "7123-1234-1234-1234"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "8123-1234-1234-1234"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-1234"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-12"));
+
   }
   
   @Test
@@ -714,9 +726,6 @@ public class DatatypeTest {
     assertTrue(p.depFormatString.equals("depformatParent:US=#####;Canada=A#A-#A#"));
     assertTrue(p.formats.size() == 2);
 }
-
-
-  
   
   @Test
   public void testFormatEscapceChars() {
