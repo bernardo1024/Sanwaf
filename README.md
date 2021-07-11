@@ -333,6 +333,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 					-6 special characters are provided to be used in formats:  
 						#   - represents a number 
 						#[] - represents a number within a specified range, for example: #[1-12] 
+						      or a number that must equal one of the specified values, for example: #[4,5,6]
 						A   - represents an uppercase alphabetic character 
 						a   - represents a lowercase alphabetic character 
 						c   - represents an alphabetic character of any case
