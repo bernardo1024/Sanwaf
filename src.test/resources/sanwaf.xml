@@ -279,7 +279,7 @@
             <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformat2invalid1</name><type>f{\[\]#[1-]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformat2invalid2</name><type>f{\[\]#[-1]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-            <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformatEscapedXchar2</name><type>f{xxx #}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>parmformatEscapedXchar3</name><type>f{xxx A}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
@@ -291,6 +291,20 @@
             <item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
             <item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A## A###}</type></item>
             <item><name>parmMultiFormatInvalid</name><type>f{}</type></item>
+
+            <item><name>parmFormatWithDate1</name><type>f{#[yy-yy(+10)]}</type></item>
+            <item><name>parmFormatWithDate1a</name><type>f{#[yy(-10)-yy]}</type></item>
+            <item><name>parmFormatWithDate2</name><type>f{#[yyyy-yyyy(+10)]}</type></item>
+            <item><name>parmFormatWithDate2a</name><type>f{#[yyyy(-10)-yyyy]}</type></item>
+            <item><name>parmFormatWithDate3</name><type>f{#[dd-dd(+5)]}</type></item>
+            <item><name>parmFormatWithDate4</name><type>f{#[mm-mm(+5)]}</type></item>
+
+            <item><name>parmFormatWithDateOverflowMonth</name><type>f{#[mm-mm(+12)]}</type></item>
+            <item><name>parmFormatWithDateOverflowDay</name><type>f{#[dd-dd(+31)]}</type></item>
+
+            <item><name>parmFormatWithDateInvalid5</name><type>f{#[yy-yy(+10]}</type></item>
+            <item><name>parmFormatWithDateInvalid6</name><type>f{dd-dd+5]}</type></item>
+            <item><name>parmFormatWithDateInvalid7</name><type>f{mm mm(+5)}</type></item>
 
             <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
             <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>

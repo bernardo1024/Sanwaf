@@ -3,6 +3,7 @@ package com.sanwaf.core;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -729,7 +730,7 @@ public class DatatypeTest {
   
   @Test
   public void testFormatEscapceChars() {
-    //<item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\|#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    //<item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     //<item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     //<item><name>parmformatEscapedXchar2</name><type>f{xxx #}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     //<item><name>parmformatEscapedXchar3</name><type>f{xxx A}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
@@ -738,7 +739,7 @@ public class DatatypeTest {
     //<item><name>parmformatEscapedXchar6</name><type>f{xxx #[1-3]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aacx[]|1"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aacx[]()|:=+-;1"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
   
     assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@#"));
@@ -758,4 +759,50 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 0"));
   }
 
+  @Test
+  public void testFormatsWithDates() {
+    //<item><name>parmFormatWithDate1</name><type>f{#[yy-yy(+10)]}</type></item>
+    //<item><name>parmFormatWithDate2</name><type>f{#[yyyy-yyyy(+10)]}</type></item>
+    //<item><name>parmFormatWithDate3</name><type>f{#[dd-dd(+5)]}</type></item>
+    //<item><name>parmFormatWithDate4</name><type>f{#[mm-mm(+5)]}</type></item>
+    //<item><name>parmFormatWithDateInvalid5</name><type>f{#[yy-yy(+10]}</type></item>
+    //<item><name>parmFormatWithDateInvalid6</name><type>f{dd-dd+5]}</type></item>
+    //<item><name>parmFormatWithDateInvalid7</name><type>f{mm mm(+5)}</type></item>
+    //<item><name>parmFormatWithDateOverflowMonth</name><type>f{#[mm-mm(+12)]}</type></item>
+    //<item><name>parmFormatWithDateOverflowDay</name><type>f{#[dd-dd(+31)]}</type></item>
+
+    Calendar c = Calendar.getInstance();
+    int yyyy = c.get(Calendar.YEAR);
+    int yy = Integer.parseInt(String.valueOf(yyyy).substring(2));
+    int dd = c.get(Calendar.DAY_OF_MONTH);
+    int mm = c.get(Calendar.MONTH) + 1;
+    
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowMonth", "12"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowDay", "31"));
+
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy+10)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy+11)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy-1)));
+
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy-10)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy-11)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy+1)));
+
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy+10)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy-10)));
+
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate3", String.valueOf(dd)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm)));
+
+  
+
+  }
+  
+  
+  
 }

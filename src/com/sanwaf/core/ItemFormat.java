@@ -2,6 +2,7 @@ package com.sanwaf.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
@@ -50,13 +51,18 @@ final class ItemFormat extends Item {
     }
 
     int formatlen = formatBlocks.size();
-    if (value.length() != formatlen) {
+    if (!(formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)")) 
+        && value.length() != formatlen) {
       return true;
     }
  
     for (int i = 0; i < value.length(); i++) {
       String c = String.valueOf(value.charAt(i));
       String formatBlock = formatBlocks.get(i);
+      
+      formatBlock = resolveDateVariables(formatBlock);
+      
+      
       if(formatBlock.startsWith("#[")){
         formatBlock = formatBlock.substring(2, formatBlock.length() - 1);
 
@@ -90,12 +96,14 @@ final class ItemFormat extends Item {
           StringBuilder cBlock = new StringBuilder(c);
           if(maxLen > 1){
             for(int j = 1; j < maxLen; j++){
-              char n = value.charAt(i + j);
-              if(n >= '0' && n <= '9'){
-                cBlock.append(n);
-              }
-              else {
-                return true;
+              if(i + j <= value.length() - 1) {
+                char n = value.charAt(i + j);
+                if(n >= '0' && n <= '9'){
+                  cBlock.append(n);
+                }
+                else {
+                  return true;
+                }
               }
             }
           }
@@ -123,6 +131,77 @@ final class ItemFormat extends Item {
     return false;
   }
 
+  private String resolveDateVariables(String format) {
+    String newMdy = "";
+    String parsedValue = format;
+    String[] dateOrder = {"dd", "mm", "yyyy", "yy"};
+
+    for (int i = 0; i < dateOrder.length; i++) {
+      int last = 0;
+      while (true) {
+        int startMdyReplacePos = 0;
+        int endMdyReplacePos = 0;
+        last = parsedValue.indexOf(dateOrder[i]);
+        if (last < 0) {
+          break;
+        }
+        startMdyReplacePos = last;
+        endMdyReplacePos = last + dateOrder[i].length();
+
+        if (dateOrder[i].equals("yy")) {
+          int year = Calendar.getInstance().get(Calendar.YEAR);
+          newMdy = String.valueOf(year).substring(2);
+          last += 2;
+          newMdy = adjustDate(parsedValue, last, newMdy);
+        } else if (dateOrder[i].equals("yyyy")) {
+          int year = Calendar.getInstance().get(Calendar.YEAR);
+          newMdy = String.valueOf(year);
+          last += 4;
+          newMdy = adjustDate(parsedValue, last, newMdy);
+        } else if (dateOrder[i].equals("mm")) {
+          int month = Calendar.getInstance().get(Calendar.MONTH);
+          newMdy = String.valueOf(month + 1);
+          last += 2;
+          newMdy = adjustDate(parsedValue, last, newMdy);
+          if (Integer.parseInt(newMdy) > 12) {
+            newMdy = "12";
+          }
+        } else if (dateOrder[i].equals("dd")) {
+          int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+          newMdy = String.valueOf(day);
+          last += 2;
+          newMdy = adjustDate(parsedValue, last, newMdy);
+          if (Integer.parseInt(newMdy) > 31) {
+            newMdy = "31";
+          }
+        }
+
+        if (parsedValue.substring(last, last + 1).equals("(")) {
+          int endOfNum = parsedValue.indexOf(')', last);
+          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endOfNum + 1, parsedValue.length());
+        } else {
+          parsedValue = parsedValue.substring(0, startMdyReplacePos) + newMdy + parsedValue.substring(endMdyReplacePos, parsedValue.length());
+        }
+      }
+    }
+    return parsedValue;
+  }
+  
+  private String adjustDate(String parsedValue, int last, String newMdy) {
+    int newValue = Integer.parseInt(newMdy);
+    if (parsedValue.substring(last, last + 1).equals("(")) {
+      int endOfNum = parsedValue.indexOf(')', last);
+      String num = parsedValue.substring(last + 2, endOfNum);
+      int parsedNum = Integer.parseInt(num);
+      String arith = parsedValue.substring(last + 1, last + 2);
+      if (arith.equals("+")) {
+        newValue += parsedNum;
+      } else if (arith.equals("-")) {
+        newValue -= parsedNum;
+      }
+    }
+    return String.valueOf(newValue);
+  }
   private String escapeChars(String s){
     s = s.replaceAll("\\\\#", "\t");
     s = s.replaceAll("\\\\A", "\n");
@@ -132,6 +211,14 @@ final class ItemFormat extends Item {
     s = s.replaceAll("\\\\\\]", "\0");
     s = s.replaceAll("\\\\\\|", "\1");
     s = s.replaceAll("\\\\x", "\2");
+    s = s.replaceAll("\\\\:", "\3");
+    s = s.replaceAll("\\\\=", "\4");
+    s = s.replaceAll("\\\\\\(", "\5");
+    s = s.replaceAll("\\\\\\)", "\6");
+    s = s.replaceAll("\\\\\\+", "\7");
+    s = s.replaceAll("\\\\\\-", "\016");
+    s = s.replaceAll("\\\\;", "\017");
+
     return s;
   }
   
@@ -145,6 +232,13 @@ final class ItemFormat extends Item {
       case '\0': return ']';
       case '\1': return '|';
       case '\2': return 'x';
+      case '\3': return ':';
+      case '\4': return '=';
+      case '\5': return '(';
+      case '\6': return ')';
+      case '\7': return '+';
+      case '\016': return '-';
+      case '\017': return ';';
       default: return c;
     }
   }
@@ -179,6 +273,9 @@ final class ItemFormat extends Item {
   
   private List<String> parseFormat(String format){
     List<String> formatBlocks = new ArrayList<>();
+    if(format.contains("\\:")) {
+      System.out.println("hello");
+    }
     format = escapeChars(format);
     int pos = 0;
     int last = 0;
