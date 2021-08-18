@@ -332,15 +332,19 @@ Also note the **secured section** contains the following groups: endpoints, para
 	f{}		DESCRIPTION:	The Format data type sets the element to use a Format 
 					-6 special characters are provided to be used in formats:  
 						#   - represents a number 
-						#[] - represents a number within a specified range, for example: #[1-12] 
-						      or a number that must equal one of the specified values, for example: #[4,5,6]
+						#[] - represents a number within a specified range, for example: #[1-12]
+							or a number that must equal one of the specified values, for example: #[4,5,6]
+							or a number bound by date settings: #[yy-yy(+10)]
+						  		where supported date variables include: yy, yyyy, mm, dd
+						  		Format: #[ variable( <+/-> # ) ]
+						  		For example: #[ yy( -10 ) - yy( +10 ) ] - accepts a year in 'yy' format in the range of up to 10 years old to 10 years in the future	
 						A   - represents an uppercase alphabetic character 
 						a   - represents a lowercase alphabetic character 
 						c   - represents an alphabetic character of any case
 						x   - represents any character of any case
 					Use a combination of the special and non-special characters to create formats 
 					To use the special characters in the format itself, you will need to escape them with a backslash:
-						\#  \A  \a  \c  \x  \[  \]
+						\#  \A  \a  \c  \x  \[  \] \( \) \| \: \; \= \+ \-
 					For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
 					Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
 					-You can set multiple formats for evaluation using the OR (||) operator 
