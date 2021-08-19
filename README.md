@@ -344,7 +344,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 						x   - represents any character of any case
 					Use a combination of the special and non-special characters to create formats 
 					To use the special characters in the format itself, you will need to escape them with a backslash:
-						\#  \A  \a  \c  \x  \[  \] \( \) \| \: \; \= \+ \-
+						\#  \A  \a  \c  \x  \[  \] \|
 					For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
 					Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
 					-You can set multiple formats for evaluation using the OR (||) operator 
