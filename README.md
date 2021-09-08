@@ -302,7 +302,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 			EXAMPLE:	"Hello this string does not contain a XSS payload"
 
   	(Open) 
-    	o     		DESCRIPTION:  	Open value.  
+	o		DESCRIPTION:  	Open value.  
                 		      	Any string provided, no regex's will run against this datatype        
         		FORMAT:       	o
         		EXAMPLE:    	"Hello this string does contain a XSS payload <script>alert(1)</script>"
