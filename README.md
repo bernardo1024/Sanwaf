@@ -197,7 +197,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	
 #### Endpoint Structure
 	- Endpoints are groupings of parameters so additional validation can occur, such as strict parameters values and simple to complex relationships
-	- <uri></uri> defines the endpoint
+	- <uri></uri> defines the endpoint (use the ::: separator to specify multiple URIs)
 	- <strict></strict> indicates to fail if any items specfied are missing 
 	   or if non-defined items are in the request (missing or extra parms cause failure)
 	   if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  
