@@ -144,6 +144,7 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		a	- Alphanumeric
 		a{}	- Alphanumeric and stated additional characters
 		s	- String (uses regex's - most expensive - try to use sparingly)
+		o	- Open value. All strings allowed, only processes item attributes; no regex run against this type
 		k{}	- Must be equal to the of if the Constant values provided
 		r{}	- Custom regex expression (reusable per field regex capabilities)
 		x{}	- Inline regex expression specified for single parameter/header/cookie only
@@ -238,7 +239,8 @@ Also note the **secured section** contains the following groups: endpoints, para
 				- to specify multiple uri's for one item, use the ':::' delimiter.  
 				- For "endpoints" the uri indicates a grouping of items to be evaulated together
 	<req></req>		- Indicates if a parameter is required thus will enforce the max & min values
-	
+	<mask-err></mask-err>   - the a value you want to mask the entered value with for when you want to hide it from being displayed in an error message (passwords...)
+
 	<related></related>	- Used in endpoints only (see Sanwaf-ui project for details)
 				- Establishes a relationship that must be met between parameters
 	
@@ -298,6 +300,12 @@ Also note the **secured section** contains the following groups: endpoints, para
 					All regex's in the autoRunPatterns are executed against the string				
 			FORMAT: 	s
 			EXAMPLE:	"Hello this string does not contain a XSS payload"
+
+  	(Open) 
+    	o     		DESCRIPTION:  	Open value.  
+                		      	Any string provided, no regex's will run against this datatype        
+        		FORMAT:       	o
+        		EXAMPLE:    	"Hello this string does contain a XSS payload <script>alert(1)</script>"
 
 	(Constant)
 	k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
