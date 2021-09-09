@@ -406,7 +406,7 @@ Sample Filter Code:
 
 ### Create a custom Logger
 
-You will need to create your own logger and pass it to Sanwaf's constructor otherwise the System.out.printl() method will be used which is not performant nor production facing.
+You will need to create your own logger and pass it to Sanwaf's constructor otherwise the default logger will be used which is not performant.
 
 Here is a simple example of creating a custom logger.  
 
