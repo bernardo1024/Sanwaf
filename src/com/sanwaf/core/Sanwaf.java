@@ -40,7 +40,7 @@ public final class Sanwaf {
    * 
    * <pre>
    * Creates a in instance of Sanwaf initializing it with:
-   *  -default System.out.println Logger (com.sanwaf.log.LoggerSystemOut)
+   *  -default java.util.logging.Logger (com.sanwaf.log.SimpleLogger)
    *   should not be used in a production environment
    *  -default Sanwaf XML configuration file (sanwaf.xml on classpath)
    * </pre>

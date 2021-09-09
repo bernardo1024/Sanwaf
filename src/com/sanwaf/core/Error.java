@@ -18,6 +18,9 @@ final class Error {
   Error(ServletRequest req, Shield shield, Item p, String key, String value) {
     this.shieldName = shield.name;
     this.key = key;
+    if(p.maskError != null && p.maskError.length() > 0) {
+      value = p.maskError;
+    }
     this.value = value;
     this.typeString = p.type;
     this.message = getErrorMessage(req, shield, p);

@@ -61,7 +61,8 @@
     i{} - Delimited list of Integers
 		a		- Alphanumeric
 		a{}	- Alphanumeric and stated additional characters
-		s		- String (uses regex's - most expensive - try to use sparingly)
+    s   - String (uses regex's - most expensive - try to use sparingly)
+    o   - Open value. All strings allowed, only processes item attributes; no regex run against this type
 		k{}	- Must be equal to the of if the Constant values provided
     r{} - Custom regex expression (reusable per field regex capabilities)
     x{} - Inline regex expression specified for single parameter/header/cookie only
@@ -116,6 +117,7 @@
 					                     - to specify many uri's for one item use the ':::' delimiter.
 		<req></req>             - true/false - specify that the parameter is required (used with max & min values)
 		                          - if you want a parameter to be between 4-10 char in length, but not required, this req to false
+    <mask-err></mask-err>   - the a value you want to mask the entered value with for when you want to hide it from being displayed in an error message (passwords...)
 		
 	EXAMPLE:
 	********
@@ -133,97 +135,103 @@
 	
 	(Character)
 		c		DESCRIPTION:	Any single character
-				FORMAT: 		c
+				FORMAT: 		  c
 	
   (Number)    
     n   DESCRIPTION:  Any positive or negative numeric value 
-                ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
-        FORMAT:     n  
-        EXAMPLE:    -321.123, 0.0001 - are valid
-                +12, 12.34.56 - are invalid
+                      ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+        FORMAT:       n  
+        EXAMPLE:      -321.123, 0.0001 - are valid
+                      +12, 12.34.56 - are invalid
                 
   (Delimited list of Numbers)
-    n{}     DESCRIPTION:  A character separated list of numbers
-        FORMAT:     n{<separator char>}
-                Note: the min & max settings applies per delimited value  
-        EXAMPLE:    using n{,}, -321.123,0.000,123,45 is valid
+    n{} DESCRIPTION:  A character separated list of numbers
+        FORMAT:       n{<separator char>}
+                      Note: the min & max settings applies per delimited value  
+        EXAMPLE:      using n{,}, -321.123,0.000,123,45 is valid
                           
   (Integer)    
     i   DESCRIPTION:  Any positive or negative integer value 
-                ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces)  
-        FORMAT:     i  
-        EXAMPLE:    -3213, 1 - are valid
-                +12, 12.34   - are invalid
+                      ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces)  
+        FORMAT:       i  
+        EXAMPLE:      -3213, 1 - are valid
+                      +12, 12.34   - are invalid
                 
   (Delimited list of Integers)
-    i{}     DESCRIPTION:  A character separated list of integers
-        FORMAT:     i{<separator char>}
-                Note: the min & max settings applies per delimited value  
-        EXAMPLE:    using i{,}, -321,0,123,45 is valid
+    i{} DESCRIPTION:  A character separated list of integers
+        FORMAT:       i{<separator char>}
+                      Note: the min & max settings applies per delimited value  
+        EXAMPLE:      using i{,}, -321,0,123,45 is valid
                           
 	(Alphanumeric)
 		a		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9. 
-				FORMAT: 		a
-				EXAMPLE:		abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
+				FORMAT: 		  a
+				EXAMPLE:		  abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ - is valid 
 	
 	(Alphanumeric and stated additional characters)						
-		a{}		DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
-				FORMAT: 		a{<characters to allow>}
-								- For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
-				EXAMPLE:		using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
+		a{}	DESCRIPTION:	Valid chars are A-Z, a-z, 0-9 *AND* the characters you specify in the curly brackets
+				FORMAT: 		  a{<characters to allow>}
+								      - For <space>, <tab>, <newline>, <carriage return> use: \s \t \n \r respectively
+				EXAMPLE:		  using a{+\s,}, abcdefghijklm nopqrstuvwxyz+, is valid
 	
-	(String) 
-		s 		DESCRIPTION:	Any string.  
-								All regex's in the autoRunPatterns are executed against the string				
-				FORMAT: 		s
-				EXAMPLE:		"Hello this string does not contain a XSS payload"
+  (String) 
+    s   DESCRIPTION:  Any string.  
+                      All regex's in the autoRunPatterns are executed against the string        
+        FORMAT:       s
+        EXAMPLE:      "Hello this string does not contain a XSS payload"
+
+  (Open) 
+    o   DESCRIPTION:  Open value.  
+                      any string provided, no regex's will run against this datatype        
+        FORMAT:       o
+        EXAMPLE:      "Hello this string does contain a XSS payload <script>alert(1)</script>"
 
 	(Constant)
-		k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
-				FORMAT: 		k{<comma separated list of strings>}
-				EXAMPLE: 		using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
+		k{}	DESCRIPTION: 	Constant, must be equal to one of the values specified
+				FORMAT: 		  k{<comma separated list of strings>}
+				EXAMPLE: 		  using k{FOO,BAR,FAR}, FOO, BAR, FAR are valid
 
   (Custom Regex)
-    r{}   DESCRIPTION:  Custom Regex Expression in this file (for reuse)
-                Custom Regex's are specified in the Shield's customPatterns section
-                Regex must not include the '/' markers nor any flags.  
-                For example, only provide the value for "<regex>" below:
-                  /<regex>/gimsuy  
-        FORMAT:     r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns xml section
+    r{} DESCRIPTION:  Custom Regex Expression in this file (for reuse)
+			                Custom Regex's are specified in the Shield's customPatterns section
+			                Regex must not include the '/' markers nor any flags.  
+			                For example, only provide the value for "<regex>" below:
+                        /<regex>/gimsuy  
+        FORMAT:       r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns xml section
   
   (Inline Regex)
-    x{}   DESCRIPTION:  Inline Regex Expression in this file (not for reuse, specified in the type)
-                Regex must not include the '/' markers nor any flags.  
-                For example, only provide the value for "<regex>" below:
-                  /<regex>/gimsuy
-        FORMAT:     x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
+    x{} DESCRIPTION:  Inline Regex Expression in this file (not for reuse, specified in the type)
+			                Regex must not include the '/' markers nor any flags.  
+			                For example, only provide the value for "<regex>" below:
+			                  /<regex>/gimsuy
+        FORMAT:       x{regex-statement}   - for example: x{^[^\s@]+@[^\s@]+$} 
   
   (Java)
-    j{}   DESCRIPTION:  Java, call java class for processing
-                -The key value and the ServletRequest object is passed to the method
-                -The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
-                  For example:
-                    public static boolean methodName(String s, ServletRequest request)
-                      return true for threat found, else false
-        FORMAT:     j{fully_qualified_className.methodName()}
+    j{} DESCRIPTION:  Java, call java class for processing
+			                -The key value and the ServletRequest object is passed to the method
+			                -The method of the Java class must be static, with a string and a ServletRequest parameter that returns a boolean value
+			                  For example:
+			                    public static boolean methodName(String s, ServletRequest request)
+			                      return true for threat found, else false
+        FORMAT:       j{fully_qualified_className.methodName()}
 
   (Format)
-    f{}   DESCRIPTION:  The Format data type sets the element to use a Format 
-								-6 special characters are provided to be used in formats:  
-								  #   - represents a number 
-								  #[] - represents a number within a specified range, for example: #[1-12] 
-								  A   - represents an upper case alphabetic character 
-                  a   - represents a lower case alphabetic character 
-                  c   - represents an upper or lower case alphabetic character 
-                  x   - represents an upper or lower case character (any character) 
-								  Use a combination of the special and non-special characters to create formats 
-  								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
-                    Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
-                -You can set multiple formats for evaluation using the OR (||) operator 
-                    For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
-                -To use the special characters in a format, escape them if with backslash: \# \[ \] \A \a \c \x
-                                  to add a postal code as well: f{#####||#####-####||A#A-#A#}
-        FORMAT:     f{format-string}
+    f{} DESCRIPTION:  The Format data type sets the element to use a Format 
+								      -6 special characters are provided to be used in formats:  
+											  #   - represents a number 
+											  #[] - represents a number within a specified range, for example: #[1-12] 
+											  A   - represents an upper case alphabetic character 
+			                  a   - represents a lower case alphabetic character 
+			                  c   - represents an upper or lower case alphabetic character 
+			                  x   - represents an upper or lower case character (any character) 
+											  Use a combination of the special and non-special characters to create formats 
+			  								  For example: if you want the end user to enter a telephone number formatted in a specific way: f{(###) ###-####}
+			                    Or, if you want the end user to enter a credit card expiry date limited to the years ending in 21 - 35: f{#[1-12] / #[21-35]}  
+			                -You can set multiple formats for evaluation using the OR (||) operator 
+			                    For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
+			                -To use the special characters in a format, escape them if with backslash: \# \[ \] \A \a \c \x
+			                                  to add a postal code as well: f{#####||#####-####||A#A-#A#}
+        FORMAT:       f{format-string}
 
  -->
 
@@ -262,7 +270,8 @@
 			<alphanumeric><![CDATA[ <b>Only alphanumeric characters are permitted.</b>&nbsp;<i>For example: <b>abc123</b></i>]]></alphanumeric>
 			<alphanumericAndMore><![CDATA[ <b>Only alphanumeric characters and special characters: <i>{0}</i> are permitted.</b>&nbsp;<i>For example: <b>abc123{0}</b></i>]]></alphanumericAndMore>
 			<constant><![CDATA[ <b>Invalid value provided,</b>&nbsp;<i>value must be one of: <b>{0}</b></i>]]></constant>
-			<string><![CDATA[ <b>Invalid text provided.</b>&nbsp;<i>Recommended Correction: Add a space before any special characters, such as: <b>&nbsp;&lt;&nbsp;&gt;&nbsp;:</b></i>]]></string>
+      <string><![CDATA[ <b>Invalid text provided.</b>&nbsp;<i>Recommended Correction: Add a space before any special characters, such as: <b>&nbsp;&lt;&nbsp;&gt;&nbsp;:</b></i>]]></string>
+      <open><![CDATA[ <b>Invalid text provided.]]></open>
 			<regex><![CDATA[ Invalid value provided, please try again.]]></regex>
 			<java><![CDATA[ Invalid value provided.]]></java>
       <format><![CDATA[  Failed to conform to format: {0}]]></format>
@@ -300,6 +309,7 @@
 					<alphanumericAndMore><![CDATA[ ]]></alphanumericAndMore>
 					<constant><![CDATA[ ]]></constant>
 					<string><![CDATA[ ]]></string>
+          <open><![ ]]></open>
 					<regex><![CDATA[ ]]></regex>
 					<java><![CDATA[ ]]></java>
 					<format><![CDATA[ ]]></format>
@@ -400,20 +410,11 @@
             </endpoint>
           </endpoints>
   				<parameters>
-					<!-- 
-						<item><name>char</name><type>c</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-            <item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-            <item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-            <item><name>integer</name><type>i</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-            <item><name>integerdelimited</name><type>i{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>parms:::use:::the:::same:::settings</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>alphanumeric</name><type>a</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>alphanumericandmore</name><type>a{'}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-						<item><name>regex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-            <item><name>java</name><type>j{com.sanwaf.core.JavaClass.over10trueElseFalse()}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-            <item><name>format</name><type>f{###-###-####}</type><max></max><min></min><msg></msg><uri></uri><req></req></item>
-					-->
+					 <!-- 
+            <item>
+              <name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><mask-err></mask-err><msg></msg><format></format><req></req><related></related>
+            </item>
+					 -->
 					</parameters>
 					<headers>
 					</headers>

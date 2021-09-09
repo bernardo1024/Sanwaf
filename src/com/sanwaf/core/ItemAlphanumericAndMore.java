@@ -26,7 +26,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if (value == null) {
+    if (value == null || maskError.length() > 0) {
       return points;
     }
     int start = -1;

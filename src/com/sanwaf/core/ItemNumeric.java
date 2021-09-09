@@ -17,6 +17,9 @@ class ItemNumeric extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
+    if(maskError.length() > 0) {
+      return points;
+    }
     final int len = value.length();
     int errStart = -1;
     boolean foundDot = false;

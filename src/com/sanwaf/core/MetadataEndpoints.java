@@ -41,11 +41,14 @@ public class MetadataEndpoints {
     String[] xmlEndpoints = endpointsXml.getAll(XML_ENDPOINT);
     for (String endpointString : xmlEndpoints) {
       Xml endpointXml = new Xml(endpointString);
-      String uri = endpointXml.get(Item.XML_ITEM_URI);
+      String[] uris = endpointXml.get(Item.XML_ITEM_URI).split(":::");
       String strict = endpointXml.get(XML_STRICT);
       String items = endpointXml.get(Item.XML_ITEMS);
       Metadata parameters = new Metadata(items, caseSensitive, true, strict);
-      endpointParameters.put(uri, parameters);
+      
+      for(String uri : uris) {
+        endpointParameters.put(uri, parameters);
+      }
     }
   }
 

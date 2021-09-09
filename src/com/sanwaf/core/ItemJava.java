@@ -33,6 +33,9 @@ final class ItemJava extends Item {
   @Override
   List<Point> getErrorPoints(Shield shield, String value) {
     List<Point> points = new ArrayList<>();
+    if(maskError.length() > 0) {
+      return points;
+    }
     points.add(new Point(0, value.length()));
     return points;
   }

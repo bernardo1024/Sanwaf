@@ -17,6 +17,9 @@ final class ItemNumericDelimited extends ItemNumeric {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
+    if(maskError.length() > 0) {
+      return points;
+    }
 
     if (value != null) {
       String[] ns = value.split(delimiter, -1);

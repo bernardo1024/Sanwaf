@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.servlet.ServletRequest;
 
-final class ItemChar extends Item {
-  ItemChar(String name, int max, int min, String msg, String uri) {
+final class ItemOpen extends Item {
+  ItemOpen(String name, int max, int min, String msg, String uri) {
     super(name, max, min, msg, uri);
-    type = CHAR;
+    type = OPEN;
   }
 
   @Override

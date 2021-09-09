@@ -21,6 +21,9 @@ final class ItemString extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
+    if(maskError.length() > 0) {
+      return points;
+    }
 
     for (Pattern p : shield.patterns) {
       Matcher m = p.matcher(value);

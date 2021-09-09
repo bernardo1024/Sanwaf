@@ -13,6 +13,7 @@ abstract class Item {
   static final String ALPHANUMERIC = "a";
   static final String ALPHANUMERIC_AND_MORE = "a{";
   static final String STRING = "s";
+  static final String OPEN = "o";
   static final String CHAR = "c";
   static final String REGEX = "r{";
   static final String INLINE_REGEX = "x{";
@@ -35,11 +36,11 @@ abstract class Item {
   static final String XML_ITEM_MIN = "min";
   static final String XML_ITEM_MSG = "msg";
   static final String XML_ITEM_URI = "uri";
-
   static final String XML_ITEM_REQUIRED = "req";
   static final String XML_ITEM_MAX_VAL = "max-value";
   static final String XML_ITEM_MIN_VAL = "min-value";
   static final String XML_ITEM_RELATED = "related";
+  static final String XML_ITEM_MASK_ERROR = "mask-err";
 
   String name;
   String type = null;
@@ -52,6 +53,7 @@ abstract class Item {
 
   boolean required = false;
   String related;
+  String maskError = "";
 
   Item() {
   }
@@ -112,6 +114,8 @@ abstract class Item {
     if (sMinVal.length() > 0) {
       item.minValue = Double.valueOf(sMinVal);
     }
+    
+    item.maskError = xml.get(XML_ITEM_MASK_ERROR);
 
     if (includeEnpointAttributes) {
       item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
@@ -177,6 +181,8 @@ abstract class Item {
     } else if (t.equals(DEPENDENT_FORMAT)) {
       type = ensureComplexTypeFormat(type);
       item = new ItemDependentFormat(name, type, max, min, msg, uri);
+    } else if (t.equals(OPEN)) {
+      item = new ItemOpen(name, max, min, msg, uri);
     } else {
       item = new ItemString(name, max, min, msg, uri);
     }
@@ -231,6 +237,7 @@ abstract class Item {
     sb.append(", required: ").append(required);
     sb.append(", max-value: ").append(maxValue);
     sb.append(", min-value: ").append(minValue);
+    sb.append(", mask-err: ").append(maskError);
     sb.append(", related: ").append(related);
     return sb.toString();
   }

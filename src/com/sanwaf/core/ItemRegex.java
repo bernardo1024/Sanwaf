@@ -20,7 +20,7 @@ final class ItemRegex extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if (value == null || value.length() == 0) {
+    if (value == null || value.length() == 0 || maskError.length() > 0) {
       return points;
     }
     Matcher m = pattern.matcher(value);

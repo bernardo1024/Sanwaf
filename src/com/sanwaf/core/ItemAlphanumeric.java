@@ -14,6 +14,9 @@ class ItemAlphanumeric extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
+    if(maskError.length() > 0) {
+      return points;
+    }
     int start = -1;
     int len = value.length();
     for (int i = 0; i < len; i++) {
