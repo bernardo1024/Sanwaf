@@ -152,6 +152,7 @@ final class Error {
   static final String XML_ERROR_MSG_INTEGER = "integer";
   static final String XML_ERROR_MSG_INTEGER_DELIMITED = "integerDelimited";
   static final String XML_ERROR_MSG_STRING = "string";
+  static final String XML_ERROR_MSG_OPEN = "open";
   static final String XML_ERROR_MSG_REGEX = "regex";
   static final String XML_ERROR_MSG_JAVA = "java";
   static final String XML_ERROR_MSG_CONSTANT = "constant";
@@ -172,6 +173,7 @@ final class Error {
     map.put(Item.INTEGER, xml.get(XML_ERROR_MSG_INTEGER));
     map.put(Item.INTEGER_DELIMITED, xml.get(XML_ERROR_MSG_INTEGER_DELIMITED));
     map.put(Item.STRING, xml.get(XML_ERROR_MSG_STRING));
+    map.put(Item.OPEN, xml.get(XML_ERROR_MSG_OPEN));
     map.put(Item.REGEX, xml.get(XML_ERROR_MSG_REGEX));
     map.put(Item.JAVA, xml.get(XML_ERROR_MSG_JAVA));
     map.put(Item.CONSTANT, xml.get(XML_ERROR_MSG_CONSTANT));
