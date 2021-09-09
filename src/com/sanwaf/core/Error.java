@@ -50,7 +50,7 @@ final class Error {
         errorMsgKey = p.type;
       }
       err = shield.errorMessages.get(errorMsgKey);
-      if (err.length() == 0) {
+      if (err == null || err.length() == 0) {
         err = shield.sanwaf.globalErrorMessages.get(errorMsgKey);
       }
     }
