@@ -11,8 +11,8 @@ final class ItemFormat extends Item {
   String formatString = null;
   List<List<String>> formatsBlocks = new ArrayList<>();
 
-  ItemFormat(String name, String type, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemFormat(String name, String display, String type, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     this.type = FORMAT;
     setFormat(type);
   }

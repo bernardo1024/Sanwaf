@@ -31,6 +31,7 @@ abstract class Item {
   static final String XML_ITEMS = "items";
   static final String XML_ITEM = "item";
   static final String XML_ITEM_NAME = "name";
+  static final String XML_ITEM_DISPLAY = "display";
   static final String XML_ITEM_TYPE = "type";
   static final String XML_ITEM_MAX = "max";
   static final String XML_ITEM_MIN = "min";
@@ -43,6 +44,7 @@ abstract class Item {
   static final String XML_ITEM_MASK_ERROR = "mask-err";
 
   String name;
+  String display;
   String type = null;
   int max = Integer.MAX_VALUE;
   int min = 0;
@@ -58,8 +60,14 @@ abstract class Item {
   Item() {
   }
 
-  Item(String name, int max, int min, String msg, String uri) {
+  Item(String name, String display, int max, int min, String msg, String uri) {
     this.name = name;
+    if(display == null || display.length() == 0) {
+      this.display = name;
+    }
+    else {
+      this.display = display;
+    }
     this.max = max;
     this.min = min;
     this.msg = msg;
@@ -76,6 +84,7 @@ abstract class Item {
 
   static Item parseItem(Xml xml, boolean includeEnpointAttributes) {
     String name = xml.get(XML_ITEM_NAME);
+    String display = xml.get(XML_ITEM_DISPLAY);
     String type = xml.get(XML_ITEM_TYPE);
     String msg = xml.get(XML_ITEM_MSG);
     String uri = xml.get(XML_ITEM_URI);
@@ -99,7 +108,7 @@ abstract class Item {
     if (min < -1) {
       min = 0;
     }
-    Item item = Item.getNewItem(name, type, min, max, msg, uri);
+    Item item = Item.getNewItem(name, display, type, min, max, msg, uri);
 
     item.required = Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));
 
@@ -141,7 +150,7 @@ abstract class Item {
     return item;
   }
 
-  static Item getNewItem(String name, String type, int min, int max, String msg, String uri) {
+  static Item getNewItem(String name, String display, String type, int min, int max, String msg, String uri) {
     Item item = null;
     String t = type.toLowerCase();
     int pos = t.indexOf(SEP_START);
@@ -150,41 +159,41 @@ abstract class Item {
     }
 
     if (t.equals(NUMERIC)) {
-      item = new ItemNumeric(name, max, min, msg, uri,false);
+      item = new ItemNumeric(name, display, max, min, msg, uri,false);
     } else if (t.equals(NUMERIC_DELIMITED)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemNumericDelimited(name, type, max, min, msg, uri, false);
+      item = new ItemNumericDelimited(name, display, type, max, min, msg, uri, false);
     } else if (t.equals(INTEGER)) {
-      item = new ItemNumeric(name, max, min, msg, uri, true);
+      item = new ItemNumeric(name, display, max, min, msg, uri, true);
     } else if (t.equals(INTEGER_DELIMITED)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemNumericDelimited(name, type, max, min, msg, uri, true);
+      item = new ItemNumericDelimited(name, display, type, max, min, msg, uri, true);
     } else if (t.equals(ALPHANUMERIC)) {
-      item = new ItemAlphanumeric(name, max, min, msg, uri);
+      item = new ItemAlphanumeric(name, display, max, min, msg, uri);
     } else if (t.equals(ALPHANUMERIC_AND_MORE)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemAlphanumericAndMore(name, type, max, min, msg, uri);
+      item = new ItemAlphanumericAndMore(name, display, type, max, min, msg, uri);
     } else if (t.equals(CHAR)) {
-      item = new ItemChar(name, max, min, msg, uri);
+      item = new ItemChar(name, display, max, min, msg, uri);
     } else if (t.equals(REGEX) || t.equals(INLINE_REGEX)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemRegex(name, type, max, min, msg, uri);
+      item = new ItemRegex(name, display, type, max, min, msg, uri);
     } else if (t.equals(JAVA)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemJava(name, type, max, min, msg, uri);
+      item = new ItemJava(name, display, type, max, min, msg, uri);
     } else if (t.equals(CONSTANT)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemConstant(name, type, max, min, msg, uri);
+      item = new ItemConstant(name, display, type, max, min, msg, uri);
     } else if (t.equals(FORMAT)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemFormat(name, type, max, min, msg, uri);
+      item = new ItemFormat(name, display, type, max, min, msg, uri);
     } else if (t.equals(DEPENDENT_FORMAT)) {
       type = ensureComplexTypeFormat(type);
-      item = new ItemDependentFormat(name, type, max, min, msg, uri);
+      item = new ItemDependentFormat(name, display, type, max, min, msg, uri);
     } else if (t.equals(OPEN)) {
-      item = new ItemOpen(name, max, min, msg, uri);
+      item = new ItemOpen(name, display, max, min, msg, uri);
     } else {
-      item = new ItemString(name, max, min, msg, uri);
+      item = new ItemString(name, display, max, min, msg, uri);
     }
     return item;
   }

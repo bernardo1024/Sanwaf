@@ -17,8 +17,8 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   char[] moreChars = new char[0];
 
-  ItemAlphanumericAndMore(String name, String type, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemAlphanumericAndMore(String name, String display, String type, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     this.type = ALPHANUMERIC_AND_MORE;
     setMoreChars(type);
   }

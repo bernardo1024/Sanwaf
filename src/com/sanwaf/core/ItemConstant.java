@@ -9,8 +9,8 @@ import javax.servlet.ServletRequest;
 final class ItemConstant extends Item {
   List<String> constants = null;
 
-  ItemConstant(String name, String type, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemConstant(String name, String display, String type, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     this.type = CONSTANT;
     setConstants(type);
   }

@@ -48,7 +48,7 @@ public class OtherClassesTest {
   @Test
   public void TestErrorAddPointErrorMax() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    Item p = new ItemString("", 5, 0, "error msg", null);
+    Item p = new ItemString("", "", 5, 0, "error msg", null);
     Error error = new Error(req, shield, p, "foo", "123456789");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));
@@ -57,16 +57,16 @@ public class OtherClassesTest {
   @Test
   public void TestErrorWithNullValue() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    Item p = new ItemString("", 5, 0, "error msg", null);
+    Item p = new ItemString("", "", 5, 0, "error msg", null);
     Error error = new Error(req, shield, p, "foo", null);
     String s = error.toJson();
-    assertTrue(s.contains("{\"key\":\"foo\",\"value\":\"\",\"samplePoints\":[],"));
+    assertTrue(s.contains("{\"key\":\"foo\","));
   }
 
   @Test
   public void TestErrorAddPointErrorMin() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    Item p = new ItemString("", 5, 5, "error msg", null);
+    Item p = new ItemString("", "", 5, 5, "error msg", null);
     Error error = new Error(req, shield, p, "foo", "123");
     String s = error.toJson();
     assertTrue(s.contains("Invalid length"));

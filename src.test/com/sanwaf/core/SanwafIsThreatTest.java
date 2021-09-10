@@ -50,7 +50,7 @@ public class SanwafIsThreatTest {
     String trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"null\",\"value\":\"<script>alert(1)<\\/script>\"") >= 0);
+    assertTrue(s.indexOf("{\"key\":\"null\"") >= 0);
     
     request = new MockHttpServletRequest();
     result = sanwaf.isThreat("< script>alert(1)</ script>", null, true, request);

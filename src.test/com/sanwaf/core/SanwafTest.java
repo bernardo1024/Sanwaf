@@ -58,7 +58,7 @@ public class SanwafTest {
     assertTrue(trackId != null);
 
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"NumericDelimited\",\"value\":\"+foobar\",\"samplePoints\":[{\"start\":\"0\",\"end\":\"7\"}],\"error\":\"") >= 0);
+    assertTrue(s.indexOf("{\"key\":\"NumericDelimited\",") >= 0);
   }
 
   @Test
@@ -73,7 +73,7 @@ public class SanwafTest {
     assertTrue(trackId != null);
 
     String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"AlphanumericAndMore\",\"value\":\"Some Bad! data;----?? \",\"samplePoints\"") >= 0);
+    assertTrue(s.indexOf("{\"key\":\"AlphanumericAndMore\"") >= 0);
   }
 
   @Test

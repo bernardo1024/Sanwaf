@@ -6,8 +6,8 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemChar extends Item {
-  ItemChar(String name, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemChar(String name, String display, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     type = CHAR;
   }
 

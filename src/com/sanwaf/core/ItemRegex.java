@@ -11,8 +11,8 @@ final class ItemRegex extends Item {
   String patternName = null;
   Pattern pattern = null;
 
-  ItemRegex(String name, String type, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemRegex(String name, String display, String type, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     this.type = REGEX;
     setPattern(type);
   }

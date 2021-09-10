@@ -13,8 +13,8 @@ final class ItemDependentFormat extends Item {
   String dependentElementName = null;
   Map<String,ItemFormat> formats = new HashMap<>();
   
-  ItemDependentFormat(String name, String type, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemDependentFormat(String name, String display, String type, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     this.type = DEPENDENT_FORMAT;
     initDependentFormat(name, type, max, min, msg, uri);
   }
@@ -77,17 +77,17 @@ final class ItemDependentFormat extends Item {
         dependentElementName = elementFormatData[0];
         String[] valueFormatPairs = elementFormatData[1].split(";");
         if(valueFormatPairs.length > 0) {
-          parseFormats(name, max, min, msg, uri, valueFormatPairs);
+          parseFormats(name, display, max, min, msg, uri, valueFormatPairs);
         }
       }
     }
   }
   
-  private void parseFormats(String name, int max, int min, String msg, String uri, String[] valueFormatPairs) {
+  private void parseFormats(String name, String display, int max, int min, String msg, String uri, String[] valueFormatPairs) {
     for(String valueFormatPair : valueFormatPairs) {
       String[] kv = valueFormatPair.split("=");
       if(kv != null && kv.length == 2) {
-        ItemFormat item = new ItemFormat(name, "f{" + kv[1] + "}", max, min, msg, uri);
+        ItemFormat item = new ItemFormat(name, display, "f{" + kv[1] + "}", max, min, msg, uri);
         formats.put(kv[0], item);
       }
     }

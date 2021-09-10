@@ -44,7 +44,7 @@ public class ErrorMessagesTest {
   @Test
   public void alpahnumericAndMoreDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "a{?}", Integer.MAX_VALUE, 0, "", "");
+    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "", "a{?}", Integer.MAX_VALUE, 0, "", "");
     String s = p.modifyErrorMsg(req, "some {0} String");
     assertTrue(s.contains("?"));
   }
@@ -97,7 +97,7 @@ public class ErrorMessagesTest {
   @Test
   public void numericDelimietedDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemNumericDelimited p = new ItemNumericDelimited("", "n{,}", Integer.MAX_VALUE, 0, "", "", false);
+    ItemNumericDelimited p = new ItemNumericDelimited("", "", "n{,}", Integer.MAX_VALUE, 0, "", "", false);
     String s = p.modifyErrorMsg(req, "some {0} String");
     assertTrue(s.contains(","));
   }
@@ -122,7 +122,7 @@ public class ErrorMessagesTest {
   @Test
   public void constantDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemConstant p = new ItemConstant("", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
+    ItemConstant p = new ItemConstant("", "", "k{foo,bar,far}", Integer.MAX_VALUE, 0, "", "");
     String s = Error.getErrorMessage(req, shield, p);
     assertTrue(s.contains("foo"));
   }

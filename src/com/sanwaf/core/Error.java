@@ -9,6 +9,7 @@ import javax.servlet.ServletRequest;
 final class Error {
   String shieldName;
   String key;
+  String display;
   String value;
   List<Point> errorPoints = new ArrayList<>();
   String message;
@@ -18,6 +19,12 @@ final class Error {
   Error(ServletRequest req, Shield shield, Item p, String key, String value) {
     this.shieldName = shield.name;
     this.key = key;
+    if(p.display == null || p.display.length() == 0) {
+      this.display = key;
+    }
+    else {
+      this.display = p.display;
+    }
     if(p.maskError != null && p.maskError.length() > 0) {
       value = p.maskError;
     }
@@ -101,6 +108,9 @@ final class Error {
     sb.append(OBJ_START);
     sb.append(QUOTE).append("key").append(QUOTE).append(K_V_SEP);
     sb.append(QUOTE).append(key).append(QUOTE);
+    sb.append(OBJ_SEP);
+    sb.append(QUOTE).append("display").append(QUOTE).append(K_V_SEP);
+    sb.append(QUOTE).append(display).append(QUOTE);
     sb.append(OBJ_SEP);
     sb.append(QUOTE).append("value").append(QUOTE).append(K_V_SEP);
     sb.append(QUOTE).append(Metadata.jsonEncode(value)).append(QUOTE);

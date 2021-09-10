@@ -13,8 +13,8 @@ final class ItemString extends Item {
     type = STRING;
   }
 
-  ItemString(String name, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemString(String name, String display, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     type = STRING;
   }
 

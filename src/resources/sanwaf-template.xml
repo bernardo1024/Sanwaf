@@ -139,7 +139,7 @@
 	
   (Number)    
     n   DESCRIPTION:  Any positive or negative numeric value 
-                      ('+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
+                      '+' sign NOT allowed; one '-' sign allowed @start of value; no spaces; one '.' allowed)  
         FORMAT:       n  
         EXAMPLE:      -321.123, 0.0001 - are valid
                       +12, 12.34.56 - are invalid
@@ -411,9 +411,7 @@
           </endpoints>
   				<parameters>
 					 <!-- 
-            <item>
-              <name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><mask-err></mask-err><msg></msg><format></format><req></req><related></related>
-            </item>
+            <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><mask-err></mask-err><msg></msg><format></format><req></req><related></related></item>
 					 -->
 					</parameters>
 					<headers>

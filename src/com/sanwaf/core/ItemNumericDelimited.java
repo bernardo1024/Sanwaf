@@ -8,8 +8,8 @@ import javax.servlet.ServletRequest;
 final class ItemNumericDelimited extends ItemNumeric {
   String delimiter = "";
 
-  ItemNumericDelimited(String name, String type, int max, int min, String msg, String uri, boolean isInt) {
-    super(name, max, min, msg, uri, isInt);
+  ItemNumericDelimited(String name, String display, String type, int max, int min, String msg, String uri, boolean isInt) {
+    super(name, display, max, min, msg, uri, isInt);
     this.type = NUMERIC_DELIMITED;
     setDelimiter(type);
   }

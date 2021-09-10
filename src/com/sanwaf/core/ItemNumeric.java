@@ -8,8 +8,8 @@ import javax.servlet.ServletRequest;
 class ItemNumeric extends Item {
   boolean isInt = false;
   
-  ItemNumeric(String name, int max, int min, String msg, String uri, boolean isInt) {
-    super(name, max, min, msg, uri);
+  ItemNumeric(String name, String display, int max, int min, String msg, String uri, boolean isInt) {
+    super(name, display, max, min, msg, uri);
     type = NUMERIC;
     this.isInt = isInt;
   }
@@ -92,7 +92,7 @@ class ItemNumeric extends Item {
       char c = value.charAt(i);
       int d = c - '0';
       if (d < 0 || d > 9) {
-        if (i == 0 && c == '-') {
+        if (i == 0 && c == '-' && value.length() > 1) {
           continue;
         } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;

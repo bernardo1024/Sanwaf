@@ -6,8 +6,8 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 class ItemAlphanumeric extends Item {
-  ItemAlphanumeric(String name, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemAlphanumeric(String name, String display, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     type = ALPHANUMERIC;
   }
 

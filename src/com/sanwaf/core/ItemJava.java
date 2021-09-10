@@ -10,8 +10,8 @@ import javax.servlet.ServletRequest;
 final class ItemJava extends Item {
   Method javaMethod = null;
 
-  ItemJava(String name, String type, int max, int min, String msg, String uri) {
-    super(name, max, min, msg, uri);
+  ItemJava(String name, String display, String type, int max, int min, String msg, String uri) {
+    super(name, display, max, min, msg, uri);
     this.type = JAVA;
     setJavaMethod(type);
   }
