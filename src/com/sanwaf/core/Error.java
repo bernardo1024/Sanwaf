@@ -110,7 +110,7 @@ final class Error {
     sb.append(QUOTE).append(key).append(QUOTE);
     sb.append(OBJ_SEP);
     sb.append(QUOTE).append("display").append(QUOTE).append(K_V_SEP);
-    sb.append(QUOTE).append(display).append(QUOTE);
+    sb.append(QUOTE).append(Metadata.jsonEncode(display)).append(QUOTE);
     sb.append(OBJ_SEP);
     sb.append(QUOTE).append("value").append(QUOTE).append(K_V_SEP);
     sb.append(QUOTE).append(Metadata.jsonEncode(value)).append(QUOTE);
