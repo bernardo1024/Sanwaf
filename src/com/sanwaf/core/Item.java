@@ -62,7 +62,7 @@ abstract class Item {
 
   Item(String name, String display, int max, int min, String msg, String uri) {
     this.name = name;
-    if(display == null || display.length() == 0) {
+    if(display.length() == 0) {
       this.display = name;
     }
     else {

@@ -15,7 +15,8 @@
 			<alphanumeric><![CDATA[  Alphanumeric error msg]]></alphanumeric>
 			<alphanumericAndMore><![CDATA[  Alphanumeric and more error msg {0}]]></alphanumericAndMore>
 			<char><![CDATA[  Character error msg]]></char>
-			<string><![CDATA[  String error msg]]></string>
+      <string><![CDATA[  String error msg]]></string>
+      <open><![CDATA[  Open error msg]]></open>
 			<regex><![CDATA[  Regex error msg]]></regex>
 			<java><![CDATA[  Java error msg]]></java>
       <constant><![CDATA[  Constant error msg {0}]]></constant>
@@ -244,6 +245,9 @@
             <item><name>Char</name><type>c</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><name>CharRequired</name><type>c</type><max></max><min></min><msg></msg><uri></uri><req>true</req></item>
 
+            <item><name>Open</name><type>o</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><name>OpenRequired</name><type>o</type><max></max><min></min><msg></msg><uri></uri><req>true</req></item>
+
             <item><name>Regex</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>
             <item><name>RegexRequired</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri><req>true</req></item>
 
@@ -306,6 +310,8 @@
             <item><name>parmFormatWithDateInvalid6</name><type>f{dd-dd+5]}</type></item>
             <item><name>parmFormatWithDateInvalid7</name><type>f{mm mm(+5)}</type></item>
 
+            <item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
+
             <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
             <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
             <item><name>depformatMultiple</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
@@ -321,6 +327,20 @@
             <item><name>depformatInvalidFormat7</name><type>depformatParent:;}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
             <item><name>depformatInvalidFormat8</name><type>depformatParent::}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
             <item><name>depformatInvalidFormat9</name><type>depformatParent:=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
+
+            <item><name>IntegerMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
+            <item><name>IntegerDelimitedMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
+            <item><name>NumericMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
+            <item><name>NumericDelimitedMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
+            <item><name>AlphanumericMask</name><type>a</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericMask</mask-err></item>
+            <item><name>AlphanumericAndMoreMask</name><type>a{?\s:}</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericAndMoreMask</mask-err></item>
+            <item><name>StringMask</name><type>s</type><max></max><min></min><msg></msg><uri></uri><mask-err>StringMask</mask-err></item>
+            <item><name>CharMask</name><type>c</type><max></max><min></min><msg></msg><uri></uri><mask-err>CharMask</mask-err></item>
+            <item><name>OpenMask</name><type>o</type><max>10</max><min>0</min><msg></msg><uri></uri><mask-err>OpenMask</mask-err></item>
+            <item><name>RegexMask</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri><mask-err>RegexMask</mask-err></item>
+            <item><name>JavaMask</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max>10</max><min>0</min><msg></msg><uri></uri><mask-err>JavaMask</mask-err></item>
+            <item><name>parmformatMask</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><msg></msg><mask-err>parmformatMask</mask-err></item>
+            <item><name>ConstantMask</name><type>k{FOO,BAR,FAR}</type><max>3</max><min>3</min><msg></msg><uri></uri><mask-err>ConstantMask</mask-err></item>
 
 					</parameters>
 					<headers>

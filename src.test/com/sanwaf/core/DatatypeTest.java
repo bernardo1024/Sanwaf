@@ -230,6 +230,39 @@ public class DatatypeTest {
   }
 
   @Test
+  public void testOpen() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "a"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "1 "));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "-a"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "%$"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", ")9)_!@#$%^&*()_+=-`1234567890-=[]\\{>?>?<,./}|"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "<asdffff."));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "OpenRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "OpenRequired", null));
+
+    ItemOpen p = new ItemOpen("", "", 10, 0, "", "");
+    assertFalse(p.inError(req, shield, "12345"));
+    assertFalse(p.inError(req, shield, "1"));
+    assertFalse(p.inError(req, shield, ""));
+    assertFalse(p.inError(req, shield, null));
+    assertTrue(p.inError(req, shield, "1234567890123"));
+  }
+
+  @Test
+  public void testOpenType2() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "OpenRequired", "");
+    for (Error error : errors) {
+      System.out.println("Open=" + error.toJson());
+    }
+  }
+
+  
+  @Test
   public void testRegex() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "CustomRegexSSN", "555-55-5555"));
@@ -798,9 +831,107 @@ public class DatatypeTest {
 
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate3", String.valueOf(dd)));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm)));
+  }
 
   
+  @Test
+  public void testParmFormatIP() {
+    //<item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
 
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "111.111.111.111"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "255.255.255.255"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "000.000.000.000"));
+
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1.1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1.1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
+  }
+ 
+  
+  @Test
+  public void testMaskingErrors() {
+    //<item><name>IntegerMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
+    //<item><name>IntegerDelimitedMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
+    //<item><name>NumericMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
+    //<item><name>NumericDelimitedMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
+    //<item><name>AlphanumericMask</name><type>a</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericMask</mask-err></item>
+    //<item><name>AlphanumericAndMoreMask</name><type>a{?\s:}</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericAndMoreMask</mask-err></item>
+    //<item><name>StringMask</name><type>s</type><max></max><min></min><msg></msg><uri></uri><mask-err>StringMask</mask-err></item>
+    //<item><name>CharMask</name><type>c</type><max></max><min></min><msg></msg><uri></uri><mask-err>CharMask</mask-err></item>
+    //<item><name>OpenMask</name><type>o</type><max>10</max><min>0</min><msg></msg><uri></uri><mask-err>OpenMask</mask-err></item>
+    //<item><name>RegexMask</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri><mask-err>RegexMask</mask-err></item>
+    //<item><name>JavaMask</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max>10</max><min>0</min><msg></msg><uri></uri><mask-err>JavaMask</mask-err></item>
+    //<item><name>parmformatMask</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><msg></msg><mask-err>parmformatMask</mask-err></item>
+    //<item><name>ConstantMask</name><type>k{FOO,BAR,FAR}</type><max>3</max><min>3</min><msg></msg><uri></uri></item>
+
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    List<Error> errors = sanwaf.getError(req, shield, "IntegerMask", "ab");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"IntegerMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "IntegerDelimitedMask", "ab");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"IntegerMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "NumericMask", "ab");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"NumericMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "NumericDelimitedMask", "ab");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"NumericMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "AlphanumericMask", "**&");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"AlphanumericMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "AlphanumericAndMoreMask", "#$%^&*");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"AlphanumericAndMoreMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "StringMask", "<script>");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"StringMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "CharMask", "sss");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"CharMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "OpenMask", "123456789146564654654654");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"OpenMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "RegexMask", "bac");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"RegexMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "JavaMask", "asd");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"JavaMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "parmformatMask", "asdf");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"parmformatMask\"") > 0);
+    }
+    
+    errors = sanwaf.getError(req, shield, "ConstantMask", "asdf");
+    for (Error error : errors) {
+      assertTrue(error.toJson().indexOf("\"value\":\"ConstantMask\"") > 0);
+    }
   }
   
   
