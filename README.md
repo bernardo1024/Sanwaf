@@ -152,6 +152,8 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		f{} 	- The Format data type sets the element to use a specified Format 
 		d{}	- Same as format except, the specific format to apply to the element is based on another elements value
 
+**See [sanwaf-ui-attribute-builder.html](https://bernardo1024.github.io/sanwaf-ui-attribute-builder.html) to help build Sanwaf Attributes**
+
 ### Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section of this XML file.  
 
@@ -255,6 +257,8 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<item><name>count</name><type>n</type><uri>/uri1:::uri2:::uri3</uri></item>
 
 ### Custom Datatypes Guide
+
+**See [sanwaf-ui-attribute-builder.html](https://bernardo1024.github.io/sanwaf-ui-attribute-builder.html) to help build Sanwaf Attributes**
 
 	(Character)
 	c		DESCRIPTION:	Any single character
