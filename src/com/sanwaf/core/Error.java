@@ -25,7 +25,7 @@ final class Error {
     else {
       this.display = p.display;
     }
-    if(p.maskError != null && p.maskError.length() > 0) {
+    if(p.maskError.length() > 0) {
       value = p.maskError;
     }
     this.value = value;

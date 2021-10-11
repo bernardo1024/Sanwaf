@@ -68,6 +68,7 @@
     x{} - Inline regex expression specified for single parameter/header/cookie only
 		j{}	- Java Class.method - returns true/false for pass/fail
 		f{} - The Format data type sets the element to use a specified Format 
+		d{} - Same as format except, the specific format to apply to the element is based on another elements value
 		
 		See below for specifying max/min and parameter level error messages
 
@@ -106,7 +107,8 @@
 														- to specify many 'names' in one item tag by using the ':::' delimiter.  
                             - for example:
 														  - <name>parameter1</name>
-														  - <name>parameter1:::parameter2:::parameter3</name> 
+														  - <name>parameter1:::parameter2:::parameter3</name>
+    <display></display>     - the value to use in error messages to reference the element. if not provided, name will be used
 		<type></type>	          - the parameter data type (see Custom Data types above) (defaults to 's' if not specified)
 		<max></max>		          - the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
 		<min></min>		          - the min length allowed for this parameter (defaults to 0 if not specified) 
@@ -232,6 +234,16 @@
 			                -To use the special characters in a format, escape them if with backslash: \# \[ \] \A \a \c \x
 			                                  to add a postal code as well: f{#####||#####-####||A#A-#A#}
         FORMAT:       f{format-string}
+        
+  (Dependent Format)
+    d{} DESCRIPTION:  Same as format except, the specific format to apply to the element is based on another elements value
+        FORMAT:       d{element:value1=format1;value2=format2;...} 
+                      where
+                        element - is the id or name of the element you want to make the format dependent on
+                        value - is the value of the element for the given format to be used
+                        format - is any format as specified it the format data type section above
+        EXAMPLE:      if you want to use a country element to determine the type of format to apply (zip or postal code):
+                        data-sw-type="d{country:USA=#####||#####-####;Canada=A#A-#A#}"  
 
  -->
 
@@ -309,7 +321,7 @@
 					<alphanumericAndMore><![CDATA[ ]]></alphanumericAndMore>
 					<constant><![CDATA[ ]]></constant>
 					<string><![CDATA[ ]]></string>
-          <open><![ ]]></open>
+          <open><![CDATA[ ]]></open>
 					<regex><![CDATA[ ]]></regex>
 					<java><![CDATA[ ]]></java>
 					<format><![CDATA[ ]]></format>

@@ -153,7 +153,7 @@
                 <item><name>related-and-or-parentY4</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>related-and-or-parentY5</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
-					    </items>
+    			    </items>
 					  </endpoint>
 
             <endpoint>
@@ -329,9 +329,9 @@
             <item><name>depformatInvalidFormat9</name><type>depformatParent:=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req></item>
 
             <item><name>IntegerMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
-            <item><name>IntegerDelimitedMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
+            <item><name>IntegerDelimitedMask</name><type>i{,}</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerDelimitedMask</mask-err></item>
             <item><name>NumericMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
-            <item><name>NumericDelimitedMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
+            <item><name>NumericDelimitedMask</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericDelimitedMask</mask-err></item>
             <item><name>AlphanumericMask</name><type>a</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericMask</mask-err></item>
             <item><name>AlphanumericAndMoreMask</name><type>a{?\s:}</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericAndMoreMask</mask-err></item>
             <item><name>StringMask</name><type>s</type><max></max><min></min><msg></msg><uri></uri><mask-err>StringMask</mask-err></item>

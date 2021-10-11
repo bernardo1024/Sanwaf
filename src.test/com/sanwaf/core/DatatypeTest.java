@@ -875,7 +875,7 @@ public class DatatypeTest {
     
     errors = sanwaf.getError(req, shield, "IntegerDelimitedMask", "ab");
     for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"IntegerMask\"") > 0);
+      assertTrue(error.toJson().indexOf("\"value\":\"IntegerDelimitedMask\"") > 0);
     }
     
     errors = sanwaf.getError(req, shield, "NumericMask", "ab");
@@ -885,7 +885,7 @@ public class DatatypeTest {
     
     errors = sanwaf.getError(req, shield, "NumericDelimitedMask", "ab");
     for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"NumericMask\"") > 0);
+      assertTrue(error.toJson().indexOf("\"value\":\"NumericDelimitedMask\"") > 0);
     }
     
     errors = sanwaf.getError(req, shield, "AlphanumericMask", "**&");

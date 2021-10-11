@@ -143,6 +143,19 @@ public class DatatypeUriTest {
   }
 
   @Test
+  public void testOpen() {
+    MockHttpServletRequest req = new MockHttpServletRequest();
+    req.setRequestURI("/foo/bar");
+    req.addParameter("Open", "valid string");
+    assertEquals(false, sanwaf.isThreatDetected(req));
+
+    req = new MockHttpServletRequest();
+    req.setRequestURI("/foo/bar/invalid");
+    req.addParameter("Open", "valid string");
+    assertEquals(true, sanwaf.isThreatDetected(req));
+  }
+
+  @Test
   public void testMultipleUris() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.setRequestURI("/foo/bar");
