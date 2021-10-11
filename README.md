@@ -229,7 +229,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 				- for example:
 					- <name>parameter1</name>
 					- <name>parameter1:::parameter2:::parameter3</name> 
-	<display></display>	- the to use in error messages to reference the element. if not provided, name will be used
+	<display></display>	- the value to use in error messages to reference the element. if not provided, name will be used
 	<type></type>		- the parameter datatype (see Custom Datatypes above) (defaults to 's' if not specified)
 	<max></max>		- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
 	<min></min>		- the min length allowed for this parameter (defaults to 0 if not specified) 
