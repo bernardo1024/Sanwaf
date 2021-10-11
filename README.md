@@ -150,6 +150,7 @@ Use these data types whenever possible (instead of simply assigning all to the s
 		x{}	- Inline regex expression specified for single parameter/header/cookie only
 		j{}	- Java Class.method - returns true/false for pass/fail
 		f{} 	- The Format data type sets the element to use a specified Format 
+		d{}	- Tries to best fit the data entered into the supplied mask that is derived from an elements value
 
 ### Configuration
 You configure how submitted data (parameters/headers/cookies) get processed in the **shields/shield/metadata** section of this XML file.  
@@ -360,6 +361,11 @@ Also note the **secured section** contains the following groups: endpoints, para
                     				For example: if you want to use 1 field for US ZIP long & short formats: f{#####||#####-####}
                                   			to add a postal code as well: f{#####||#####-####||A#A-#A#}
 			FORMAT:		f{format-string}
+
+	(Dependent Format)
+	d{}		DESCRIPTION:	 Tries to best fit the data entered into the supplied mask that is derived from an elements value
+			FORMAT:		d{element:value1=format1;value2=format2;...}
+			EXAMPLE: 	d{country:USA=#####;Canada=A#A-#A#}, 55555 is valid if the element with id or name is equal to USA
 
 
 ## Sample code
