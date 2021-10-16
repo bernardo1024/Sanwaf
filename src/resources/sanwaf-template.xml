@@ -348,10 +348,11 @@
 				</alwaysPerformRegex>
 				
 				<!-- Auto Run Patterns is a list of patterns that will automatically be run against every parameter marked as a string (s) datatype  
-						<key>  - the name of the pattern
-						<item> - the pattern in a regular string format (no escaping quotes, backslashes...)
-									 NOTE: 	Do NOT wrap regex in "/.../i" format.
-											All regex's are compiled with ignore case enabled 
+						<item>   - item entry in autoRunPatterns
+              <key>   - the name of the pattern
+              <value> - the pattern in a regular string format (no escaping quotes, backslashes...)
+                     NOTE: 	Do NOT wrap regex in "/.../i" format.
+                        All regex's are compiled with ignore case enabled 
 					Note that values provided below are for demonstration purposes
 				-->
 				<autoRunPatterns>
