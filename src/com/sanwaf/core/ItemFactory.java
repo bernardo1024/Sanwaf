@@ -33,6 +33,9 @@ public class ItemFactory {
   static final String XML_ITEM_RELATED = "related";
   static final String XML_ITEM_MASK_ERROR = "mask-err";
 
+  ItemFactory() {
+    //no instances allowed
+  }
   static Item parseItem(Xml xml, com.sanwaf.log.Logger logger) {
     return parseItem(xml, false, logger);
   }

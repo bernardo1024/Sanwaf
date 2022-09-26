@@ -75,23 +75,29 @@ abstract class Item {
     }
   }
 
-  boolean handleMode(boolean ret, String value, String more){
+  boolean handleMode(boolean ret, String value, String more, ServletRequest req){
     if(mode == Modes.BLOCK) {
       return ret;
     }
     if(ret && (mode == Modes.DETECT || mode == Modes.DETECT_ALL)) {
-      logger.info(toString(value, more));
+      logger.info(toString(value, more, req));
     }
     return false;
   }
   
   public String toString() {
-    return toString(null, null);
+    return toString(null, null, null);
   }
-  public String toString(String value, String more) {
+  public String toString(String value, String more, ServletRequest req) {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
     sb.append("\"mode\":\"").append(mode).append("\"");
+    if(req != null) {
+      HttpServletRequest hreq = (HttpServletRequest)req;
+      sb.append("\"transaction-id\":\"").append(hreq.getAttribute(Sanwaf.REQ_ATT_TRANS_ID)).append("\"");
+      sb.append("\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
+      sb.append("\"referer\":\"").append(hreq.getHeader("referer")).append("\"");
+    }
     sb.append(",\"name\":\"").append(Metadata.jsonEncode(name)).append("\"");
     sb.append(",\"type\":\"").append(getType()).append("\"");
     sb.append(",\"max\":\"").append(max).append("\"");

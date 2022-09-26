@@ -42,7 +42,7 @@ final class ItemFormat extends Item {
         break;
       }
     }
-    return handleMode(!foundValidFormat, value, INVALID_FORMAT + formatString);
+    return handleMode(!foundValidFormat, value, INVALID_FORMAT + formatString, req);
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks) {

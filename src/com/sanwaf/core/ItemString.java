@@ -35,10 +35,10 @@ final class ItemString extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI);
+      return handleMode(true, value, INVALID_URI, req);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE);
+      return handleMode(true, value, INVALID_SIZE, req);
     }
     if(value.length() == 0) {
       return false;
@@ -50,7 +50,7 @@ final class ItemString extends Item {
 
       if (rule.getValue().pattern.matcher(value).find()) {
         if(rule.getValue().mode == Modes.BLOCK) { inError = true; }
-        handleMode(true, value, FAILED_PATTERN + rule.getKey());
+        handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
         if(mode != Modes.DETECT_ALL) { break; }
       } 
     }

@@ -36,15 +36,15 @@ final class ItemRegex extends Item {
       pattern = shield.customRulePatterns.get(patternName).pattern;
     }
     if (!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI);
+      return handleMode(true, value, INVALID_URI, req);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE);
+      return handleMode(true, value, INVALID_SIZE, req);
     }
     if(value.length() == 0) {
       return false;
     }
-    return handleMode(!pattern.matcher(value).find(), value, FAILED_CUSTOM_PATTERN + patternName);
+    return handleMode(!pattern.matcher(value).find(), value, FAILED_CUSTOM_PATTERN + patternName, req);
   }
 
   private void setPattern(String value) {

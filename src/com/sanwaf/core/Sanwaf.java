@@ -19,6 +19,7 @@ public final class Sanwaf {
   private static final String STANDALONE_XML_FILENAME = "sanwaf.xml";
   private static final String REQ_ATT_TRACK_ID = "~sanwaf-id";
   private static final String REQ_ATT_ERRORS = "~sanwaf-errors";
+  static final String REQ_ATT_TRANS_ID = "~sanwaf-trans-id";
 
   private String xmlFilename = null;
   protected Logger logger;
@@ -113,6 +114,10 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req) {
+    if(req != null) {
+      req.setAttribute(REQ_ATT_TRANS_ID, getSortOfRandomNumber());
+    }
+    
     if (!enabled || !(req instanceof HttpServletRequest)) {
       return false;
     }
@@ -196,6 +201,9 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req) {
+    if(req != null) {
+      req.setAttribute(REQ_ATT_TRANS_ID, getSortOfRandomNumber());
+    }
     boolean foundThreat = checkForThreats(value, shieldName);
     if (foundThreat && setErrorAttributes) {
       addErrorAttributes(req, getSortOfRandomNumber(), getErrorList(value));
@@ -241,6 +249,9 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml) {
+    if(req != null) {
+      req.setAttribute(REQ_ATT_TRANS_ID, getSortOfRandomNumber());
+    }
     Item item = ItemFactory.parseItem(new Xml(xml), logger);
     Shield sh = getShield(shieldName);
     if (sh == null) {
@@ -393,6 +404,7 @@ public final class Sanwaf {
   }
 
   private void addErrorAttributes(ServletRequest req, String id, List<Error> errors) {
+    if(req == null) { return; }
     if (onErrorAddTrackId) {
       req.setAttribute(REQ_ATT_TRACK_ID, id);
     }

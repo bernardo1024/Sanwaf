@@ -66,10 +66,10 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI);
+      return handleMode(true, value, INVALID_URI, req);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE);
+      return handleMode(true, value, INVALID_SIZE, req);
     }
     if (value.length() == 0) {
       return false;
@@ -77,7 +77,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
-        return handleMode(true, value, INVALID_AN_MORE + String.valueOf(moreChars));
+        return handleMode(true, value, INVALID_AN_MORE + String.valueOf(moreChars), req);
       }
     }
     return false;

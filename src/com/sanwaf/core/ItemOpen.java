@@ -13,10 +13,10 @@ class ItemOpen extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if(!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI);
+      return handleMode(true, value, INVALID_URI, req);
     }
     if(isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE);
+      return handleMode(true, value, INVALID_SIZE, req);
     }
     return false;
   }

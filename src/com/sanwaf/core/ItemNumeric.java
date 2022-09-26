@@ -83,13 +83,13 @@ class ItemNumeric extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if(!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI);    
+      return handleMode(true, value, INVALID_URI, req);    
     }
     if(isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE);    
+      return handleMode(true, value, INVALID_SIZE, req);    
     }
     if(isMaxMinValueError(value)) {
-      return handleMode(true, value, INVALID_MAX_MIN);
+      return handleMode(true, value, INVALID_MAX_MIN, req);
     }
     
     if(value.length() == 0) {
@@ -105,7 +105,7 @@ class ItemNumeric extends Item {
         } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;
         } else {
-          return handleMode(true, value, INVALID_NUMBER);
+          return handleMode(true, value, INVALID_NUMBER, req);
         }
       }
     }
