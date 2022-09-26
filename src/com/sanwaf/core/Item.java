@@ -94,9 +94,9 @@ abstract class Item {
     sb.append("\"mode\":\"").append(mode).append("\"");
     if(req != null) {
       HttpServletRequest hreq = (HttpServletRequest)req;
-      sb.append("\"transaction-id\":\"").append(hreq.getAttribute(Sanwaf.REQ_ATT_TRANS_ID)).append("\"");
-      sb.append("\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
-      sb.append("\"referer\":\"").append(hreq.getHeader("referer")).append("\"");
+      sb.append(",\"transaction-id\":\"").append(hreq.getAttribute(Sanwaf.REQ_ATT_TRANS_ID)).append("\"");
+      sb.append(",\"ip\":\"").append(hreq.getRemoteAddr()).append("\"");
+      sb.append(",\"referer\":\"").append(hreq.getHeader("referer")).append("\"");
     }
     sb.append(",\"name\":\"").append(Metadata.jsonEncode(name)).append("\"");
     sb.append(",\"type\":\"").append(getType()).append("\"");

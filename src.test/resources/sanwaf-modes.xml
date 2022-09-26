@@ -92,7 +92,7 @@
 
           <parameters>
             <item><mode>detect</mode><name>modeParameter</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><mode>detect</mode><name>modeParameterString</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><mode>detect_all</mode><name>modeParameterString</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>detect</mode><name>modeParameterRegex</name><type>r{date}</type><max></max><min></min><msg></msg><uri></uri></item>
           </parameters>
           <headers>
