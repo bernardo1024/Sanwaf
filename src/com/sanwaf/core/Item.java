@@ -80,15 +80,15 @@ abstract class Item {
       return ret;
     }
     if(ret && (mode == Modes.DETECT || mode == Modes.DETECT_ALL)) {
-      logger.info(toString(value, more, req));
+      logger.info(toJson(value, more, req));
     }
     return false;
   }
   
   public String toString() {
-    return toString(null, null, null);
+    return toJson(null, null, null);
   }
-  public String toString(String value, String more, ServletRequest req) {
+  public String toJson(String value, String more, ServletRequest req) {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
     sb.append("\"mode\":\"").append(mode).append("\"");
