@@ -303,7 +303,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	
 	(String) 
 	s 		DESCRIPTION:	Any string.  
-					All regex's in the autoRunPatterns are executed against the string				
+					All regex's in the stringPatterns are executed against the string				
 			FORMAT: 	s
 			EXAMPLE:	"Hello this string does not contain a XSS payload"
 

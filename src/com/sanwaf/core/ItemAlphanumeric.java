@@ -6,13 +6,12 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 class ItemAlphanumeric extends Item {
-  ItemAlphanumeric(String name, String display, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    type = ALPHANUMERIC;
+  ItemAlphanumeric(ItemData id) {
+    super(id);
   }
 
   @Override
-  List<Point> getErrorPoints(final Shield shield, final String value) {
+  List<Point> getErrorPoints(Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
     if(maskError.length() > 0) {
       return points;
@@ -37,10 +36,10 @@ class ItemAlphanumeric extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if(value.length() == 0) {
       return false;
@@ -49,7 +48,7 @@ class ItemAlphanumeric extends Item {
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c)) {
-        return true;
+        return handleMode(true, value);
       }
     }
     return false;
@@ -57,5 +56,10 @@ class ItemAlphanumeric extends Item {
 
   static boolean isNotAlphanumeric(char c) {
     return (c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a);
+  }
+
+  @Override 
+  Types getType() {
+    return Types.ALPHANUMERIC_AND_MORE;
   }
 }

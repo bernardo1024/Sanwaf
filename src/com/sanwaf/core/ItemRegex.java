@@ -11,10 +11,9 @@ final class ItemRegex extends Item {
   String patternName = null;
   Pattern pattern = null;
 
-  ItemRegex(String name, String display, String type, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    this.type = REGEX;
-    setPattern(type);
+  ItemRegex(ItemData id) {
+    super(id);
+    setPattern(id.type);
   }
 
   @Override
@@ -33,28 +32,33 @@ final class ItemRegex extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (pattern == null) {
-      pattern = shield.customPatterns.get(patternName);
+      pattern = shield.customRulePatterns.get(patternName).pattern;
     }
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if(value.length() == 0) {
       return false;
     }
-    return !pattern.matcher(value).find();
+    return handleMode(!pattern.matcher(value).find(), value);
   }
 
   private void setPattern(String value) {
-    if (value.startsWith(INLINE_REGEX)) {
-      pattern = Pattern.compile(value.substring(INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
+    if (value.startsWith(ItemFactory.INLINE_REGEX)) {
+      pattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
     } else {
-      int start = value.indexOf(REGEX);
+      int start = value.indexOf(ItemFactory.REGEX);
       if (start >= 0) {
-        patternName = value.substring(start + REGEX.length(), value.length() - 1).toLowerCase();
+        patternName = value.substring(start + ItemFactory.REGEX.length(), value.length() - 1).toLowerCase();
       }
     }
+  }
+
+  @Override 
+  Types getType() {
+    return Types.REGEX;
   }
 }

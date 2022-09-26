@@ -17,15 +17,16 @@ import com.sanwaf.log.Logger;
 
 final class Shield {
   static final String XML_NAME = "name";
+  static final String XML_MODE = "mode";
   static final String XML_MIN_LEN = "minLen";
   static final String XML_MAX_LEN = "maxLen";
   static final String XML_CHILD = "child";
   static final String XML_CHILD_SHIELD = "child-shield";
   static final String XML_SHIELD_SETTINGS = "shield-settings";
   static final String XML_REGEX_CONFIG = "regex-config";
-  static final String XML_REGEX_ALWAYS_REGEX = "alwaysPerformRegex";
+  static final String XML_REGEX_ALWAYS_REGEX = "forceStringPatterns";
   static final String XML_REGEX_ALWAYS_REGEX_EXCLUSIONS = "exclusions";
-  static final String XML_REGEX_PATTERNS_AUTO = "autoRunPatterns";
+  static final String XML_REGEX_PATTERNS_AUTO = "stringPatterns";
   static final String XML_REGEX_PATTERNS_CUSTOM = "customPatterns";
 
   static final String XML_KEY = "key";
@@ -37,6 +38,7 @@ final class Shield {
   Sanwaf sanwaf = null;
   Logger logger = null;
   String name = null;
+  Modes mode = Modes.BLOCK;
   Shield childShield = null;
   int minLen = 0;
   int maxLen = Integer.MAX_VALUE;
@@ -44,8 +46,8 @@ final class Shield {
   boolean regexAlways = false;
   Map<String, String> errorMessages = new HashMap<>();
   List<String> regexAlwaysExclusions = new ArrayList<>();
-  List<Pattern> patterns = new ArrayList<>();
-  Map<String, Pattern> customPatterns = new HashMap<>();
+  Map<String, Rule> rulePatterns = new HashMap<>();
+  Map<String, Rule> customRulePatterns = new HashMap<>();
   Metadata parameters = null;
   Metadata cookies = null;
   Metadata headers = null;
@@ -59,7 +61,9 @@ final class Shield {
   }
 
   boolean threatDetected(ServletRequest req) {
-    return ((endpoints.enabled && endpointsThreatDetected(req)) || (parameters.enabled && parameterThreatDetected(req)) || (headers.enabled && headerThreatDetected(req))
+    return ((endpoints.enabled && endpointsThreatDetected(req)) 
+        || (parameters.enabled && parameterThreatDetected(req)) 
+        || (headers.enabled && headerThreatDetected(req))
         || (cookies.enabled && cookieThreatDetected(req)));
   }
 
@@ -140,7 +144,7 @@ final class Shield {
     return threat(req, meta, key, value, isEndpoint, false);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceRegexAlways) {
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceStringPatterns) {
     if (value == null) {
       return false;
     }
@@ -152,7 +156,7 @@ final class Shield {
     if (meta != null) {
       item = getItemFromMetaOrIndex(meta, key);
       if (item == null) {
-        if (forceRegexAlways) {
+        if (forceStringPatterns) {
           item = new ItemString();
         } else {
           return meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta); 
@@ -215,8 +219,22 @@ final class Shield {
     return item;
   }
 
+  static Modes getMode(String sMode, Modes def) {
+    switch(sMode.toLowerCase()) {
+    case "disabled":
+      return Modes.DISABLED;
+    case "block":
+      return Modes.BLOCK;
+    case "detect":
+      return Modes.DETECT;
+    case "detect-all":
+      return Modes.DETECT_ALL;
+    default:
+      return def;
+    }
+  }
+  
   String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
-
     if (name == null || req == null) {
       return null;
     }
@@ -333,6 +351,7 @@ final class Shield {
   private void load(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger) {
     Xml settingsBlockXml = new Xml(shieldXml.get(XML_SHIELD_SETTINGS));
     name = String.valueOf(settingsBlockXml.get(XML_NAME));
+    mode = getMode(settingsBlockXml.get(XML_MODE), Modes.BLOCK);
     maxLen = parseInt(settingsBlockXml.get(XML_MAX_LEN), maxLen);
     if (maxLen == -1) {
       maxLen = Integer.MAX_VALUE;
@@ -341,7 +360,6 @@ final class Shield {
     if (minLen == -1) {
       minLen = Integer.MAX_VALUE;
     }
-
     String childShieldName = settingsBlockXml.get(XML_CHILD);
     if (childShieldName.length() > 0) {
       loadChildShield(sanwaf, xml, childShieldName, logger);
@@ -363,7 +381,7 @@ final class Shield {
     if (regexAlways) {
       String exclusionsBlock = alwaysBlockXml.get(XML_REGEX_ALWAYS_REGEX_EXCLUSIONS);
       Xml exclusionsBlockXml = new Xml(exclusionsBlock);
-      String[] items = exclusionsBlockXml.getAll(Item.XML_ITEM);
+      String[] items = exclusionsBlockXml.getAll(ItemFactory.XML_ITEM);
       for (String item : items) {
         List<String> list = split(item);
         for (String l : list) {
@@ -371,10 +389,10 @@ final class Shield {
         }
       }
     }
-    endpoints = new MetadataEndpoints(shieldXml);
-    parameters = new Metadata(shieldXml, Metadata.XML_PARAMETERS);
-    cookies = new Metadata(shieldXml, Metadata.XML_COOKIES);
-    headers = new Metadata(shieldXml, Metadata.XML_HEADERS);
+    endpoints = new MetadataEndpoints(shieldXml, logger);
+    parameters = new Metadata(shieldXml, Metadata.XML_PARAMETERS, logger);
+    cookies = new Metadata(shieldXml, Metadata.XML_COOKIES, logger);
+    headers = new Metadata(shieldXml, Metadata.XML_HEADERS, logger);
   }
 
   private void loadChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger) {
@@ -392,25 +410,28 @@ final class Shield {
   private void loadPatterns(Xml xml) {
     String autoBlock = xml.get(XML_REGEX_PATTERNS_AUTO);
     Xml autoBlockXml = new Xml(autoBlock);
-    String[] items = autoBlockXml.getAll(Item.XML_ITEM);
+    String[] items = autoBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String item : items) {
       Xml itemBlockXml = new Xml(item);
       String value = itemBlockXml.get(XML_VALUE);
+      String key = itemBlockXml.get(XML_KEY);
+      Modes m = Shield.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
       List<String> list = split(value);
       for (String l : list) {
-        patterns.add(Pattern.compile(l, Pattern.CASE_INSENSITIVE));
+        rulePatterns.put(key, new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE)));
       }
     }
     String customBlock = xml.get(XML_REGEX_PATTERNS_CUSTOM);
     Xml customBlockXml = new Xml(customBlock);
-    items = customBlockXml.getAll(Item.XML_ITEM);
+    items = customBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String item : items) {
       Xml itemBlockXml = new Xml(item);
       String key = itemBlockXml.get(XML_KEY);
       String value = itemBlockXml.get(XML_VALUE);
+      Modes m = Shield.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
       List<String> list = split(value);
       for (String l : list) {
-        customPatterns.put(key.toLowerCase(), Pattern.compile(l, Pattern.CASE_INSENSITIVE));
+        customRulePatterns.put(key.toLowerCase(), new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE)));
       }
     }
   }
@@ -435,20 +456,17 @@ final class Shield {
       sb.append("\t").append(Metadata.XML_HEADERS).append(".").append(XML_ENABLED).append("=").append(headers.enabled).append("\n");
       sb.append("\t").append(Metadata.XML_HEADERS).append(".").append(XML_CASE_SENSITIVE).append("=").append(headers.caseSensitive).append("\n");
 
-      int dot = 0;
       String propsRegex = XML_REGEX_PATTERNS_AUTO + ".";
       sb.append("\nPatterns:\n");
-      for (Pattern pattern : patterns) {
-        sb.append("\t").append(propsRegex).append(dot++).append("=").append(pattern).append("\n");
+      for (Map.Entry<String, Rule> e : rulePatterns.entrySet()) {
+        sb.append("\t").append(e.getValue().mode).append("\t").append(propsRegex).append(e.getKey()).append("=").append(e.getValue().pattern).append("\n");
       }
 
       sb.append("\n" + XML_REGEX_PATTERNS_CUSTOM + ":\n");
-      Iterator<Map.Entry<String, Pattern>> it = customPatterns.entrySet().iterator();
-      while (it.hasNext()) {
-        Map.Entry<String, Pattern> pair = it.next();
-        sb.append("\t").append(pair.getKey()).append("=").append(pair.getValue()).append("\n");
+      for (Map.Entry<String, Rule> e : customRulePatterns.entrySet()) {
+        sb.append("\t").append(e.getValue().mode).append("\t").append(propsRegex).append(e.getKey()).append("=").append(e.getValue().pattern).append("\n");
       }
-
+      
       if (regexAlways) {
         sb.append("\n\tShield Secured List: *Ignored*");
         sb.append("\n\tRegexAlways=true (process all parameters)");
@@ -513,5 +531,14 @@ final class Shield {
       }
     }
     return out;
+  }
+}
+
+class Rule{
+  Modes mode;
+  Pattern pattern;
+  Rule(Modes mode, Pattern patter){
+    this.mode = mode;
+    this.pattern = patter;
   }
 }

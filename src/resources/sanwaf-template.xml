@@ -178,7 +178,7 @@
 	
   (String) 
     s   DESCRIPTION:  Any string.  
-                      All regex's in the autoRunPatterns are executed against the string        
+                      All regex's in the stringPatterns are executed against the string        
         FORMAT:       s
         EXAMPLE:      "Hello this string does not contain a XSS payload"
 
@@ -299,7 +299,10 @@
       <shield-settings>
         <!-- Name of the Shield.  Must be unique. -->
 				<name>XSS</name>
-				
+
+				<!-- Shield Modes are: disabled, block(default), detect, detect-all -->
+				<mode>block</mode>
+
 				<!-- Minimum length of parameter to trigger this shield.  For example, if you can not perform an XSS exploit in under 3 chars, set it to 3 -->
 				<minLen>3</minLen>
 				
@@ -309,7 +312,7 @@
         <!-- child shield to use if parameter exceeds the maxLen of the shield.  used as a secondary layer of protection -->
         <child></child>
 		
-				<!-- Localized error messages for this shield - overrides globe values -->
+				<!-- Localized error messages for this shield - overrides global values -->
 				<!-- 
 				<errorMessages>
 					<char><![CDATA[ ]]></char>
@@ -338,27 +341,27 @@
 				<minLen>3</minLen>
 				
 				<!-- Control whether to treat all non-secured parameters/headers/cookies as strings (regex) -->
-				<alwaysPerformRegex>
+				<forceStringPatterns>
 					<enabled>false</enabled>
-					
 					<!-- List of parameters to be ignored for the regex processing -->
 					<exclusions>
 						<item></item>
 					</exclusions>
-				</alwaysPerformRegex>
+				</forceStringPatterns>
 				
 				<!-- Auto Run Patterns is a list of patterns that will automatically be run against every parameter marked as a string (s) datatype  
-						<item>   - item entry in autoRunPatterns
+						<item>   - item entry in stringPatterns
               <key>   - the name of the pattern
               <value> - the pattern in a regular string format (no escaping quotes, backslashes...)
                      NOTE: 	Do NOT wrap regex in "/.../i" format.
                         All regex's are compiled with ignore case enabled 
 					Note that values provided below are for demonstration purposes
 				-->
-				<autoRunPatterns>
+				<stringPatterns>
 				<!-- 
 					<item>
 						<key>javascriptExpression</key>
+            <mode>disabled/block(default)/detect/detect-all</mode>
 						<value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
 					</item>
 					<item>
@@ -366,12 +369,13 @@
 						<value><![CDATA[(?:(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)|(?:<|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:4|%34)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3c)(?:\/|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:5|%35)(?:7|%37)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))2f))(?:[^\s\/]{1}.+)(?:>|(?:\\|%5C)(?:0|(?:%30)){0,1}(?:7|%37)(?:6|%36)|(?:%|(?:\\|%5C)(?:(?:x|%[75]8)|(?:(?:(?:u)|(?:%)[75]5)(?:0|(?:%30)){2})))3e)]]></value>
 					</item>
 				-->
-				</autoRunPatterns>
+				</stringPatterns>
 				
 				<!-- Custom Patterns are a list of named patterns to be applied against one or more parameters/headers/cookies
 						Note that a pass/true is returned for matches; otherwise a fail/false is returned
 				 
 					<key> - the name of the pattern 
+					<mode> - disabled, block, detect, detect-all
 					<item> - the pattern in a regular string format (no escaping quotes, backslashes...)
 									 NOTE: 	Do NOT wrap regex in "/.../i" format.
 											All regex's are compiled with ignore case enabled 
@@ -379,7 +383,7 @@
 				-->
 				<customPatterns>
 				<!-- 
-					<item><key>date</key><value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value></item>
+					<item><key>date</key><mode></mode><value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value></item>
 					<item><key>telephone</key><value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value></item>
 				-->
 				</customPatterns>
@@ -403,12 +407,14 @@
 					<cookies>true</cookies>
 				</caseSensitive>
 				
-				<!-- Secured section is where you specify parameters/headers/cookies to be protected by Sanwaf -->
+				<!-- Secured section is where you specify endpoints or global parameters/headers/cookies to be protected by Sanwaf -->
 				<secured>
 				  <!-- endpoint's group parameters for given endpoint uri's allowing more complex processing such as required, and relationships
 				       see the Sanwaf-ui-2-server project for automating this section in your build pipeline -->
           <endpoints>
             <endpoint>
+              <!-- Mode that the endpoint is running under (default is block)-->
+              <mode>block</mode>
               <!-- URI must be unique -->
               <uri></uri>
               <!-- if the strict element is "true" the request fails if it doesn't have the exact parameter specified in the items list.  Use "<" or "less" to not fail if there are less parameters than specified. -->
@@ -417,14 +423,14 @@
               <items>
                 <!--  note the additional attributes: <req> & <related>.  See the Sanwaf-ui project for details on using these paramters -->
                 <!-- 
-                <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+                <item><name></name><mode></mode><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                  -->
               </items>
             </endpoint>
           </endpoints>
   				<parameters>
 					 <!-- 
-            <item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><mask-err></mask-err><msg></msg><format></format><req></req><related></related></item>
+            <item><name></name><mode></mode><type></type><max></max><min></min><max-value></max-value><min-value></min-value><mask-err></mask-err><msg></msg><format></format><req></req><related></related></item>
 					 -->
 					</parameters>
 					<headers>
@@ -437,7 +443,7 @@
 		
 		<!-- child-shield's have the same XML format as the shield (including <child></child> tags)
 		     child-shield's are engaged when a shield specifies a <child></child> tag and the maxLen of the shield is violated 
-         child-shield's are intended to be used as a secondary form of protection done for performance reasons -->
+         child-shield's are intended to be used as a subsequent form of protection done for performance reasons -->
     <child-shield>
     </child-shield>
 

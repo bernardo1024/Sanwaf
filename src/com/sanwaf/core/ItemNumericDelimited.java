@@ -8,10 +8,9 @@ import javax.servlet.ServletRequest;
 final class ItemNumericDelimited extends ItemNumeric {
   String delimiter = "";
 
-  ItemNumericDelimited(String name, String display, String type, int max, int min, String msg, String uri, boolean isInt) {
-    super(name, display, max, min, msg, uri, isInt);
-    this.type = NUMERIC_DELIMITED;
-    setDelimiter(type);
+  ItemNumericDelimited(ItemData id, boolean isInt) {
+    super(id, isInt);
+    setDelimiter(id.type);
   }
 
   @Override
@@ -37,7 +36,7 @@ final class ItemNumericDelimited extends ItemNumeric {
     String[] ns = value.split(delimiter);
     for (String n : ns) {
       if (super.inError(req, shield, n)) {
-        return true;
+        return handleMode(true, value);
       }
     }
     return false;
@@ -53,8 +52,13 @@ final class ItemNumericDelimited extends ItemNumeric {
   }
 
   private void setDelimiter(String value) {
-    int start = value.indexOf(SEP_START);
-    int end = value.lastIndexOf(SEP_END);
-    delimiter = value.substring(start + SEP_START.length(), end);
+    int start = value.indexOf(ItemFactory.SEP_START);
+    int end = value.lastIndexOf(ItemFactory.SEP_END);
+    delimiter = value.substring(start + ItemFactory.SEP_START.length(), end);
+  }
+
+  @Override 
+  Types getType() {
+    return Types.NUMERIC_DELIMITED;
   }
 }

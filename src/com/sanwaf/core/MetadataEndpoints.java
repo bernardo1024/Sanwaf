@@ -13,11 +13,13 @@ public class MetadataEndpoints {
   static final String XML_ENDPOINT = "endpoint";
   static final String XML_STRICT = "strict";
 
+  com.sanwaf.log.Logger logger;
   boolean enabled = false;
   boolean caseSensitive = true;
   Map<String, Metadata> endpointParameters = new HashMap<>();
 
-  MetadataEndpoints(Xml xml) {
+  MetadataEndpoints(Xml xml, com.sanwaf.log.Logger logger) {
+    this.logger = logger;
     load(xml);
   }
 
@@ -41,10 +43,10 @@ public class MetadataEndpoints {
     String[] xmlEndpoints = endpointsXml.getAll(XML_ENDPOINT);
     for (String endpointString : xmlEndpoints) {
       Xml endpointXml = new Xml(endpointString);
-      String[] uris = endpointXml.get(Item.XML_ITEM_URI).split(":::");
+      String[] uris = endpointXml.get(ItemFactory.XML_ITEM_URI).split(":::");
       String strict = endpointXml.get(XML_STRICT);
-      String items = endpointXml.get(Item.XML_ITEMS);
-      Metadata parameters = new Metadata(items, caseSensitive, true, strict);
+      String items = endpointXml.get(ItemFactory.XML_ITEMS);
+      Metadata parameters = new Metadata(items, caseSensitive, true, strict, logger);
       
       for(String uri : uris) {
         endpointParameters.put(uri, parameters);

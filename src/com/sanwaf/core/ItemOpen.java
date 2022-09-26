@@ -5,15 +5,14 @@ import java.util.List;
 
 import javax.servlet.ServletRequest;
 
-final class ItemOpen extends Item {
-  ItemOpen(String name, String display, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    type = OPEN;
+class ItemOpen extends Item {
+  ItemOpen(ItemData id) {
+    super(id);
   }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    return (!isUriValid(req) || isSizeError(value));
+    return handleMode((!isUriValid(req) || isSizeError(value)), value);
   }
 
   @Override
@@ -24,5 +23,10 @@ final class ItemOpen extends Item {
     }
     points.add(new Point(0, value.length()));
     return points;
+  }
+
+  @Override 
+  Types getType() {
+    return Types.OPEN;
   }
 }

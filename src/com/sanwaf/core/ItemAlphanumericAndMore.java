@@ -17,10 +17,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   char[] moreChars = new char[0];
 
-  ItemAlphanumericAndMore(String name, String display, String type, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    this.type = ALPHANUMERIC_AND_MORE;
-    setMoreChars(type);
+  ItemAlphanumericAndMore(ItemData id) {
+    super(id);
+    setMoreChars(id.type);
   }
 
   @Override
@@ -66,10 +65,10 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if (value.length() == 0) {
       return false;
@@ -77,7 +76,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
-        return true;
+        return handleMode(true, value);
       }
     }
     return false;
@@ -127,9 +126,14 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   }
 
   private void setMoreChars(String value) {
-    int start = value.indexOf(SEP_START);
-    int end = value.lastIndexOf(SEP_END);
-    char[] array = getMoreCharArray(value.substring(start + SEP_START.length(), end));
+    int start = value.indexOf(ItemFactory.SEP_START);
+    int end = value.lastIndexOf(ItemFactory.SEP_END);
+    char[] array = getMoreCharArray(value.substring(start + ItemFactory.SEP_START.length(), end));
     moreChars = array;
+  }
+
+  @Override 
+  Types getType() {
+    return Types.ALPHANUMERIC_AND_MORE;
   }
 }

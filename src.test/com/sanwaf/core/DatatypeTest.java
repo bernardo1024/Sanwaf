@@ -68,7 +68,8 @@ public class DatatypeTest {
   @Test
   public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemNumericDelimited p = new ItemNumericDelimited("", "", "n{}", Integer.MAX_VALUE, 0, "", "", false);
+    ItemData id = new ItemData("key1", "BLOCK", "", "n{}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemNumericDelimited p = new ItemNumericDelimited(id, false);
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
     List<Point> list = p.getErrorPoints(shield, "");
@@ -82,7 +83,8 @@ public class DatatypeTest {
   @Test
   public void testIntegerDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemNumericDelimited p = new ItemNumericDelimited("", "", "i{}", Integer.MAX_VALUE, 0, "", "", false);
+    ItemData id = new ItemData("key1", "BLOCK", "", "i{}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemNumericDelimited p = new ItemNumericDelimited(id, false);
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
     List<Point> list = p.getErrorPoints(shield, "");
@@ -157,7 +159,8 @@ public class DatatypeTest {
   @Test
   public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore("", "", "a{,}", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "a{,}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemAlphanumericAndMore p = new ItemAlphanumericAndMore(id);
     assertEquals(false, p.inError(req, shield, ""));
     assertEquals(false, p.inError(req, shield, "abcde"));
     assertEquals(true, p.inError(req, shield, "abcde?fg"));
@@ -213,7 +216,8 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "CharRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "CharRequired", null));
 
-    ItemChar p = new ItemChar("", "", 1, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "c", "error msg1", null, 1, 0);
+    ItemChar p = new ItemChar(id);
     assertTrue(p.inError(req, shield, "12345"));
     assertFalse(p.inError(req, shield, "1"));
     assertFalse(p.inError(req, shield, ""));
@@ -244,7 +248,8 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "OpenRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "OpenRequired", null));
 
-    ItemOpen p = new ItemOpen("", "", 10, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "o", "error msg1", null, 10, 0);
+    ItemOpen p = new ItemOpen(id);
     assertFalse(p.inError(req, shield, "12345"));
     assertFalse(p.inError(req, shield, "1"));
     assertFalse(p.inError(req, shield, ""));
@@ -292,7 +297,8 @@ public class DatatypeTest {
   @Test
   public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemRegex p = new ItemRegex("", "", "r{telephone}", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "r{telephone}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName != null && p.patternName.length() > 0);
 
     assertEquals(false, p.inError(req, shield, "416-555-5555"));
@@ -312,7 +318,8 @@ public class DatatypeTest {
 
   @Test
   public void testRegexTypeInvalidFormta() {
-    ItemRegex p = new ItemRegex("", "", "r telephone", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "r telephone", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName == null);
     assertTrue(p.pattern == null);
   }
@@ -332,12 +339,15 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "far"));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "FOOO"));
 
-    ItemConstant p = new ItemConstant("", "", "k FOO,BAR", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemConstant p = new ItemConstant(id);
     assertTrue(p.constants == null);
-    p = new ItemConstant("", "", "k FOO}", Integer.MAX_VALUE, 0, "", "");
+    id = new ItemData("key1", "BLOCK", "", "k FOO}", "error msg1", null, Integer.MAX_VALUE, 0);
+    p = new ItemConstant(id);
     assertTrue(p.constants == null);
 
-    p = new ItemConstant("", "", "", Integer.MAX_VALUE, 0, "", "");
+    id = new ItemData("key1", "BLOCK", "", "", "error msg1", null, Integer.MAX_VALUE, 0);
+    p = new ItemConstant(id);
     assertTrue(p.constants == null);
   }
 
@@ -426,14 +436,16 @@ public class DatatypeTest {
 
   @Test
   public void testFormatType() {
-    ItemFormat p = new ItemFormat("", "", "f{(###) ###-####", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "f{(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemFormat p = new ItemFormat(id);
     assertTrue(p.formatString != null);
     assertTrue(p.formatString.length() > 0);
   }
 
   @Test
   public void testInvalidFormatType() {
-    ItemFormat p = new ItemFormat("", "", "f {(###) ###-####", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "f {(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemFormat p = new ItemFormat(id);
     assertTrue(p.formatString == null);
   }
 
@@ -457,7 +469,6 @@ public class DatatypeTest {
 
   @Test
   public void testFormat2Required() {
-    //<item><name>parmFormatRequired2</name><type>f{\#\A\a\c #Aac}
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZzZ"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zzz"));
@@ -750,12 +761,14 @@ public class DatatypeTest {
   
   @Test
   public void testDepFormatType() {
-    ItemDependentFormat p = new ItemDependentFormat("", "", "d {depformatParent:US=#####;Canada=A#A-#A#", Integer.MAX_VALUE, 0, "", "");
+    ItemData id = new ItemData("key1", "BLOCK", "", "d {depformatParent:US=#####;Canada=A#A-#A#", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemDependentFormat p = new ItemDependentFormat(id);
     assertTrue(p.dependentElementName == null);
     assertTrue(p.depFormatString == null);
     assertTrue(p.formats.size() == 0);
 
-    p = new ItemDependentFormat("", "", "d{depformatParent:US=#####;Canada=A#A-#A#}", Integer.MAX_VALUE, 0, "", "");
+    id = new ItemData("key1", "BLOCK", "", "d{depformatParent:US=#####;Canada=A#A-#A#}", "error msg1", null, Integer.MAX_VALUE, 0);
+    p = new ItemDependentFormat(id);
     assertTrue(p.dependentElementName.equals("depformatParent"));
     assertTrue(p.depFormatString.equals("depformatParent:US=#####;Canada=A#A-#A#"));
     assertTrue(p.formats.size() == 2);
@@ -933,7 +946,5 @@ public class DatatypeTest {
       assertTrue(error.toJson().indexOf("\"value\":\"ConstantMask\"") > 0);
     }
   }
-  
-  
   
 }

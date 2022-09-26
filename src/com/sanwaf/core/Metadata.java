@@ -14,6 +14,7 @@ class Metadata {
   static final String INDEX_PARM_MARKER = "  ";
   static final String STAR = "*";
 
+  com.sanwaf.log.Logger logger;
   boolean enabled = false;
   boolean caseSensitive = true;
   boolean endpointIsStrict = false;
@@ -21,11 +22,13 @@ class Metadata {
   Map<String, Item> items = new HashMap<>();
   Map<String, List<String>> index = new HashMap<>();
 
-  Metadata(Xml xml, String type) {
+  Metadata(Xml xml, String type, com.sanwaf.log.Logger logger) {
+    this.logger = logger;
     load(xml, type);
   }
 
-  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict) {
+  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger) {
+    this.logger = logger;
     load(itemsString, caseSensitive, includeEndpointAttributes);
 
     if ("true".equalsIgnoreCase(endpointIsStrict)) {
@@ -89,7 +92,7 @@ class Metadata {
 
     String subBlock = securedBlockXml.get(type);
     Xml subBlockXml = new Xml(subBlock);
-    String[] xmlItems = subBlockXml.getAll(Item.XML_ITEM);
+    String[] xmlItems = subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems) {
       loadItem(itemString, false);
     }
@@ -101,7 +104,7 @@ class Metadata {
     this.caseSensitive = caseSensitive;
 
     Xml itemsXml = new Xml(itemsString);
-    String[] xmlItems = itemsXml.getAll(Item.XML_ITEM);
+    String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems) {
       loadItem(itemString, includeEndpointAttributes);
     }
@@ -109,8 +112,8 @@ class Metadata {
 
   private void loadItem(String itemString, boolean includeEnpointAttributes) {
     Xml xml = new Xml(itemString);
-    Item item = Item.parseItem(xml, includeEnpointAttributes);
-    String namesString = xml.get(Item.XML_ITEM_NAME);
+    Item item = ItemFactory.parseItem(xml, includeEnpointAttributes, logger);
+    String namesString = xml.get(ItemFactory.XML_ITEM_NAME);
 
     if (namesString.contains(Shield.SEPARATOR)) {
       String[] names = namesString.split(Shield.SEPARATOR);
@@ -122,7 +125,7 @@ class Metadata {
         if (!caseSensitive) {
           name = name.toLowerCase();
         }
-        items.put(name, Item.getNewItem(name, item));
+        items.put(name, ItemFactory.getNewItem(name, item));
       }
     } else {
       item.name = refineName(item.name, index);

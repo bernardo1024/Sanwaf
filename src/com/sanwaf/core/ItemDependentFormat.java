@@ -13,10 +13,9 @@ final class ItemDependentFormat extends Item {
   String dependentElementName = null;
   Map<String,ItemFormat> formats = new HashMap<>();
   
-  ItemDependentFormat(String name, String display, String type, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    this.type = DEPENDENT_FORMAT;
-    initDependentFormat(name, type, max, min, msg, uri);
+  ItemDependentFormat(ItemData id) {
+    super(id);
+    initDependentFormat(id);
   }
 
   @Override
@@ -36,7 +35,7 @@ final class ItemDependentFormat extends Item {
       return false;
     }
     ItemFormat format = getFormatForValue(elementValue);
-    return (format != null && format.inError(req, shield, value));
+    return handleMode((format != null && format.inError(req, shield, value)), value);
   }
 
   private ItemFormat getFormatForValue(String value) {
@@ -65,10 +64,10 @@ final class ItemDependentFormat extends Item {
     return errorMsg;
   }
 
-  private void initDependentFormat(String name, String type, int max, int min, String msg, String uri) {
-    int start = type.indexOf(DEPENDENT_FORMAT);
+  private void initDependentFormat(ItemData id) {
+    int start = id.type.indexOf(ItemFactory.DEPENDENT_FORMAT);
     if (start >= 0) {
-      depFormatString = type.substring(start + DEPENDENT_FORMAT.length(), type.length() - 1);
+      depFormatString = id.type.substring(start + ItemFactory.DEPENDENT_FORMAT.length(), id.type.length() - 1);
       if(depFormatString.length() == 0) {
         return;
       }
@@ -77,17 +76,18 @@ final class ItemDependentFormat extends Item {
         dependentElementName = elementFormatData[0];
         String[] valueFormatPairs = elementFormatData[1].split(";");
         if(valueFormatPairs.length > 0) {
-          parseFormats(name, display, max, min, msg, uri, valueFormatPairs);
+          parseFormats(id, valueFormatPairs);
         }
       }
     }
   }
   
-  private void parseFormats(String name, String display, int max, int min, String msg, String uri, String[] valueFormatPairs) {
+  private void parseFormats(ItemData id, String[] valueFormatPairs) {
     for(String valueFormatPair : valueFormatPairs) {
       String[] kv = valueFormatPair.split("=");
       if(kv != null && kv.length == 2) {
-        ItemFormat item = new ItemFormat(name, display, "f{" + kv[1] + "}", max, min, msg, uri);
+        id.type = "f{" + kv[1] + "}";
+        ItemFormat item = new ItemFormat(id);
         formats.put(kv[0], item);
       }
     }
@@ -103,5 +103,10 @@ final class ItemDependentFormat extends Item {
       item.minValue = minValue;
       item.related = related;
     }
+  }
+
+  @Override 
+  Types getType() {
+    return Types.DEPENDENT_FORMAT;
   }
 }

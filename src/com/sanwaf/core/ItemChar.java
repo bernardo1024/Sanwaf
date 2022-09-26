@@ -6,23 +6,22 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemChar extends Item {
-  ItemChar(String name, String display, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    type = CHAR;
+  ItemChar(ItemData id) {
+    super(id);
   }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if (value == null) {
       return false;
     }
-    return (value.length() > 1);
+    return handleMode((value.length() > 1), value);
   }
 
   @Override
@@ -33,5 +32,10 @@ final class ItemChar extends Item {
     }
     points.add(new Point(0, value.length()));
     return points;
+  }
+
+  @Override 
+  Types getType() {
+    return Types.CHAR;
   }
 }

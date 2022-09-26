@@ -10,24 +10,23 @@ import javax.servlet.ServletRequest;
 final class ItemJava extends Item {
   Method javaMethod = null;
 
-  ItemJava(String name, String display, String type, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    this.type = JAVA;
-    setJavaMethod(type);
+  ItemJava(ItemData id) {
+    super(id);
+    setJavaMethod(id.type);
   }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if(value.length() == 0) {
       return false;
     }
-    return runJavaMethod(javaMethod, value, req);
+    return handleMode(runJavaMethod(javaMethod, value, req), value);
   }
 
   @Override
@@ -41,7 +40,7 @@ final class ItemJava extends Item {
   }
 
   private void setJavaMethod(String type) {
-    String sClazzAndMethod = type.substring(type.indexOf(JAVA) + JAVA.length(), type.length() - 1);
+    String sClazzAndMethod = type.substring(type.indexOf(ItemFactory.JAVA) + ItemFactory.JAVA.length(), type.length() - 1);
     if (sClazzAndMethod.length() == 0) {
       return;
     }
@@ -81,5 +80,10 @@ final class ItemJava extends Item {
     } catch (NullPointerException | IllegalAccessException | InvocationTargetException e) {
       return true;
     }
+  }
+
+  @Override 
+  Types getType() {
+    return Types.JAVA;
   }
 }

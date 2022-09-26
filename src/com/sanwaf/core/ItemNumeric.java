@@ -8,9 +8,8 @@ import javax.servlet.ServletRequest;
 class ItemNumeric extends Item {
   boolean isInt = false;
   
-  ItemNumeric(String name, String display, int max, int min, String msg, String uri, boolean isInt) {
-    super(name, display, max, min, msg, uri);
-    type = NUMERIC;
+  ItemNumeric(ItemData id, boolean isInt) {
+    super(id);
     this.isInt = isInt;
   }
 
@@ -82,7 +81,7 @@ class ItemNumeric extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req) || isSizeError(value) || isMaxMinValueError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if(value.length() == 0) {
       return false;
@@ -97,10 +96,15 @@ class ItemNumeric extends Item {
         } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;
         } else {
-          return true;
+          return handleMode(true, value);
         }
       }
     }
     return false;
+  }
+
+  @Override 
+  Types getType() {
+    return Types.NUMERIC;
   }
 }

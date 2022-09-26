@@ -9,24 +9,23 @@ import javax.servlet.ServletRequest;
 final class ItemConstant extends Item {
   List<String> constants = null;
 
-  ItemConstant(String name, String display, String type, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    this.type = CONSTANT;
-    setConstants(type);
+  ItemConstant(ItemData id) {
+    super(id);
+    setConstants(id.type);
   }
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if(value.length() == 0) {
       return false;
     }
-    return !constants.contains(value);
+    return handleMode(!constants.contains(value), value);
   }
 
   @Override
@@ -49,10 +48,15 @@ final class ItemConstant extends Item {
   }
 
   private void setConstants(String value) {
-    int start = value.indexOf(CONSTANT);
+    int start = value.indexOf(ItemFactory.CONSTANT);
     if (start >= 0) {
-      String s = value.substring(start + CONSTANT.length(), value.length() - 1);
+      String s = value.substring(start + ItemFactory.CONSTANT.length(), value.length() - 1);
       constants = new ArrayList<>(Arrays.asList(s.split(",")));
     }
+  }
+
+  @Override 
+  Types getType() {
+    return Types.CONSTANT;
   }
 }

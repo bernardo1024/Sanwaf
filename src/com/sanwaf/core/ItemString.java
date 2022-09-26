@@ -2,20 +2,17 @@ package com.sanwaf.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletRequest;
 
 final class ItemString extends Item {
 
-  ItemString() {
-    type = STRING;
-  }
+  ItemString() {}
 
-  ItemString(String name, String display, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    type = STRING;
+  ItemString(ItemData id) {
+    super(id);
   }
 
   @Override
@@ -24,9 +21,8 @@ final class ItemString extends Item {
     if(maskError.length() > 0) {
       return points;
     }
-
-    for (Pattern p : shield.patterns) {
-      Matcher m = p.matcher(value);
+    for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet()) {
+      Matcher m = r.getValue().pattern.matcher(value);
       while (m.find()) {
         int start = m.start();
         int end = m.end();
@@ -39,19 +35,33 @@ final class ItemString extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return true;
+      return handleMode(true, value);
     }
     if (isSizeError(value)) {
-      return true;
+      return handleMode(true, value);
     }
     if(value.length() == 0) {
       return false;
     }
-    for (Pattern p : shield.patterns) {
-      if (p.matcher(value).find()) {
-        return true;
-      }
+    
+    boolean inError = false;
+    for (Map.Entry<String, Rule> rule : shield.rulePatterns.entrySet()) {
+      if (rule.getValue().mode == Modes.DISABLED) { continue; }
+
+      if (rule.getValue().pattern.matcher(value).find()) {
+        inError = true;
+        if(rule.getValue().mode != Modes.BLOCK) { handleMode(true, value); }
+        if(rule.getValue().mode != Modes.DETECT_ALL) { break; }
+      } 
     }
-    return false;
+    if(mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
+      return false;
+    }
+    return inError;
+  }
+
+  @Override 
+  Types getType() {
+    return Types.STRING;
   }
 }

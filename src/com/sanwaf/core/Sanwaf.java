@@ -148,7 +148,7 @@ public final class Sanwaf {
    * <pre>
    * Threats detected are derived from the provided shield's configuration
    * 
-   * The shields autoRunPatterns will be executed against the value
+   * The shields stringPatterns will be executed against the value
    * 
    * No error attributes are set.
    * </pre>
@@ -156,7 +156,7 @@ public final class Sanwaf {
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
-   *          the shields name that you want to execute the autoRunPatterns from
+   *          the shields name that you want to execute the stringPatterns from
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName) {
@@ -169,7 +169,7 @@ public final class Sanwaf {
    * <pre>
    * Threats detected are derived from the provided shield's configuration
    * 
-   * The shields autoRunPatterns will be executed against the value
+   * The shields stringPatterns will be executed against the value
    * 
    * Error attributes will be set if specified
    * 
@@ -186,7 +186,7 @@ public final class Sanwaf {
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
-   *          The shields name that you want to execute the autoRunPatterns from
+   *          The shields name that you want to execute the stringPatterns from
    * @param setErrorAttributes
    *          boolean to indicate whether to set the tracking id and error json
    *          to the request's attributes
@@ -210,7 +210,7 @@ public final class Sanwaf {
    * Threats detected are derived from the XML provided
    * XML must conform to Sanwaf.xml specifications
    * 
-   * The specified shield's autoRunPatterns will be executed against the value for datatype String
+   * The specified shield's stringPatterns will be executed against the value for datatype String
    * 
    * Error attributes will be set if specified
    * 
@@ -227,7 +227,7 @@ public final class Sanwaf {
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
-   *          the shields name that you want to execute the autoRunPatterns from
+   *          the shields name that you want to execute the stringPatterns from
    *          (String data type only) or use the custom regex's specified (regex
    *          data type only)
    * @param setErrorAttributes
@@ -241,7 +241,7 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml) {
-    Item item = Item.parseItem(new Xml(xml));
+    Item item = ItemFactory.parseItem(new Xml(xml), logger);
     Shield sh = getShield(shieldName);
     if (sh == null) {
       logger.error("Invalid ShieldName provided to isThreat():" + shieldName);

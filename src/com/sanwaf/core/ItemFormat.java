@@ -11,10 +11,9 @@ final class ItemFormat extends Item {
   String formatString = null;
   List<List<String>> formatsBlocks = new ArrayList<>();
 
-  ItemFormat(String name, String display, String type, int max, int min, String msg, String uri) {
-    super(name, display, max, min, msg, uri);
-    this.type = FORMAT;
-    setFormat(type);
+  ItemFormat(ItemData id) {
+    super(id);
+    setFormat(id.type);
   }
 
   @Override
@@ -42,7 +41,7 @@ final class ItemFormat extends Item {
         break;
       }
     }
-    return !foundValidFormat;
+    return handleMode(!foundValidFormat, value);
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks) {
@@ -253,9 +252,9 @@ final class ItemFormat extends Item {
   }
 
   private void setFormat(String value) {
-    int start = value.indexOf(FORMAT);
+    int start = value.indexOf(ItemFactory.FORMAT);
     if (start >= 0) {
-      formatString = value.substring(start + FORMAT.length(), value.length() - 1);
+      formatString = value.substring(start + ItemFactory.FORMAT.length(), value.length() - 1);
       parseFormats(formatString);
     }
   }
@@ -342,4 +341,8 @@ final class ItemFormat extends Item {
     }
   }
   
+  @Override 
+  Types getType() {
+    return Types.FORMAT;
+  }
 }

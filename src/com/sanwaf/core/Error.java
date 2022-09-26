@@ -29,7 +29,7 @@ final class Error {
       value = p.maskError;
     }
     this.value = value;
-    this.typeString = p.type;
+    this.typeString = p.getType().toString();
     this.message = getErrorMessage(req, shield, p);
 
     if (value != null) {
@@ -54,7 +54,7 @@ final class Error {
     }
     if(err == null) {
       if(errorMsgKey == null) {
-        errorMsgKey = p.type;
+        errorMsgKey = p.getType().toString();
       }
       err = shield.errorMessages.get(errorMsgKey);
       if (err == null || err.length() == 0) {
@@ -175,20 +175,20 @@ final class Error {
 
   static void setErrorMessages(Map<String, String> map, Xml xmlString) {
     Xml xml = new Xml(xmlString.get(XML_ERROR_MSG));
-    map.put(Item.ALPHANUMERIC, xml.get(XML_ERROR_MSG_ALHPANUMERIC));
-    map.put(Item.ALPHANUMERIC_AND_MORE, xml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));
-    map.put(Item.CHAR, xml.get(XML_ERROR_MSG_CHAR));
-    map.put(Item.NUMERIC, xml.get(XML_ERROR_MSG_NUMERIC));
-    map.put(Item.NUMERIC_DELIMITED, xml.get(XML_ERROR_MSG_NUMERIC_DELIMITED));
-    map.put(Item.INTEGER, xml.get(XML_ERROR_MSG_INTEGER));
-    map.put(Item.INTEGER_DELIMITED, xml.get(XML_ERROR_MSG_INTEGER_DELIMITED));
-    map.put(Item.STRING, xml.get(XML_ERROR_MSG_STRING));
-    map.put(Item.OPEN, xml.get(XML_ERROR_MSG_OPEN));
-    map.put(Item.REGEX, xml.get(XML_ERROR_MSG_REGEX));
-    map.put(Item.JAVA, xml.get(XML_ERROR_MSG_JAVA));
-    map.put(Item.CONSTANT, xml.get(XML_ERROR_MSG_CONSTANT));
-    map.put(Item.FORMAT, xml.get(XML_ERROR_MSG_FORMAT));
-    map.put(Item.DEPENDENT_FORMAT, xml.get(XML_ERROR_MSG_DEPENDENT_FORMAT));
+    map.put(String.valueOf(Types.ALPHANUMERIC), xml.get(XML_ERROR_MSG_ALHPANUMERIC));
+    map.put(String.valueOf(Types.ALPHANUMERIC_AND_MORE), xml.get(XML_ERROR_MSG_ALPHANUMERIC_AND_MORE));
+    map.put(String.valueOf(Types.CHAR), xml.get(XML_ERROR_MSG_CHAR));
+    map.put(String.valueOf(Types.NUMERIC), xml.get(XML_ERROR_MSG_NUMERIC));
+    map.put(String.valueOf(Types.NUMERIC_DELIMITED), xml.get(XML_ERROR_MSG_NUMERIC_DELIMITED));
+    map.put(String.valueOf(Types.INTEGER), xml.get(XML_ERROR_MSG_INTEGER));
+    map.put(String.valueOf(Types.INTEGER_DELIMITED), xml.get(XML_ERROR_MSG_INTEGER_DELIMITED));
+    map.put(String.valueOf(Types.STRING), xml.get(XML_ERROR_MSG_STRING));
+    map.put(String.valueOf(Types.OPEN), xml.get(XML_ERROR_MSG_OPEN));
+    map.put(String.valueOf(Types.REGEX), xml.get(XML_ERROR_MSG_REGEX));
+    map.put(String.valueOf(Types.JAVA), xml.get(XML_ERROR_MSG_JAVA));
+    map.put(String.valueOf(Types.CONSTANT), xml.get(XML_ERROR_MSG_CONSTANT));
+    map.put(String.valueOf(Types.FORMAT), xml.get(XML_ERROR_MSG_FORMAT));
+    map.put(String.valueOf(Types.DEPENDENT_FORMAT), xml.get(XML_ERROR_MSG_DEPENDENT_FORMAT));
     map.put(XML_INVALID_LENGTH_MSG, xml.get(XML_INVALID_LENGTH_MSG));
     map.put(XML_REQUIRED_MSG, xml.get(XML_REQUIRED_MSG));
   }
