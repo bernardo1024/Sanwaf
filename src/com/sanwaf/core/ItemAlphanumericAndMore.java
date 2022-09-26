@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemAlphanumericAndMore extends ItemAlphanumeric {
+  static final String INVALID_AN_MORE = "Invalid Alphanumeric And More: ";
   static final String SPACE = "\\s";
   static final String TAB = "\\t";
   static final String NEWLINE = "\\n";
@@ -65,10 +66,10 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_URI);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_SIZE);
     }
     if (value.length() == 0) {
       return false;
@@ -76,7 +77,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
-        return handleMode(true, value);
+        return handleMode(true, value, INVALID_AN_MORE + String.valueOf(moreChars));
       }
     }
     return false;

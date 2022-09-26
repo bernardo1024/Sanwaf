@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemConstant extends Item {
+  static final String INVALID_CONSTANT = "Invalid Constant: ";
   List<String> constants = null;
 
   ItemConstant(ItemData id) {
@@ -17,15 +18,15 @@ final class ItemConstant extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_URI);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_SIZE);
     }
     if(value.length() == 0) {
       return false;
     }
-    return handleMode(!constants.contains(value), value);
+    return handleMode(!constants.contains(value), value, INVALID_CONSTANT + constants);
   }
 
   @Override

@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 class ItemNumeric extends Item {
+  static final String INVALID_NUMBER = "Invalid Number";
+  static final String INVALID_MAX_MIN = "Invalid Max Min Range";
   boolean isInt = false;
   
   ItemNumeric(ItemData id, boolean isInt) {
@@ -80,9 +82,16 @@ class ItemNumeric extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (!isUriValid(req) || isSizeError(value) || isMaxMinValueError(value)) {
-      return handleMode(true, value);
+    if(!isUriValid(req)) {
+      return handleMode(true, value, INVALID_URI);    
     }
+    if(isSizeError(value)) {
+      return handleMode(true, value, INVALID_SIZE);    
+    }
+    if(isMaxMinValueError(value)) {
+      return handleMode(true, value, INVALID_MAX_MIN);
+    }
+    
     if(value.length() == 0) {
       return false;
     }
@@ -96,7 +105,7 @@ class ItemNumeric extends Item {
         } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;
         } else {
-          return handleMode(true, value);
+          return handleMode(true, value, INVALID_NUMBER);
         }
       }
     }

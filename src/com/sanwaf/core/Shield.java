@@ -227,7 +227,7 @@ final class Shield {
       return Modes.BLOCK;
     case "detect":
       return Modes.DETECT;
-    case "detect-all":
+    case "detect_all":
       return Modes.DETECT_ALL;
     default:
       return def;

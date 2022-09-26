@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 
 final class ItemDependentFormat extends Item {
+  static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";
   String depFormatString = null;
   String dependentElementName = null;
   Map<String,ItemFormat> formats = new HashMap<>();
@@ -35,7 +36,7 @@ final class ItemDependentFormat extends Item {
       return false;
     }
     ItemFormat format = getFormatForValue(elementValue);
-    return handleMode((format != null && format.inError(req, shield, value)), value);
+    return handleMode((format != null && format.inError(req, shield, value)), value, INVALID_DEP_FORMAT + depFormatString);
   }
 
   private ItemFormat getFormatForValue(String value) {

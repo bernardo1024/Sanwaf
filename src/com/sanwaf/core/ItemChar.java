@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemChar extends Item {
+  static final String INVALID_CHAR = "Invalid Constant: ";
   ItemChar(ItemData id) {
     super(id);
   }
@@ -13,15 +14,15 @@ final class ItemChar extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_URI);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_SIZE);
     }
     if (value == null) {
       return false;
     }
-    return handleMode((value.length() > 1), value);
+    return handleMode((value.length() > 1), value, INVALID_CHAR);
   }
 
   @Override

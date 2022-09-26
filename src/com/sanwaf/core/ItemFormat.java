@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemFormat extends Item {
+  static final String INVALID_FORMAT = "Invalid Format: ";
   String formatString = null;
   List<List<String>> formatsBlocks = new ArrayList<>();
 
@@ -41,7 +42,7 @@ final class ItemFormat extends Item {
         break;
       }
     }
-    return handleMode(!foundValidFormat, value);
+    return handleMode(!foundValidFormat, value, INVALID_FORMAT + formatString);
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks) {

@@ -76,7 +76,7 @@ public class DatatypeModeTest {
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
-    request.addParameter("modeeParameterString", "javascript: ");
+    request.addParameter("modeeParameterString", "javascript: <script> ");
     assertTrue(!sanwaf.isThreatDetected(request));
 
     request = new MockHttpServletRequest();

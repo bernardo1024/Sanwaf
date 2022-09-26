@@ -8,8 +8,10 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 final class ItemJava extends Item {
+  static final String INVALID_JAVA = "Invalid Java: ";
   Method javaMethod = null;
-
+  String sClazzAndMethod = null;
+  
   ItemJava(ItemData id) {
     super(id);
     setJavaMethod(id.type);
@@ -18,15 +20,15 @@ final class ItemJava extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_URI);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_SIZE);
     }
     if(value.length() == 0) {
       return false;
     }
-    return handleMode(runJavaMethod(javaMethod, value, req), value);
+    return handleMode(runJavaMethod(javaMethod, value, req), value, INVALID_JAVA + sClazzAndMethod);
   }
 
   @Override
@@ -40,7 +42,7 @@ final class ItemJava extends Item {
   }
 
   private void setJavaMethod(String type) {
-    String sClazzAndMethod = type.substring(type.indexOf(ItemFactory.JAVA) + ItemFactory.JAVA.length(), type.length() - 1);
+    sClazzAndMethod = type.substring(type.indexOf(ItemFactory.JAVA) + ItemFactory.JAVA.length(), type.length() - 1);
     if (sClazzAndMethod.length() == 0) {
       return;
     }

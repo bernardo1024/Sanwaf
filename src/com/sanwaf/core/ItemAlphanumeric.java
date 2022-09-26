@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.ServletRequest;
 
 class ItemAlphanumeric extends Item {
+  static final String INVALID_AN = "Invalid Alphanumeric: ";
   ItemAlphanumeric(ItemData id) {
     super(id);
   }
@@ -36,10 +37,10 @@ class ItemAlphanumeric extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     if (!isUriValid(req)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_URI);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_SIZE);
     }
     if(value.length() == 0) {
       return false;
@@ -48,7 +49,7 @@ class ItemAlphanumeric extends Item {
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c)) {
-        return handleMode(true, value);
+        return handleMode(true, value, INVALID_AN);
       }
     }
     return false;

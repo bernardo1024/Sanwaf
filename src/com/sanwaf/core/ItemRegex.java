@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletRequest;
 
 final class ItemRegex extends Item {
+  static final String FAILED_CUSTOM_PATTERN = "Failed Custom Pattern: ";
   String patternName = null;
   Pattern pattern = null;
 
@@ -35,15 +36,15 @@ final class ItemRegex extends Item {
       pattern = shield.customRulePatterns.get(patternName).pattern;
     }
     if (!isUriValid(req)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_URI);
     }
     if (isSizeError(value)) {
-      return handleMode(true, value);
+      return handleMode(true, value, INVALID_SIZE);
     }
     if(value.length() == 0) {
       return false;
     }
-    return handleMode(!pattern.matcher(value).find(), value);
+    return handleMode(!pattern.matcher(value).find(), value, FAILED_CUSTOM_PATTERN + patternName);
   }
 
   private void setPattern(String value) {
