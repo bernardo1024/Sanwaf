@@ -36,15 +36,9 @@ class ItemAlphanumeric extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(mode == Modes.DISABLED) { return false; }
-    if (!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI, req);
-    }
-    if (isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE, req);
-    }
-    if(value.length() == 0) {
-      return false;
+    DefinitiveError definitiveError = getDefiniteError(req, value);
+    if(definitiveError != null) {
+      return definitiveError.error;
     }
     int i = 0;
     for (i = 0; i < value.length(); i++) {

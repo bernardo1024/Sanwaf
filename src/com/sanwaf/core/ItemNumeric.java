@@ -82,19 +82,12 @@ class ItemNumeric extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(mode == Modes.DISABLED) { return false; }
-    if(!isUriValid(req)) {
-      return handleMode(true, value, INVALID_URI, req);    
-    }
-    if(isSizeError(value)) {
-      return handleMode(true, value, INVALID_SIZE, req);    
+    DefinitiveError definitiveError = getDefiniteError(req, value);
+    if(definitiveError != null) {
+      return definitiveError.error;
     }
     if(isMaxMinValueError(value)) {
       return handleMode(true, value, INVALID_MAX_MIN, req);
-    }
-    
-    if(value.length() == 0) {
-      return false;
     }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {

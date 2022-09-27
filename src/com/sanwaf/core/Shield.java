@@ -219,21 +219,6 @@ final class Shield {
     return item;
   }
 
-  static Modes getMode(String sMode, Modes def) {
-    switch(sMode.toLowerCase()) {
-    case "disabled":
-      return Modes.DISABLED;
-    case "block":
-      return Modes.BLOCK;
-    case "detect":
-      return Modes.DETECT;
-    case "detect_all":
-      return Modes.DETECT_ALL;
-    default:
-      return def;
-    }
-  }
-  
   String getAllowListedValue(String name, AllowListType type, HttpServletRequest req) {
     if (name == null || req == null) {
       return null;
@@ -351,7 +336,7 @@ final class Shield {
   private void load(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger) {
     Xml settingsBlockXml = new Xml(shieldXml.get(XML_SHIELD_SETTINGS));
     name = String.valueOf(settingsBlockXml.get(XML_NAME));
-    mode = getMode(settingsBlockXml.get(XML_MODE), Modes.BLOCK);
+    mode = ItemData.getMode(settingsBlockXml.get(XML_MODE), Modes.BLOCK);
     maxLen = parseInt(settingsBlockXml.get(XML_MAX_LEN), maxLen);
     if (maxLen == -1) {
       maxLen = Integer.MAX_VALUE;
@@ -415,7 +400,7 @@ final class Shield {
       Xml itemBlockXml = new Xml(item);
       String value = itemBlockXml.get(XML_VALUE);
       String key = itemBlockXml.get(XML_KEY);
-      Modes m = Shield.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
+      Modes m = ItemData.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
       List<String> list = split(value);
       for (String l : list) {
         rulePatterns.put(key, new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE)));
@@ -428,7 +413,7 @@ final class Shield {
       Xml itemBlockXml = new Xml(item);
       String key = itemBlockXml.get(XML_KEY);
       String value = itemBlockXml.get(XML_VALUE);
-      Modes m = Shield.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
+      Modes m = ItemData.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
       List<String> list = split(value);
       for (String l : list) {
         customRulePatterns.put(key.toLowerCase(), new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE)));

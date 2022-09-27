@@ -27,7 +27,7 @@ abstract class Item {
 
   Item(ItemData id) {
     name = id.name;
-    mode = Shield.getMode(id.sMode, Modes.BLOCK);
+    mode = ItemData.getMode(id.sMode, Modes.BLOCK);
     if(id.display.length() == 0) {
       display = name;
     }
@@ -45,6 +45,22 @@ abstract class Item {
   abstract List<Point> getErrorPoints(Shield shield, String value);
   abstract Types getType();
 
+  DefinitiveError getDefiniteError(ServletRequest req, String value) {
+    DefinitiveError de = new DefinitiveError();
+    if (mode == Modes.DISABLED) { 
+      de.error = false; 
+    } else if (!isUriValid(req)) {
+      de.error = true;
+    } else if (isSizeError(value)) {
+      de.error = true;
+    } else if(value != null && value.length() == 0) {
+      de.error = false;
+    } else {
+      return null;
+    }
+    return de;
+  }
+  
   boolean isUriValid(ServletRequest req) {
     if (uri == null) {
       return true;
@@ -119,25 +135,4 @@ abstract class Item {
     return sb.toString();
   }
  
-}
-class ItemData{
-  String name;
-  String display;
-  String type;
-  int min;
-  int max;
-  String msg;
-  String uri;
-  String sMode;
-  
-  ItemData(String name, String sMode, String display, String type, String msg, String uri, int max, int min){
-    this.name = name; 
-    this.display = display; 
-    this.type = type;
-    this.min = min;
-    this.max = max; 
-    this.msg = msg;
-    this.uri = uri;
-    this.sMode = sMode;
-  } 
 }
