@@ -33,6 +33,7 @@ final class ItemNumericDelimited extends ItemNumeric {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(mode == Modes.DISABLED) { return false; }
     String[] ns = value.split(delimiter);
     for (String n : ns) {
       if (super.inError(req, shield, n)) {

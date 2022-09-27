@@ -31,6 +31,7 @@ final class ItemDependentFormat extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(mode == Modes.DISABLED) { return false; }
     String elementValue = req.getParameter(dependentElementName);
     if(elementValue == null) {
       return false;

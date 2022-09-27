@@ -13,6 +13,7 @@ final class ItemChar extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(mode == Modes.DISABLED) { return false; }
     if (!isUriValid(req)) {
       return handleMode(true, value, INVALID_URI, req);
     }

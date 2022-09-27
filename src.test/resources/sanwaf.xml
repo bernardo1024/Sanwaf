@@ -91,6 +91,7 @@
                 <item><name>char</name><type>c</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>charRequired</name><type>c</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
                 <item><name>numeric</name><type>n</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+                <item><name>open</name><type>o</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>numericRequired</name><type>n</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
                 <item><name>numericdelimited</name><type>n{,}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
                 <item><name>numericdelimitedRequired</name><type>n{,}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>

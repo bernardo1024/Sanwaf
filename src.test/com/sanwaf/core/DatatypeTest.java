@@ -321,7 +321,7 @@ public class DatatypeTest {
     ItemData id = new ItemData("key1", "BLOCK", "", "r telephone", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName == null);
-    assertTrue(p.pattern == null);
+    assertTrue(p.rule == null);
   }
 
   @Test

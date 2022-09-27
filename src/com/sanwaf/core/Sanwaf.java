@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ public final class Sanwaf {
   private static final String STANDALONE_XML_FILENAME = "sanwaf.xml";
   private static final String REQ_ATT_TRACK_ID = "~sanwaf-id";
   private static final String REQ_ATT_ERRORS = "~sanwaf-errors";
-  static final String REQ_ATT_TRANS_ID = "~sanwaf-trans-id";
+  static final String REQ_ATT_TRANS_ID = "~sanwaf-transaction-id";
 
   private String xmlFilename = null;
   protected Logger logger;
@@ -115,7 +116,7 @@ public final class Sanwaf {
    */
   public boolean isThreatDetected(ServletRequest req) {
     if(req != null) {
-      req.setAttribute(REQ_ATT_TRANS_ID, getSortOfRandomNumber());
+      req.setAttribute(REQ_ATT_TRANS_ID, UUID.randomUUID());
     }
     
     if (!enabled || !(req instanceof HttpServletRequest)) {
@@ -202,7 +203,7 @@ public final class Sanwaf {
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req) {
     if(req != null) {
-      req.setAttribute(REQ_ATT_TRANS_ID, getSortOfRandomNumber());
+      req.setAttribute(REQ_ATT_TRANS_ID, UUID.randomUUID());
     }
     boolean foundThreat = checkForThreats(value, shieldName);
     if (foundThreat && setErrorAttributes) {
@@ -250,7 +251,7 @@ public final class Sanwaf {
    */
   public boolean isThreat(String value, String shieldName, boolean setErrorAttributes, ServletRequest req, String xml) {
     if(req != null) {
-      req.setAttribute(REQ_ATT_TRANS_ID, getSortOfRandomNumber());
+      req.setAttribute(REQ_ATT_TRANS_ID, UUID.randomUUID());
     }
     Item item = ItemFactory.parseItem(new Xml(xml), logger);
     Shield sh = getShield(shieldName);

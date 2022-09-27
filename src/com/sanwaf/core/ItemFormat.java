@@ -29,6 +29,7 @@ final class ItemFormat extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
+    if(mode == Modes.DISABLED) { return false; }
     if(formatsBlocks.isEmpty()) {
       return false;
     }

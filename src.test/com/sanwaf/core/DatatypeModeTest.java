@@ -52,6 +52,44 @@ public class DatatypeModeTest {
     assertTrue(!sanwaf.isThreatDetected(request));
   }
 
+  @Test
+  public void testParameterBlock() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameter-BLOCK", "foobarfoobar");
+    assertTrue(sanwaf.isThreatDetected(request));
+  }
+  
+  @Test
+  public void testParameterDisabled() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameter-DISABLED", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
+
+  @Test
+  public void testParameterItemRuleCombinations() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameter-DETECT-BLOCK", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameterString-DETECT-DISABLED", "javascript: <script> ");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameterRegex-BLOCK-BLOCK", "foobarfoobar");
+    assertTrue(sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameterRegex-BLOCK-DISABLED", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
 
   @Test
   public void testHeader() {
@@ -66,26 +104,69 @@ public class DatatypeModeTest {
     request.setCookies(new Cookie("modeCookie", "foobarfoobar"));
     assertTrue(!sanwaf.isThreatDetected(request));
   }
-
+  
   @Test
-  public void testEndPoint() {
+  public void testEndPointDetect() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
-    request.addParameter("modeeParameter", "foobarfoobar");
+    request.addParameter("modeeParameter-DETECT", "foobarfoobar");
     assertTrue(!sanwaf.isThreatDetected(request));
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
-    request.addParameter("modeeParameterString", "javascript: <script> ");
+    request.addParameter("modeeParameterString-DETECT", "javascript: <script> ");
     assertTrue(!sanwaf.isThreatDetected(request));
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
-    request.addParameter("modeeParameterRegex", "foobarfoobar");
+    request.addParameter("modeeParameterRegex-DETECT", "foobarfoobar");
     assertTrue(!sanwaf.isThreatDetected(request));
 
-    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameter-DETECT", "foobarfoobar");
+    request.addParameter("modeeParameterString-DETECT", "javascript: <script> ");
+    request.addParameter("modeeParameterRegex-DETECT", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
+  
+  @Test
+  public void testEndPointBlock() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameter-BLOCK", "foobarfoobar");
+    assertTrue(sanwaf.isThreatDetected(request));
+  }
+  
+  @Test
+  public void testEndPointDisabled() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameter-DISABLED", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
   }
 
-  
+  @Test
+  public void testEndPointItemRuleCombinations() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameter-DETECT-BLOCK", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameterString-DETECT-DISABLED", "javascript: <script> ");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameterRegex-BLOCK-BLOCK", "foobarfoobar");
+    assertTrue(sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameterRegex-BLOCK-DISABLED", "foobarfoobar");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
+    
 }

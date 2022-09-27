@@ -10,7 +10,7 @@ import javax.servlet.ServletRequest;
 final class ItemRegex extends Item {
   static final String FAILED_CUSTOM_PATTERN = "Failed Custom Pattern: ";
   String patternName = null;
-  Pattern pattern = null;
+  Rule rule = null;
 
   ItemRegex(ItemData id) {
     super(id);
@@ -23,7 +23,10 @@ final class ItemRegex extends Item {
     if (value == null || value.length() == 0 || maskError.length() > 0) {
       return points;
     }
-    Matcher m = pattern.matcher(value);
+    if (rule == null) {
+      rule = shield.customRulePatterns.get(patternName);
+    }
+    Matcher m = rule.pattern.matcher(value);
     if (!m.find()) {
       points.add(new Point(0, value.length()));
     }
@@ -32,9 +35,7 @@ final class ItemRegex extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if (pattern == null) {
-      pattern = shield.customRulePatterns.get(patternName).pattern;
-    }
+    if (mode == Modes.DISABLED) { return false; }
     if (!isUriValid(req)) {
       return handleMode(true, value, INVALID_URI, req);
     }
@@ -44,12 +45,29 @@ final class ItemRegex extends Item {
     if(value.length() == 0) {
       return false;
     }
-    return handleMode(!pattern.matcher(value).find(), value, FAILED_CUSTOM_PATTERN + patternName, req);
+    if (rule == null) {
+      rule = shield.customRulePatterns.get(patternName);
+    }
+    if(rule.mode == Modes.DISABLED) {
+      return false;
+    }
+
+    if(!rule.pattern.matcher(value).find()) {
+      if(mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
+        handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);
+      }
+      if(rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void setPattern(String value) {
     if (value.startsWith(ItemFactory.INLINE_REGEX)) {
-      pattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
+      rule = new Rule();
+      rule.pattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
+      patternName = "inline-regex: " + rule.pattern;
     } else {
       int start = value.indexOf(ItemFactory.REGEX);
       if (start >= 0) {

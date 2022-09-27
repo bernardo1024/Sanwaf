@@ -537,8 +537,13 @@ final class Shield {
 class Rule{
   Modes mode;
   Pattern pattern;
-  Rule(Modes mode, Pattern patter){
+  
+  Rule(){
+    mode = Modes.BLOCK;
+  }
+  
+  Rule(Modes mode, Pattern pattern){
     this.mode = mode;
-    this.pattern = patter;
+    this.pattern = pattern;
   }
 }

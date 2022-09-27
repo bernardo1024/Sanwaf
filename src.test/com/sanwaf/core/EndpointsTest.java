@@ -127,6 +127,15 @@ public class EndpointsTest {
   }
   
   @Test
+  public void testEndpointOpen() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("open", "(123) 456-7890 abz ABZ");
+    boolean isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(!isThreat);
+}
+  
+  @Test
   public void testEndpointFormat() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
