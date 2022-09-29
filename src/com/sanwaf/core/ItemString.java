@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import javax.servlet.ServletRequest;
 
 final class ItemString extends Item {
-
   ItemString() {}
 
   ItemString(ItemData id) {

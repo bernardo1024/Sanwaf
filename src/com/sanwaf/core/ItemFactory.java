@@ -37,6 +37,9 @@ public class ItemFactory {
     //no instances allowed
   }
   static Item parseItem(Xml xml, com.sanwaf.log.Logger logger) {
+    //to cache the dynamic creation of Items
+    //1. hash xml and look up in table
+    //2. if found, return, else build new
     return parseItem(xml, false, logger);
   }
 
