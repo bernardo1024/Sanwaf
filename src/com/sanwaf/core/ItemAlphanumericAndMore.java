@@ -65,9 +65,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, INVALID_AN_MORE + String.valueOf(moreChars), req);
     }
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
@@ -89,9 +89,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
 
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
-    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(handleSpecialChars(moreChars)) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
@@ -128,8 +128,14 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     moreChars = array;
   }
 
+  @Override
+  String getProperties() {
+    return "\"morechars\":\"" + Metadata.jsonEncode(new String(moreChars)) + "\"";
+  }
+  
   @Override 
   Types getType() {
     return Types.ALPHANUMERIC_AND_MORE;
   }
 }
+

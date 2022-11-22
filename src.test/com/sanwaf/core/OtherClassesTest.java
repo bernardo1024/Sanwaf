@@ -4,13 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.sanwaf.log.SimpleLogger;
 
@@ -31,9 +28,10 @@ public class OtherClassesTest {
 
   @Test
   public void TestDefaultContructorParameterItem() {
+    sanwaf.verbose = true;
     Item pi = new ItemString();
     String s = pi.toString();
-    assertTrue(s.contains("\"max\":\"" + Integer.MAX_VALUE + "\",\"min\":\"0\""));
+    assertTrue(s.contains("\"type\":\"STRING\""));
   }
 
   @Test
@@ -43,52 +41,6 @@ public class OtherClassesTest {
     logger.info("foobar-info");
 
     assertTrue(true);
-  }
-
-  @Test
-  public void TestErrorAddPointErrorMax() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("", "BLOCK", "", "", "error msg1", null, 5, 0);
-    Item p = new ItemString(id);
-    Error error = new Error(req, shield, p, "foo", "123456789");
-    String s = error.toJson();
-    assertTrue(s.contains("Invalid length"));
-  }
-
-  @Test
-  public void TestErrorWithNullValue() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("", "BLOCK", "", null, "error msg1", null, 5, 0);
-    Item p = new ItemString(id);
-    Error error = new Error(req, shield, p, "foo", null);
-    String s = error.toJson();
-    assertTrue(s.contains("{\"key\":\"foo\","));
-  }
-
-  @Test
-  public void TestErrorAddPointErrorMin() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("", "BLOCK", "", null, "error msg1", null, 5, 5);
-    Item p = new ItemString(id);
-    Error error = new Error(req, shield, p, "foo", "123");
-    String s = error.toJson();
-    assertTrue(s.contains("Invalid length"));
-  }
-
-  @Test
-  public void appendParameterItemMapToSBTest() {
-    StringBuilder sb = new StringBuilder();
-    Map<String, Item> m = new HashMap<>();
-    Shield.appendPItemMapToSB(m, sb, "label");
-    assertEquals(true, sb.indexOf("(none found)") > 0);
-
-    Shield.appendPItemMapToSB(null, sb, "label");
-    assertEquals(true, sb.indexOf("(none found)") > 0);
-
-    sb = new StringBuilder();
-    m = null;
-    Shield.appendPItemMapToSB(m, sb, "label");
-    assertEquals(true, sb.indexOf("(none found)") > 0);
   }
 
   @Test

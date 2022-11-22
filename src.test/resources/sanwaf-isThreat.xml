@@ -6,8 +6,13 @@
 		<verbose>true</verbose>
 		<app.version>=${Your_Application_Release_Version}</app.version>	
 		<errorHandling>
-			<provideTrackId>true</provideTrackId>
-			<provideErrors>true</provideErrors>
+      <provideTrackId>true</provideTrackId>
+      <provideErrors>true</provideErrors>
+      <logErrors>true</logErrors>
+      <logErrorsVerbose>true</logErrorsVerbose>
+      <provideDetects>true</provideDetects>
+      <logDetects>true</logDetects>
+      <logDetectsVerbose>true</logDetectsVerbose>
 		</errorHandling>
 		<errorMessages>
 			<numeric><![CDATA[  Numeric error msg]]></numeric>

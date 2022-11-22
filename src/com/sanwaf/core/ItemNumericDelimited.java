@@ -37,7 +37,7 @@ final class ItemNumericDelimited extends ItemNumeric {
     String[] ns = value.split(delimiter);
     for (String n : ns) {
       if (super.inError(req, shield, n)) {
-        return handleMode(true, value, INVALID_NUMBER, req);
+        return handleMode(true, value, INVALID_NUMBER, req, false);
       }
     }
     return false;
@@ -45,9 +45,9 @@ final class ItemNumericDelimited extends ItemNumeric {
 
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
-    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(delimiter) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
@@ -58,6 +58,11 @@ final class ItemNumericDelimited extends ItemNumeric {
     delimiter = value.substring(start + ItemFactory.SEP_START.length(), end);
   }
 
+  @Override
+  String getProperties() {
+    return "\"delimiter\":\"" + Metadata.jsonEncode(delimiter) + "\"";
+  }
+  
   @Override 
   Types getType() {
     return Types.NUMERIC_DELIMITED;

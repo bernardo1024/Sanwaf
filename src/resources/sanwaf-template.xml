@@ -83,24 +83,24 @@
         <endpoint>
           <uri></uri>
           <items>
-            <item><name></name><type></type><max></max><min></min><msg></msg></item>
+            <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg></item>
           </items>
         </endpoint>
       </endpoints>
 			<parameters>
-				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</parameters>
 			<headers>
-				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</headers>
 			<cookies>
-				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</cookies>
 		</secured>
 		
 	Item Format:
 	***********
-		<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+		<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 	where
 	
 		<name></name>	          - parameter/header/cookie name
@@ -108,6 +108,9 @@
                             - for example:
 														  - <name>parameter1</name>
 														  - <name>parameter1:::parameter2:::parameter3</name>
+		<mode></mode>           - the mode of the items (detect, detect-all, disabled, block(default)
+		                          - the mode controls how the item will be processed
+		                          - use the detect & detect-all settings to log findings and not block requests
     <display></display>     - the value to use in error messages to reference the element. if not provided, name will be used
 		<type></type>	          - the parameter data type (see Custom Data types above) (defaults to 's' if not specified)
 		<max></max>		          - the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
@@ -261,10 +264,21 @@
 		<!-- Application Release Version that is being protected, for logging purposes only -->
 		<app.version>=${Your_Application_Release_Version}</app.version>	
 	
-		<!-- Error Handling: Specify what to store in the request as attributes to be consumed by your application. -->
+		<!-- Error Handling: Specify what to store in the request as attributes to be consumed by your application. 
+      provideTrackId  - add a tracking ID # as a request attribute
+      provideErrors   - add all WAF errors as a request attribute
+      logErrors       - log WAF errors to file when found
+      provideDetects  - add all WAF Detections as request attribute
+      logDetects      - log WAF detects to file when found
+		-->
 		<errorHandling>
 			<provideTrackId>true</provideTrackId>
-			<provideErrors>true</provideErrors>
+      <provideErrors>true</provideErrors>
+      <logErrors>true</logErrors>
+      <logErrorsVerbose>true</logErrorsVerbose>
+      <provideDetects>true</provideDetects>
+      <logDetects>true</logDetects>
+      <logDetectsVerbose>true</logDetectsVerbose>
 		</errorHandling>
 	
 		<!-- Default Error Messages for data type violations.  Can be overridden by shield or parameter entries.
@@ -300,7 +314,7 @@
         <!-- Name of the Shield.  Must be unique. -->
 				<name>XSS</name>
 
-				<!-- Shield Modes are: disabled, block(default), detect, detect-all -->
+				<!-- Shield Modes are: disabled, block(default), detect, detect-all.  the Shield mode is used if none is provided for a parameter, endpoint or regex -->
 				<mode>block</mode>
 
 				<!-- Minimum length of parameter to trigger this shield.  For example, if you can not perform an XSS exploit in under 3 chars, set it to 3 -->
@@ -349,12 +363,21 @@
 					</exclusions>
 				</forceStringPatterns>
 				
-				<!-- Auto Run Patterns is a list of patterns that will automatically be run against every parameter marked as a string (s) datatype  
+				<!-- String Patterns is a list of patterns that will automatically be run against every parameter marked as a string (s) datatype  
 						<item>   - item entry in stringPatterns
               <key>   - the name of the pattern
+              <match> - pass/fail
+                        - pass: if regex matches, this is a pass
+                        - fail (default): - if regex matches, this is a failure
               <value> - the pattern in a regular string format (no escaping quotes, backslashes...)
                      NOTE: 	Do NOT wrap regex in "/.../i" format.
-                        All regex's are compiled with ignore case enabled 
+                        All regex's are compiled with ignore case enabled
+                      - To store regex patterns in seperate files you can use the format:
+                          file=<filename>|<key>
+                          where
+                          "file="     - marker indicating to pull regex from a file
+                          "filename"  - relative path to a file containing the regex
+                          "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
 					Note that values provided below are for demonstration purposes
 				-->
 				<stringPatterns>
@@ -362,6 +385,7 @@
 					<item>
 						<key>javascriptExpression</key>
             <mode>disabled/block(default)/detect/detect-all</mode>
+            <match>fail(default)</match>
 						<value><![CDATA[(?:(?:(?:^)|(?:=|"|'|(?:%(?:2[27]|3D))))|(?:\s|%20)+)(?:(?:j|%[46]a)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:v|%[57]6)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:a|%[46]1)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:s|%[57]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:c|%[46]3)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:r|%[57]2)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:i|%[46]9)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:p|%[57]0)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:t|%[57]4)(?:(?:&|%26)(?:.)*?(?:;|%3b))*?(?:\:|%3a)|(?:v|%[57]6)(?:b|%[46]2)(?:s|%[57]3)(?:c|%[46]3)(?:r|%[57]2)(?:i|%[46]9)(?:p|%[57]0)(?:t|%[57]4)|(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:x|%[75]8)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:p|%[75]0)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:r|%[75]2)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:e|%[64]5)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:s|%[75]3)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:i|%[64]9)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:o|%[64]f)(?:(?:\/|%2f)(?:\*|%2a).*?(?:\*|%2a)(?:\/|%2f))*?(?:n|%[64]e)(?:\(|%28))]]></value>
 					</item>
 					<item>
@@ -374,16 +398,25 @@
 				<!-- Custom Patterns are a list of named patterns to be applied against one or more parameters/headers/cookies
 						Note that a pass/true is returned for matches; otherwise a fail/false is returned
 				 
-					<key> - the name of the pattern 
-					<mode> - disabled, block, detect, detect-all
+					<key>  - the name of the pattern 
+          <mode> - disabled, block(default), detect, detect-all
+          <match>- pass/fail
+                    - pass (default): if regex matches, this is a pass
+                    - fail: - if regex matches, this is a failure
 					<item> - the pattern in a regular string format (no escaping quotes, backslashes...)
 									 NOTE: 	Do NOT wrap regex in "/.../i" format.
 											All regex's are compiled with ignore case enabled 
+                 - To store regex patterns in seperate files you can use the format:
+                     file=filename:::key
+                     where
+                     "file="     - marker indicating to pull regex from a file
+                     "filename"  - relative path to a file containing the regex
+                     "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
 					Note that values provided below are for demonstration purposes
 				-->
 				<customPatterns>
 				<!-- 
-					<item><key>date</key><mode></mode><value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value></item>
+					<item><key>date</key><mode></mode><match>pass</match><value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value></item>
 					<item><key>telephone</key><value><![CDATA[(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})]]></value></item>
 				-->
 				</customPatterns>

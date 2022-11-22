@@ -1,5 +1,5 @@
 package com.sanwaf.core;
-
-class DefinitiveError{
+//used to return true/false/null
+class ModeError{
   boolean error = false;
 }

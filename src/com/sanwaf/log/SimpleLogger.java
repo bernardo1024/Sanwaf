@@ -10,6 +10,11 @@ public final class SimpleLogger implements Logger {
   }
 
   @Override
+  public void warn(String s) {
+    LOGGER.log(java.util.logging.Level.WARNING, "Sanwaf-warn:\t{0}", s);
+  }
+
+  @Override
   public void info(String s) {
     LOGGER.log(java.util.logging.Level.INFO, "Sanwaf-info:\t{0}", s);
   }

@@ -17,18 +17,18 @@ final class ItemConstant extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, INVALID_CONSTANT, req);
     }
     return handleMode(!constants.contains(value), value, INVALID_CONSTANT + constants, req);
   }
 
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
-    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(constants.toString()) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(constants.toString()) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
@@ -51,6 +51,17 @@ final class ItemConstant extends Item {
     }
   }
 
+  @Override
+  String getProperties() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("\"constant\":\"");
+    for(String s : constants) {
+      sb.append(Metadata.jsonEncode(s + " "));
+    }
+    sb.append("\"");
+    return sb.toString();
+  }
+  
   @Override 
   Types getType() {
     return Types.CONSTANT;

@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.Cookie;
 
@@ -13,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.sanwaf.core.Error;
 import com.sanwaf.core.Shield;
 import com.sanwaf.core.Sanwaf;
 
@@ -37,54 +34,6 @@ public class ShieldTest {
     } catch (IOException ioe) {
       assertTrue(false);
     }
-  }
-
-  @Test
-  public void testRegexMatch() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... </script>");
-    for (Error error : errors) {
-      System.out.println("String(XSS1)=" + error.toJson());
-    }
-
-    errors = sanwaf.getError(req, shield, "String", "javascript: abc123<script abc123> foo <script bar");
-    for (Error error : errors) {
-      System.out.println("String(XSS2)=" + error.toJson());
-    }
-
-    errors = sanwaf.getError(req, shield, "String",
-        "any string<B>ANY  etc.) and here foo (bar). and we go until quotes . <font color=\" this should not be highlighted) and this (one, and should) be=\" not this");
-    for (Error error : errors) {
-      System.out.println("String(XSS3)=" + error.toJson());
-    }
-
-    req = new MockHttpServletRequest();
-    errors = sanwaf.getError(req, shield, "String", "some text <script> some other script... <script>");
-    for (Error error : errors) {
-      System.out.println("String(XSS)=" + error.toJson());
-    }
-
-    errors = sanwaf.getError(req, shield, "Numeric", "123abc456");
-    for (Error error : errors) {
-      System.out.println("Number=" + error.toJson());
-    }
-}
-
-  @Test
-  public void TestToJson() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("key1", "BLOCK", "", "type", "error msg1", null, 3, 2);
-    Item p1 = new ItemString(id);
-    Error error1 = new Error(req, shield, p1, "key1", "value2");
-    id = new ItemData("key11", "BLOCK", "", "type", "error msg2", null, 1000, 1);
-    Item p2 = new ItemNumeric(id, false);
-    Error error2 = new Error(req, shield, p2, "key11", "value22");
-    System.out.println(error1.toJson());
-    System.out.println(Error.toJson(null));
-    List<Error> errors = new ArrayList<Error>();
-    errors.add(error1);
-    errors.add(error2);
-    System.out.println(Error.toJson(errors));
   }
 
   @Test

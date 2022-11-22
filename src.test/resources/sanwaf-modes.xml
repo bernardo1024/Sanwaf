@@ -7,8 +7,13 @@
 		<verbose>true</verbose>
 		<app.version>=${yourapp.release.version}</app.version>	
 		<errorHandling>
-			<provideTrackId>true</provideTrackId>
-			<provideErrors>true</provideErrors>
+      <provideTrackId>true</provideTrackId>
+      <provideErrors>true</provideErrors>
+      <logErrors>true</logErrors>
+      <logErrorsVerbose>true</logErrorsVerbose>
+      <provideDetects>true</provideDetects>
+      <logDetects>true</logDetects>
+      <logDetectsVerbose>true</logDetectsVerbose>
 		</errorHandling>
 		<errorMessages>
 			<numeric><![CDATA[  Numeric error msg]]></numeric>
@@ -32,7 +37,7 @@
       <shield-settings>
         <mode>block</mode>
         <name>XSS</name>
-        <minLen>4</minLen>
+        <minLen>2</minLen>
         <maxLen>9999</maxLen>
         <child></child>
       </shield-settings>
@@ -66,15 +71,29 @@
             <value><![CDATA[(?:RULE-IS-DETECT)]]></value>
           </item>
           <item>
+            <key>xss-form-elements-DETECT-ALL</key>
+            <mode>detect-all</mode>
+            <value><![CDATA[(?:RULE-IS-DETECT-ALL)]]></value>
+          </item>
+          <item>
             <key>xss-form-elements-DISABLED</key>
             <mode>disabled</mode>
             <value><![CDATA[(?:RULE-IS-DISABLED)]]></value>
+          </item>
+          <item>
+            <key>xss-form-elements-NO-MODE</key>
+            <value><![CDATA[(?:RULE-IS-NO-MODE)]]></value>
           </item>
         </stringPatterns>
         <customPatterns>
           <item>
             <key>date-DETECT</key>
             <mode>detect</mode>
+            <value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
+          </item>
+          <item>
+            <key>date-DETECT-ALL</key>
+            <mode>detect-all</mode>
             <value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
           </item>
           <item>
@@ -85,6 +104,10 @@
           <item>
             <key>date-DISABLED</key>
             <mode>disabled</mode>
+            <value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
+          </item>
+          <item>
+            <key>date-NO-MODE</key>
             <value><![CDATA[^\d{4}\-(?:0?[1-9]|1[012])\-(?:0?[1-9]|[12][0-9]|3[01])$]]></value>
           </item>
         </customPatterns>
@@ -112,7 +135,8 @@
 		            <item><mode>detect_all</mode><name>modeeParameterString-DETECT</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
 		            <item><mode>detect</mode><name>modeeParameterRegex-DETECT</name><type>r{date-DETECT}</type><max></max><min></min><msg></msg><uri></uri></item>
 			          <item><mode>block</mode><name>modeeParameter-BLOCK</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-			          <item><mode>disabled</mode><name>modeeParameter-DISABLED</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+                <item><mode>disabled</mode><name>modeeParameter-DISABLED</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+                <item>                     <name>modeeParameter-NO-MODE</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
                 
                 <item><mode>detect</mode><name>modeeParameterRegex-DETECT-BLOCK</name><type>r{date-BLOCK}</type><max></max><min></min><msg></msg><uri></uri></item>
                 <item><mode>detect</mode><name>modeeParameterRegex-DETECT-DISABLED</name><type>r{date-DISABLED}</type><max></max><min></min><msg></msg><uri></uri></item>
@@ -124,27 +148,49 @@
 
           <parameters>
             <item><mode>detect</mode><name>modeParameter-DETECT</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><mode>detect_all</mode><name>modeParameterString-DETECT</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><mode>detect</mode><name>modeParameter-DETECT2</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><mode>detect-all</mode><name>modeParameterString-DETECT</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>detect</mode><name>modeParameterRegex-DETECT</name><type>r{date-DETECT}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>block</mode><name>modeParameter-BLOCK</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>disabled</mode><name>modeParameter-DISABLED</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item>                     <name>modeParameter-NO-MODE</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             
             <item><mode>detect</mode><name>modeParameterRegex-DETECT-BLOCK</name><type>r{date-BLOCK}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>detect</mode><name>modeParameterRegex-DETECT-DISABLED</name><type>r{date-DISABLED}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>block</mode><name>modeParameterRegex-BLOCK-BLOCK</name><type>r{date-BLOCK}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>block</mode><name>modeParameterRegex-BLOCK-DISABLED</name><type>r{date-DISABLED}</type><max></max><min></min><msg></msg><uri></uri></item>
+
+            <item><mode>detect</mode><name>char</name><type>c</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>numeric</name><type>n</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>open</name><type>o</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>numericdelimited</name><type>n{,}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>alphanumeric</name><type>a</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>alphanumericandmore</name><type>a{'\s!}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>constant</name><type>k{y,n}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>regex</name><type>r{date-DETECT-ALL}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg>Must be a proper email address</msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>max-min-value</name><type>n</type><max></max><min></min><max-value>100</max-value><min-value>10</min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>format</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>dependentparent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>dependentformat</name><type>d{dependentparent:123=####}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+
+            <item><mode>detect</mode><name>endpointRegex</name><type>x{^[^\s@]+@[^\s@]+$}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg>Must be a proper email address</msg><req></req><related></related></item>
+            <item><name>regexParmNoModeWithRegexDetectMode</name><type>r{date-DETECT-ALL}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+
           </parameters>
           <headers>
             <item><mode>detect</mode><name>modeHeader-DETECT</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
-            <item><mode>detect_all</mode><name>modeHeader-DETECT_ALL</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item><mode>detectall</mode><name>modeHeader-DETECT_ALL</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>block</mode><name>modeHeader-BLOCK</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>disabled</mode><name>modeHeader-DISABLED</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item>                     <name>modeHeader-NO-MODE</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item>                     <name>modeHeader-DETECT2</name><mode>detect</mode><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
           </headers>
           <cookies>
             <item><mode>detect</mode><name>modeCookie-DETECT</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>detect_all</mode><name>modeCookie-DETECT_ALL</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>block</mode><name>modeCookie-BLOCK</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>disabled</mode><name>modeCookie-DISABLED</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
+            <item>                     <name>modeCookie-NO-MODE</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
           </cookies>
         </secured>
       </metadata>

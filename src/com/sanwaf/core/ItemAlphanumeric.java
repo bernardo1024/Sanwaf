@@ -10,7 +10,7 @@ class ItemAlphanumeric extends Item {
   ItemAlphanumeric(ItemData id) {
     super(id);
   }
-
+  
   @Override
   List<Point> getErrorPoints(Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
@@ -36,9 +36,9 @@ class ItemAlphanumeric extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, INVALID_AN, req);
     }
     int i = 0;
     for (i = 0; i < value.length(); i++) {

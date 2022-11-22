@@ -54,11 +54,14 @@ public class SanwafTest {
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
 
-    String trackId = Sanwaf.getTrackingId(request);
+    String trackId = sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
 
-    String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"NumericDelimited\",") >= 0);
+    String s = sanwaf.getErrors(request);
+    assertTrue(s.indexOf("{\"name\":\"NumericDelimited\",") >= 0);
+    
+    s = sanwaf.getDetects(request);
+    assertTrue(s == null || s.length() == 0);
   }
 
   @Test
@@ -69,11 +72,11 @@ public class SanwafTest {
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
 
-    String trackId = Sanwaf.getTrackingId(request);
+    String trackId = sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
 
-    String s = Sanwaf.getErrors(request);
-    assertTrue(s.indexOf("{\"key\":\"AlphanumericAndMore\"") >= 0);
+    String s = sanwaf.getErrors(request);
+    assertTrue(s.indexOf("{\"name\":\"AlphanumericAndMore\"") >= 0);
   }
 
   @Test
@@ -88,8 +91,8 @@ public class SanwafTest {
     sanwaf.onErrorAddParmErrors = false;
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
-    assertTrue(Sanwaf.getTrackingId(request) == null);
-    assertTrue(Sanwaf.getErrors(request) == null);
+    assertTrue(sanwaf.getTrackingId(request) == null);
+    assertTrue(sanwaf.getErrors(request) == null);
 
     sanwaf.onErrorAddTrackId = trackID;
     sanwaf.onErrorAddParmErrors = trackErrors;
@@ -150,7 +153,7 @@ public class SanwafTest {
   public void TestNonMappedParamDefaultToStingWithRegexAlwaysEnabled() {
     boolean xssAlways = shield.regexAlways;
     shield.regexAlways = true;
-    boolean b = sanwaf.isThreat(null);
+    boolean b = sanwaf.isThreatDetected(null);
     assertTrue(!b);
 
     MockHttpServletRequest request = new MockHttpServletRequest();

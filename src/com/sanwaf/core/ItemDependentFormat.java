@@ -53,7 +53,8 @@ final class ItemDependentFormat extends Item {
   
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
-    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
+    if(req == null) { return ""; }
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
       String elementValue = req.getParameter(dependentElementName);
       ItemFormat format = getFormatForValue(elementValue);
@@ -61,7 +62,7 @@ final class ItemDependentFormat extends Item {
       if(format != null) {
         formatString = format.formatString;
       }
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
@@ -107,6 +108,26 @@ final class ItemDependentFormat extends Item {
     }
   }
 
+  @Override
+  String getProperties() {
+    StringBuilder sb = new StringBuilder();
+    boolean isFirst = true;
+    sb.append("\"formats\":{");
+    String sep = "";
+    for (Map.Entry<String,ItemFormat> entry : formats.entrySet()) {
+      if(!isFirst) {
+        sep = ",";
+      }
+      else {
+        isFirst = false;
+      }
+      sb.append(sep).append("\"key\":\"").append(entry.getKey()).append("\"");
+      sb.append(",\"value\":\"").append(entry.getValue().formatString).append("\"");
+    }
+    sb.append("}");
+    return sb.toString();
+  }
+   
   @Override 
   Types getType() {
     return Types.DEPENDENT_FORMAT;

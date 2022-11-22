@@ -17,7 +17,7 @@ final class ItemString extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if(maskError.length() > 0) {
+    if(shield == null || maskError.length() > 0) {
       return points;
     }
     for (Map.Entry<String, Rule> r : shield.rulePatterns.entrySet()) {
@@ -33,21 +33,26 @@ final class ItemString extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, FAILED_PATTERN, req);
     }
     boolean inError = false;
-    for (Map.Entry<String, Rule> rule : shield.rulePatterns.entrySet()) {
-      if (rule.getValue().mode == Modes.DISABLED) { continue; }
-
-      if (rule.getValue().pattern.matcher(value).find()) {
-        if(rule.getValue().mode == Modes.BLOCK) { inError = true; }
-        else {
-          handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
-        }
-        if(mode != Modes.DETECT_ALL) { break; }
-      } 
+    if(shield != null) {
+      for (Map.Entry<String, Rule> rule : shield.rulePatterns.entrySet()) {
+        if (rule.getValue().mode == Modes.DISABLED) { continue; }
+        boolean match = rule.getValue().pattern.matcher(value).find();
+        if((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match)) {
+          if(rule.getValue().mode == Modes.BLOCK) { 
+            inError = true; 
+            handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
+          }
+          else {
+            handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
+          }
+          if(mode != Modes.DETECT_ALL) { break; }
+        } 
+      }
     }
     if(mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
       return false;

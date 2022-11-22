@@ -12,9 +12,9 @@ class ItemOpen extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, INVALID_SIZE + " (min:" + min + ", max:" + max + ")", req);
     }
     return false;
   }

@@ -19,9 +19,9 @@ final class ItemJava extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, INVALID_JAVA + sClazzAndMethod, req);
     }
     if(value.length() == 0) {
       return false;
@@ -81,7 +81,12 @@ final class ItemJava extends Item {
       return true;
     }
   }
-
+  
+  @Override
+  String getProperties() {
+    return "\"typespecific\":\"" + Metadata.jsonEncode(sClazzAndMethod) + "\"";
+  }
+  
   @Override 
   Types getType() {
     return Types.JAVA;

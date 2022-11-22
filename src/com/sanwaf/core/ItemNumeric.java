@@ -68,10 +68,10 @@ class ItemNumeric extends Item {
       return false;
     }
     try {
-      if (maxValue > Integer.MIN_VALUE && Double.parseDouble(value) > maxValue) {
+      if (Double.parseDouble(value) > maxValue) {
         return true;
       }
-      if (minValue > Integer.MIN_VALUE && Double.parseDouble(value) < minValue) {
+      if (Double.parseDouble(value) < minValue) {
         return true;
       }
     } catch (NumberFormatException nfe) {
@@ -82,9 +82,9 @@ class ItemNumeric extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    DefinitiveError definitiveError = getDefiniteError(req, value);
-    if(definitiveError != null) {
-      return definitiveError.error;
+    ModeError me = isModeError(req, value);
+    if(me != null) {
+      return handleMode(me.error, value, INVALID_MAX_MIN, req);
     }
     if(isMaxMinValueError(value)) {
       return handleMode(true, value, INVALID_MAX_MIN, req);

@@ -142,11 +142,11 @@ public class ItemLengthsTest {
   public void TestMaxMinLength() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "ParmLength");
     assertTrue(shield.maxLen == Integer.MAX_VALUE);
-    assertTrue(shield.minLen == Integer.MAX_VALUE);
+    assertTrue(shield.minLen == 0);
     assertTrue(shield.regexMinLen == Integer.MAX_VALUE);
 
     Item p = shield.getItem(shield.parameters, "MaxMinLen");
     assertTrue(p.max == Integer.MAX_VALUE);
-    assertTrue(p.min == Integer.MAX_VALUE);
+    assertTrue(p.min == 0);
   }
 }

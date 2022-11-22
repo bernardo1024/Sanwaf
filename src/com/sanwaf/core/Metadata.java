@@ -21,15 +21,17 @@ class Metadata {
   boolean endpointIsStrictAllowLess = false;
   Map<String, Item> items = new HashMap<>();
   Map<String, List<String>> index = new HashMap<>();
+  Shield shield;
 
-  Metadata(Xml xml, String type, com.sanwaf.log.Logger logger) {
+  Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger) {
     this.logger = logger;
-    load(xml, type);
+    this.shield = shield;
+    load(shield, xml, type);
   }
 
-  Metadata(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger) {
+  Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger) {
     this.logger = logger;
-    load(itemsString, caseSensitive, includeEndpointAttributes);
+    load(shield, itemsString, caseSensitive, includeEndpointAttributes);
 
     if ("true".equalsIgnoreCase(endpointIsStrict)) {
       this.endpointIsStrict = true;
@@ -74,7 +76,7 @@ class Metadata {
     return null;
   }
 
-  void load(Xml xml, String type) {
+  void load(Shield shield, Xml xml, String type) {
     initA2Zindex(index);
 
     String metadataBlock = xml.get(XML_METADATA);
@@ -94,11 +96,11 @@ class Metadata {
     Xml subBlockXml = new Xml(subBlock);
     String[] xmlItems = subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems) {
-      loadItem(itemString, false);
+      loadItem(shield, itemString, false);
     }
   }
 
-  void load(String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
+  void load(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
     initA2Zindex(index);
     enabled = true;
     this.caseSensitive = caseSensitive;
@@ -106,13 +108,13 @@ class Metadata {
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems) {
-      loadItem(itemString, includeEndpointAttributes);
+      loadItem(shield, itemString, includeEndpointAttributes);
     }
   }
 
-  private void loadItem(String itemString, boolean includeEnpointAttributes) {
+  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes) {
     Xml xml = new Xml(itemString);
-    Item item = ItemFactory.parseItem(xml, includeEnpointAttributes, logger);
+    Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
     String namesString = xml.get(ItemFactory.XML_ITEM_NAME);
 
     if (namesString.contains(Shield.SEPARATOR)) {

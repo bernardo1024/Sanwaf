@@ -13,7 +13,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.sanwaf.core.Shield;
 import com.sanwaf.core.Sanwaf;
 
-public class DatatypeModeTest {
+public class ModeTest {
   static Sanwaf sanwaf;
   static Shield shield;
 
@@ -69,6 +69,14 @@ public class DatatypeModeTest {
   }
 
   @Test
+  public void testParameterNoMode() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeParameter-NO-MODE", "foobarfoobar");
+    assertTrue(sanwaf.isThreatDetected(request));
+  }
+
+  @Test
   public void testParameterItemRuleCombinations() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
@@ -99,10 +107,31 @@ public class DatatypeModeTest {
   }
 
   @Test
+  public void testHeaderNoMode() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addHeader("modeHeader-NO-MODE", "<script>");
+    assertTrue(sanwaf.isThreatDetected(request));
+  }
+
+  @Test
+  public void testHeaderNoModeLargeValue() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("modeParameter-DETECT2", ":RULE-IS-DETECT<script> 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
+
+  @Test
   public void testCookie() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setCookies(new Cookie("modeCookie", "foobarfoobar"));
     assertTrue(!sanwaf.isThreatDetected(request));
+  }
+  
+  @Test
+  public void testCookieNoMode() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setCookies(new Cookie("modeCookie-NO-MODE", "foobarfoobar"));
+    assertTrue(sanwaf.isThreatDetected(request));
   }
   
   @Test
@@ -145,6 +174,14 @@ public class DatatypeModeTest {
     request.addParameter("modeeParameter-DISABLED", "foobarfoobar");
     assertTrue(!sanwaf.isThreatDetected(request));
   }
+  
+  @Test
+  public void testEndPointNoMode() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/test.jsp");
+    request.addParameter("modeeParameter-NO-MODE", "foobarfoobar");
+    assertTrue(sanwaf.isThreatDetected(request));
+}
 
   @Test
   public void testEndPointItemRuleCombinations() {
@@ -169,4 +206,69 @@ public class DatatypeModeTest {
     assertTrue(!sanwaf.isThreatDetected(request));
   }
     
+  @Test
+  public void testDatatypeDetect() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("char", "cc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("numeric", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("numericdelimited", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("alphanumeric", "!@#$");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("alphanumericandmore", "!!@$#$");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("constant", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("regex", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("endpointRegex", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("max-min-value", "abclkajdflkjasdklfjaskldfjaskldfjlkasjflkasjflkasdjfklasjfklasdjflkasdjfk");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    
+    request = new MockHttpServletRequest();
+    request.addParameter("format", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+
+    request = new MockHttpServletRequest();
+    request.addParameter("dependentparent", "123");
+    request.addParameter("dependentformat", "<script>abc23@!##");
+    assertTrue(!sanwaf.isThreatDetected(request));
+    String s = sanwaf.getDetects(request);
+    assertTrue(s != null && s.length() > 0);
+    
+  }
+
+  @Test
+  public void testTest() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("numericdelimited", "abc");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
+
+  @Test
+  public void testRegexModeDetextNoModeOnParmDetect() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("regexParmNoModeWithRegexDetectMode", "abcd");
+    assertTrue(!sanwaf.isThreatDetected(request));
+  }
+
 }

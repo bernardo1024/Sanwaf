@@ -36,13 +36,13 @@ final class Xml {
     if (xml == null || xml.length() == 0) {
       return "";
     }
-    String xmlUc = xml.toUpperCase();
-    String keyUc = "<" + key.toUpperCase() + ">";
+    String xmlUc = xml.toLowerCase();
+    String keyUc = "<" + key.toLowerCase() + ">";
     int start = xmlUc.indexOf(keyUc);
     if (start < 0) {
       return "";
     }
-    String endKeyUc = "</" + key.toUpperCase() + ">";
+    String endKeyUc = "</" + key.toLowerCase() + ">";
     int end = xmlUc.indexOf(endKeyUc, start);
     if (end < 0) {
       return "";

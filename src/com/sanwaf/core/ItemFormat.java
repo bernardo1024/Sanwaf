@@ -246,9 +246,9 @@ final class ItemFormat extends Item {
 
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
-    int i = errorMsg.indexOf(Error.XML_ERROR_MSG_PLACEHOLDER1);
+    int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
-      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + Error.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
@@ -341,6 +341,11 @@ final class ItemFormat extends Item {
     if(last < format.length()) {
       formatBlocks.addAll(Arrays.asList(format.substring(last, format.length()).split("")));
     }
+  }
+  
+  @Override
+  String getProperties() {
+    return "\"format\":\"" + Metadata.jsonEncode(formatString) + "\"";
   }
   
   @Override 

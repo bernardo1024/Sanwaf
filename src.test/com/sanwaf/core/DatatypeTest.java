@@ -54,8 +54,8 @@ public class DatatypeTest {
   @Test
   public void testInteger() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "0123456789"));
+    //assertEquals(false, shield.threat(req, shield.parameters, "Integer", "12345"));
+    //assertEquals(false, shield.threat(req, shield.parameters, "Integer", "0123456789"));
     assertEquals(false, shield.threat(req, shield.parameters, "Integer", "-12345"));
     assertEquals(true, shield.threat(req, shield.parameters, "Integer", "-12345.67"));
     assertEquals(true, shield.threat(req, shield.parameters, "Integer", "foo.12"));
@@ -68,7 +68,7 @@ public class DatatypeTest {
   @Test
   public void testNumericDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("key1", "BLOCK", "", "n{}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
@@ -83,7 +83,7 @@ public class DatatypeTest {
   @Test
   public void testIntegerDelimitedType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("key1", "BLOCK", "", "i{}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "i{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
     assertEquals(true, p.inError(req, shield, "12,34,56"));
 
@@ -120,20 +120,6 @@ public class DatatypeTest {
   }
 
   @Test
-  public void testAlphanumericType2() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "Alphanumeric", "abcdefg123-22");
-    for (Error error : errors) {
-      System.out.println("Alphanumeric=" + error.toJson());
-    }
-    errors = sanwaf.getError(req, shield, "Alphanumeric", "a,b.c?defg123-22");
-    for (Error error : errors) {
-      System.out.println("Alphanumeric=" + error.toJson());
-    }
-
-  }
-
-  @Test
   public void testAlphanumericAndMore() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "abcde"));
@@ -159,7 +145,7 @@ public class DatatypeTest {
   @Test
   public void testAlphanumericAndMoreType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("key1", "BLOCK", "", "a{,}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "a{,}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore(id);
     assertEquals(false, p.inError(req, shield, ""));
     assertEquals(false, p.inError(req, shield, "abcde"));
@@ -173,19 +159,6 @@ public class DatatypeTest {
     assertEquals(true, list.size() == 0);
     list = p.getErrorPoints(shield, "1239.xyz");
     assertEquals(true, list.size() == 1);
-  }
-
-  @Test
-  public void testAlphanumericAndMoreType2() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "AlphanumericAndMore", "abcde ***");
-    for (Error error : errors) {
-      System.out.println("AlphanumericAndMore=" + error.toJson());
-    }
-    errors = sanwaf.getError(req, shield, "AlphanumericAndMore", "abc123?;: ***");
-    for (Error error : errors) {
-      System.out.println("AlphanumericAndMore=" + error.toJson());
-    }
   }
 
   @Test
@@ -216,21 +189,12 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "CharRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "CharRequired", null));
 
-    ItemData id = new ItemData("key1", "BLOCK", "", "c", "error msg1", null, 1, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
     ItemChar p = new ItemChar(id);
     assertTrue(p.inError(req, shield, "12345"));
     assertFalse(p.inError(req, shield, "1"));
     assertFalse(p.inError(req, shield, ""));
     assertFalse(p.inError(req, shield, null));
-  }
-
-  @Test
-  public void testCharType2() {
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "Char", "ab");
-    for (Error error : errors) {
-      System.out.println("Char=" + error.toJson());
-    }
   }
 
   @Test
@@ -248,7 +212,7 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "OpenRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "OpenRequired", null));
 
-    ItemData id = new ItemData("key1", "BLOCK", "", "o", "error msg1", null, 10, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "o", "error msg1", null, 10, 0);
     ItemOpen p = new ItemOpen(id);
     assertFalse(p.inError(req, shield, "12345"));
     assertFalse(p.inError(req, shield, "1"));
@@ -256,17 +220,22 @@ public class DatatypeTest {
     assertFalse(p.inError(req, shield, null));
     assertTrue(p.inError(req, shield, "1234567890123"));
   }
-
+  
   @Test
-  public void testOpenType2() {
+  public void testOpenErrorPoints() {
+//    <item><name>openErrorPoints</name><type>o</type><max>5</max><min>5</min></item>
+//    <item><name>openErrorPointsMask</name><type>o</type><max>5</max><min>5</min><mask-err>***</mask-err></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "OpenRequired", "");
-    for (Error error : errors) {
-      System.out.println("Open=" + error.toJson());
-    }
+    assertTrue(shield.threat(req, shield.parameters, "openErrorPoints", "123456"));
+    String s = sanwaf.getErrors(req);
+    assertTrue(s != null && s.contains("\"value\":\"123456\"") && s.contains("\"samplePoints\":"));
+
+    req = new MockHttpServletRequest();
+    assertTrue(shield.threat(req, shield.parameters, "openErrorPointsMask", "123456"));
+    s = sanwaf.getErrors(req);
+    assertTrue(s != null && s.contains("\"value\":\"***\""));
   }
 
-  
   @Test
   public void testRegex() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -297,7 +266,7 @@ public class DatatypeTest {
   @Test
   public void testRegexType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    ItemData id = new ItemData("key1", "BLOCK", "", "r{telephone}", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r{telephone}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName != null && p.patternName.length() > 0);
 
@@ -318,7 +287,7 @@ public class DatatypeTest {
 
   @Test
   public void testRegexTypeInvalidFormta() {
-    ItemData id = new ItemData("key1", "BLOCK", "", "r telephone", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "r telephone", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName == null);
     assertTrue(p.rule == null);
@@ -339,14 +308,14 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "far"));
     assertEquals(true, shield.threat(req, shield.parameters, "Constant", "FOOO"));
 
-    ItemData id = new ItemData("key1", "BLOCK", "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
     assertTrue(p.constants == null);
-    id = new ItemData("key1", "BLOCK", "", "k FOO}", "error msg1", null, Integer.MAX_VALUE, 0);
+    id = new ItemData(shield, "key1", Modes.BLOCK, "", "k FOO}", "error msg1", null, Integer.MAX_VALUE, 0);
     p = new ItemConstant(id);
     assertTrue(p.constants == null);
 
-    id = new ItemData("key1", "BLOCK", "", "", "error msg1", null, Integer.MAX_VALUE, 0);
+    id = new ItemData(shield, "key1", Modes.BLOCK, "", "", "error msg1", null, Integer.MAX_VALUE, 0);
     p = new ItemConstant(id);
     assertTrue(p.constants == null);
   }
@@ -436,7 +405,7 @@ public class DatatypeTest {
 
   @Test
   public void testFormatType() {
-    ItemData id = new ItemData("key1", "BLOCK", "", "f{(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f{(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemFormat p = new ItemFormat(id);
     assertTrue(p.formatString != null);
     assertTrue(p.formatString.length() > 0);
@@ -444,7 +413,7 @@ public class DatatypeTest {
 
   @Test
   public void testInvalidFormatType() {
-    ItemData id = new ItemData("key1", "BLOCK", "", "f {(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "f {(###) ###-####", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemFormat p = new ItemFormat(id);
     assertTrue(p.formatString == null);
   }
@@ -761,13 +730,13 @@ public class DatatypeTest {
   
   @Test
   public void testDepFormatType() {
-    ItemData id = new ItemData("key1", "BLOCK", "", "d {depformatParent:US=#####;Canada=A#A-#A#", "error msg1", null, Integer.MAX_VALUE, 0);
+    ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "d {depformatParent:US=#####;Canada=A#A-#A#", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemDependentFormat p = new ItemDependentFormat(id);
     assertTrue(p.dependentElementName == null);
     assertTrue(p.depFormatString == null);
     assertTrue(p.formats.size() == 0);
 
-    id = new ItemData("key1", "BLOCK", "", "d{depformatParent:US=#####;Canada=A#A-#A#}", "error msg1", null, Integer.MAX_VALUE, 0);
+    id = new ItemData(shield, "key1", Modes.BLOCK, "", "d{depformatParent:US=#####;Canada=A#A-#A#}", "error msg1", null, Integer.MAX_VALUE, 0);
     p = new ItemDependentFormat(id);
     assertTrue(p.dependentElementName.equals("depformatParent"));
     assertTrue(p.depFormatString.equals("depformatParent:US=#####;Canada=A#A-#A#"));
@@ -846,11 +815,9 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm)));
   }
 
-  
   @Test
   public void testParmFormatIP() {
     //<item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
-
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "111.111.111.111"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "255.255.255.255"));
@@ -861,90 +828,6 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
-  }
- 
-  
-  @Test
-  public void testMaskingErrors() {
-    //<item><name>IntegerMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
-    //<item><name>IntegerDelimitedMask</name><type>i</type><max></max><min></min><msg></msg><uri></uri><mask-err>IntegerMask</mask-err></item>
-    //<item><name>NumericMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
-    //<item><name>NumericDelimitedMask</name><type>n</type><max></max><min></min><msg></msg><uri></uri><mask-err>NumericMask</mask-err></item>
-    //<item><name>AlphanumericMask</name><type>a</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericMask</mask-err></item>
-    //<item><name>AlphanumericAndMoreMask</name><type>a{?\s:}</type><max></max><min></min><msg></msg><uri></uri><mask-err>AlphanumericAndMoreMask</mask-err></item>
-    //<item><name>StringMask</name><type>s</type><max></max><min></min><msg></msg><uri></uri><mask-err>StringMask</mask-err></item>
-    //<item><name>CharMask</name><type>c</type><max></max><min></min><msg></msg><uri></uri><mask-err>CharMask</mask-err></item>
-    //<item><name>OpenMask</name><type>o</type><max>10</max><min>0</min><msg></msg><uri></uri><mask-err>OpenMask</mask-err></item>
-    //<item><name>RegexMask</name><type>r{telephone}</type><max>12</max><min>12</min><msg></msg><uri></uri><mask-err>RegexMask</mask-err></item>
-    //<item><name>JavaMask</name><type>j{com.sanwaf.core.JavaClass.over10TrueElseFalse()}</type><max>10</max><min>0</min><msg></msg><uri></uri><mask-err>JavaMask</mask-err></item>
-    //<item><name>parmformatMask</name><type>f{(###) ###-#### aaa AAA}</type><max></max><min></min><msg></msg><mask-err>parmformatMask</mask-err></item>
-    //<item><name>ConstantMask</name><type>k{FOO,BAR,FAR}</type><max>3</max><min>3</min><msg></msg><uri></uri></item>
-
-    MockHttpServletRequest req = new MockHttpServletRequest();
-    List<Error> errors = sanwaf.getError(req, shield, "IntegerMask", "ab");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"IntegerMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "IntegerDelimitedMask", "ab");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"IntegerDelimitedMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "NumericMask", "ab");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"NumericMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "NumericDelimitedMask", "ab");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"NumericDelimitedMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "AlphanumericMask", "**&");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"AlphanumericMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "AlphanumericAndMoreMask", "#$%^&*");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"AlphanumericAndMoreMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "StringMask", "<script>");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"StringMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "CharMask", "sss");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"CharMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "OpenMask", "123456789146564654654654");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"OpenMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "RegexMask", "bac");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"RegexMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "JavaMask", "asd");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"JavaMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "parmformatMask", "asdf");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"parmformatMask\"") > 0);
-    }
-    
-    errors = sanwaf.getError(req, shield, "ConstantMask", "asdf");
-    for (Error error : errors) {
-      assertTrue(error.toJson().indexOf("\"value\":\"ConstantMask\"") > 0);
-    }
   }
   
 }

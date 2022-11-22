@@ -17,13 +17,15 @@ public class MetadataEndpoints {
   boolean enabled = false;
   boolean caseSensitive = true;
   Map<String, Metadata> endpointParameters = new HashMap<>();
-
-  MetadataEndpoints(Xml xml, com.sanwaf.log.Logger logger) {
+  Shield shield;
+  
+  MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger) {
+    this.shield = shield;
     this.logger = logger;
-    load(xml);
+    load(shield, xml);
   }
 
-  void load(Xml xml) {
+  void load(Shield shield, Xml xml) {
     String metadataBlock = xml.get(Metadata.XML_METADATA);
     Xml metadataBlockXml = new Xml(metadataBlock);
     String securedBlock = metadataBlockXml.get(Metadata.XML_SECURED);
@@ -46,7 +48,7 @@ public class MetadataEndpoints {
       String[] uris = endpointXml.get(ItemFactory.XML_ITEM_URI).split(":::");
       String strict = endpointXml.get(XML_STRICT);
       String items = endpointXml.get(ItemFactory.XML_ITEMS);
-      Metadata parameters = new Metadata(items, caseSensitive, true, strict, logger);
+      Metadata parameters = new Metadata(shield, items, caseSensitive, true, strict, logger);
       
       for(String uri : uris) {
         endpointParameters.put(uri, parameters);
