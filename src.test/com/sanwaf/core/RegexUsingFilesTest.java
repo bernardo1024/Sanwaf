@@ -58,5 +58,4 @@ public class RegexUsingFilesTest {
     assertTrue(!sanwaf.isThreatDetected(request));
   }
 
-  
 }

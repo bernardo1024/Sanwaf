@@ -66,7 +66,7 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     ModeError me = isModeError(req, value);
-    if(me != null) {
+    if (me != null) {
       return handleMode(me.error, value, INVALID_AN_MORE + String.valueOf(moreChars), req);
     }
     for (int i = 0; i < value.length(); i++) {
@@ -132,10 +132,9 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   String getProperties() {
     return "\"morechars\":\"" + Metadata.jsonEncode(new String(moreChars)) + "\"";
   }
-  
-  @Override 
+
+  @Override
   Types getType() {
     return Types.ALPHANUMERIC_AND_MORE;
   }
 }
-

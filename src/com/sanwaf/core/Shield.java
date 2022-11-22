@@ -44,9 +44,7 @@ final class Shield {
   }
 
   boolean threatDetected(ServletRequest req) {
-    return ((endpoints.enabled && endpointsThreatDetected(req)) 
-        || (parameters.enabled && parameterThreatDetected(req)) 
-        || (headers.enabled && headerThreatDetected(req))
+    return ((endpoints.enabled && endpointsThreatDetected(req)) || (parameters.enabled && parameterThreatDetected(req)) || (headers.enabled && headerThreatDetected(req))
         || (cookies.enabled && cookieThreatDetected(req)));
   }
 
@@ -142,7 +140,7 @@ final class Shield {
         if (forceStringPatterns) {
           item = new ItemString();
         } else {
-          return meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta); 
+          return meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
         }
       }
     } else {
@@ -257,7 +255,6 @@ final class Shield {
     return item;
   }
 
-  
   // XML LOAD CODE
   static final String XML_NAME = "name";
   static final String XML_MODE = "mode";
@@ -355,39 +352,39 @@ final class Shield {
       Modes m = Modes.getMode(itemBlockXml.get(XML_MODE), Modes.BLOCK);
       List<String> list = split(value);
       for (String l : list) {
-        if(l.startsWith(REGEX_FILE_MARKER)) {
+        if (l.startsWith(REGEX_FILE_MARKER)) {
           String x = getXmlFileFile(l);
-          if(x == null) { continue; }
+          if (x == null) {
+            continue;
+          }
           l = x;
         }
         String match = itemBlockXml.get(ItemFactory.XML_ITEM_MATCH);
-        if(match == null || match.length() == 0) {
+        if (match == null || match.length() == 0) {
           match = defaultMatch;
         }
         patterns.put(key.toLowerCase(), new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match));
       }
     }
   }
-  
+
   private String getXmlFileFile(String xml) {
     String filename = xml.substring(REGEX_FILE_MARKER.length());
     String filekey = null;
     String[] a = xml.split("\\|");
-    if(a.length == 2){
+    if (a.length == 2) {
       filename = a[0].substring(REGEX_FILE_MARKER.length());
       filekey = a[1];
-    }
-    else if (a.length != 1) {
+    } else if (a.length != 1) {
       logger.error("invalid pattern definition (unable to load specified file):" + xml);
       return null;
     }
 
     try {
       Xml fileXml = new Xml(Shield.class.getResource(filename));
-      if(filekey == null) {
+      if (filekey == null) {
         return fileXml.toString().trim();
-      }
-      else {
+      } else {
         return fileXml.get(filekey).trim();
       }
     } catch (IOException e) {
@@ -425,10 +422,10 @@ final class Shield {
       for (Map.Entry<String, Rule> e : customRulePatterns.entrySet()) {
         sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append("\tfailOnMatch=").append(e.getValue().failOnMatch).append("\n");
       }
-      
+
       if (regexAlways) {
         sb.append("\n\tShield Secured List: *Ignored*");
-        sb.append("\n\t"+XML_REGEX_ALWAYS_REGEX+"=true (process all parameters)");
+        sb.append("\n\t" + XML_REGEX_ALWAYS_REGEX + "=true (process all parameters)");
         sb.append("\n\tExcept for (exclusion list):\n");
         for (String s : regexAlwaysExclusions) {
           sb.append("\t").append(s);
@@ -492,19 +489,19 @@ final class Shield {
   }
 }
 
-class Rule{
+class Rule {
   Modes mode;
   Pattern pattern;
   boolean failOnMatch = true;
-  
-  Rule(){
+
+  Rule() {
     mode = Modes.BLOCK;
   }
-  
-  Rule(Modes mode, Pattern pattern, String match){
+
+  Rule(Modes mode, Pattern pattern, String match) {
     this.mode = mode;
     this.pattern = pattern;
-    if("pass".equalsIgnoreCase(match)) {
+    if ("pass".equalsIgnoreCase(match)) {
       failOnMatch = false;
     }
   }

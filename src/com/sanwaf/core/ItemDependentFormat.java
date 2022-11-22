@@ -12,8 +12,8 @@ final class ItemDependentFormat extends Item {
   static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";
   String depFormatString = null;
   String dependentElementName = null;
-  Map<String,ItemFormat> formats = new HashMap<>();
-  
+  Map<String, ItemFormat> formats = new HashMap<>();
+
   ItemDependentFormat(ItemData id) {
     super(id);
     initDependentFormat(id);
@@ -31,9 +31,11 @@ final class ItemDependentFormat extends Item {
 
   @Override
   boolean inError(final ServletRequest req, Shield shield, final String value) {
-    if(mode == Modes.DISABLED) { return false; }
+    if (mode == Modes.DISABLED) {
+      return false;
+    }
     String elementValue = req.getParameter(dependentElementName);
-    if(elementValue == null) {
+    if (elementValue == null) {
       return false;
     }
     ItemFormat format = getFormatForValue(elementValue);
@@ -43,23 +45,25 @@ final class ItemDependentFormat extends Item {
   private ItemFormat getFormatForValue(String value) {
     Iterator<Map.Entry<String, ItemFormat>> it = formats.entrySet().iterator();
     while (it.hasNext()) {
-        Map.Entry<String,ItemFormat> pair = it.next();
-        if(value.equals(pair.getKey())){
-          return pair.getValue();
-        }
+      Map.Entry<String, ItemFormat> pair = it.next();
+      if (value.equals(pair.getKey())) {
+        return pair.getValue();
+      }
     }
     return null;
   }
-  
+
   @Override
   String modifyErrorMsg(ServletRequest req, String errorMsg) {
-    if(req == null) { return ""; }
+    if (req == null) {
+      return "";
+    }
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
       String elementValue = req.getParameter(dependentElementName);
       ItemFormat format = getFormatForValue(elementValue);
-      String formatString = " --- "; 
-      if(format != null) {
+      String formatString = " --- ";
+      if (format != null) {
         formatString = format.formatString;
       }
       return errorMsg.substring(0, i) + Metadata.jsonEncode(formatString) + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
@@ -71,35 +75,35 @@ final class ItemDependentFormat extends Item {
     int start = id.type.indexOf(ItemFactory.DEPENDENT_FORMAT);
     if (start >= 0) {
       depFormatString = id.type.substring(start + ItemFactory.DEPENDENT_FORMAT.length(), id.type.length() - 1);
-      if(depFormatString.length() == 0) {
+      if (depFormatString.length() == 0) {
         return;
       }
       String[] elementFormatData = depFormatString.split(":");
-      if(elementFormatData.length == 2) {
+      if (elementFormatData.length == 2) {
         dependentElementName = elementFormatData[0];
         String[] valueFormatPairs = elementFormatData[1].split(";");
-        if(valueFormatPairs.length > 0) {
+        if (valueFormatPairs.length > 0) {
           parseFormats(id, valueFormatPairs);
         }
       }
     }
   }
-  
+
   private void parseFormats(ItemData id, String[] valueFormatPairs) {
-    for(String valueFormatPair : valueFormatPairs) {
+    for (String valueFormatPair : valueFormatPairs) {
       String[] kv = valueFormatPair.split("=");
-      if(kv != null && kv.length == 2) {
+      if (kv != null && kv.length == 2) {
         id.type = "f{" + kv[1] + "}";
         ItemFormat item = new ItemFormat(id);
         formats.put(kv[0], item);
       }
     }
   }
-  
+
   void setAdditionalFields() {
     Iterator<Map.Entry<String, ItemFormat>> it = formats.entrySet().iterator();
     while (it.hasNext()) {
-      Map.Entry<String,ItemFormat> pair = it.next();
+      Map.Entry<String, ItemFormat> pair = it.next();
       ItemFormat item = pair.getValue();
       item.required = required;
       item.maxValue = maxValue;
@@ -114,11 +118,10 @@ final class ItemDependentFormat extends Item {
     boolean isFirst = true;
     sb.append("\"formats\":{");
     String sep = "";
-    for (Map.Entry<String,ItemFormat> entry : formats.entrySet()) {
-      if(!isFirst) {
+    for (Map.Entry<String, ItemFormat> entry : formats.entrySet()) {
+      if (!isFirst) {
         sep = ",";
-      }
-      else {
+      } else {
         isFirst = false;
       }
       sb.append(sep).append("\"key\":\"").append(entry.getKey()).append("\"");
@@ -127,8 +130,8 @@ final class ItemDependentFormat extends Item {
     sb.append("}");
     return sb.toString();
   }
-   
-  @Override 
+
+  @Override
   Types getType() {
     return Types.DEPENDENT_FORMAT;
   }

@@ -9,7 +9,7 @@ class ItemNumeric extends Item {
   static final String INVALID_NUMBER = "Invalid Number";
   static final String INVALID_MAX_MIN = "Invalid Max Min Range";
   boolean isInt = false;
-  
+
   ItemNumeric(ItemData id, boolean isInt) {
     super(id);
     this.isInt = isInt;
@@ -18,7 +18,7 @@ class ItemNumeric extends Item {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if(maskError.length() > 0) {
+    if (maskError.length() > 0) {
       return points;
     }
     final int len = value.length();
@@ -64,7 +64,7 @@ class ItemNumeric extends Item {
   }
 
   private boolean isMaxMinValueError(String value) {
-    if(value.length() == 0 && !required) {
+    if (value.length() == 0 && !required) {
       return false;
     }
     try {
@@ -83,10 +83,10 @@ class ItemNumeric extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     ModeError me = isModeError(req, value);
-    if(me != null) {
+    if (me != null) {
       return handleMode(me.error, value, INVALID_MAX_MIN, req);
     }
-    if(isMaxMinValueError(value)) {
+    if (isMaxMinValueError(value)) {
       return handleMode(true, value, INVALID_MAX_MIN, req);
     }
     boolean foundDot = false;
@@ -106,7 +106,7 @@ class ItemNumeric extends Item {
     return false;
   }
 
-  @Override 
+  @Override
   Types getType() {
     return Types.NUMERIC;
   }

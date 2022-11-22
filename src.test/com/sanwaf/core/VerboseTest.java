@@ -58,7 +58,7 @@ public class VerboseTest {
     assertTrue(s.contains("date="));
     assertTrue(s.contains("Endpoints"));
   }
-  
+
   @Test
   public void testForceString() {
     try {
@@ -74,7 +74,6 @@ public class VerboseTest {
       assertTrue(false);
     }
   }
-    
 
   @Test
   public void verboseEnabledRegexTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
@@ -87,7 +86,7 @@ public class VerboseTest {
     assertTrue(s.contains("customPatterns"));
     assertTrue(s.contains("date="));
   }
-  
+
   @Test
   public void verboseChildShieldTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     sanwaf = new Sanwaf(new UnitTestLogger(), "/sanwaf-childShield.xml");

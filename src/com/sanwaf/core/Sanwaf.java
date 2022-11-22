@@ -14,7 +14,7 @@ import com.sanwaf.log.Logger;
 import com.sanwaf.log.SimpleLogger;
 
 public final class Sanwaf {
-  static final String DEFAULT_LOGGER_DETECTED_MSG = "NOTE: Sanwaf is using the Default \"SimpleLogger\" logger." 
+  static final String DEFAULT_LOGGER_DETECTED_MSG = "NOTE: Sanwaf is using the Default \"SimpleLogger\" logger."
       + " To correct this, implement the com.sanwaf.log.Logger Interface and provide your logger in the Sanwaf constructor.";
   static final String STANDALONE_XML_FILENAME = "sanwaf.xml";
   static final String ATT_LOG_ERROR = "~sanwaf-errors";
@@ -44,12 +44,14 @@ public final class Sanwaf {
 
   /**
    * Default Sanwaf constructor.
+   * 
    * <pre>
    * Creates a in instance of Sanwaf initializing it with:
    *  -default java.util.logging.Logger (com.sanwaf.log.SimpleLogger)
    *   should not be used in a production environment
    *  -default Sanwaf XML configuration file (sanwaf.xml on classpath)
    * </pre>
+   * 
    * @return void
    */
   public Sanwaf() throws IOException {
@@ -59,10 +61,12 @@ public final class Sanwaf {
 
   /**
    * Sanwaf constructor.
+   * 
    * <pre>
    * Creates a new Sanwaf instance initializing it with the logger provided; 
    * Uses the default Sanwaf XML configuration file (sanwaf.xml on classpath)
    * </pre>
+   * 
    * @param logger
    *          A logger of your choice that implements the com.sanwaf.log.Logger
    *          interface
@@ -74,9 +78,11 @@ public final class Sanwaf {
 
   /**
    * Sanwaf constructor where you specify the logger and properties file to use
+   * 
    * <pre>
    * Creates a new instance of Sanwaf using the logger & Sanwaf XML configuration provided.
    * </pre>
+   * 
    * @param logger
    *          A logger of your choice that implements the com.sanwaf.log.Logger
    *          interface
@@ -92,6 +98,7 @@ public final class Sanwaf {
 
   /**
    * Test if a threat is detected in a given request
+   * 
    * <pre>
    * Threats detected are derived from all shields configurations
    * If an error is detected, attributes will be added to request for processing latter.  
@@ -102,6 +109,7 @@ public final class Sanwaf {
    *  public static String getTrackingId(HttpServletRequest req)
    *  public static String getErrors(HttpServletRequest req)
    * </pre>
+   * 
    * @param req
    *          ServletRequest the ServletRequest object you want to scan for
    *          threats
@@ -112,7 +120,9 @@ public final class Sanwaf {
   }
 
   /**
-   * Test if a threat is detected in a given request for a provided list of Shields
+   * Test if a threat is detected in a given request for a provided list of
+   * Shields
+   * 
    * <pre>
    * Threats detected are derived from all shields configurations
    * If an error is detected, attributes will be added to request for processing latter.  
@@ -123,6 +133,7 @@ public final class Sanwaf {
    *  public static String getTrackingId(HttpServletRequest req)
    *  public static String getErrors(HttpServletRequest req)
    * </pre>
+   * 
    * @param req
    *          ServletRequest the ServletRequest object you want to scan for
    *          threats
@@ -131,16 +142,16 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req, List<String> shieldList) {
-    if(req != null && onErrorAddTrackId) {
+    if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
-    
+
     if (!enabled || !(req instanceof HttpServletRequest)) {
       return false;
     }
     for (Shield sh : shields) {
-      if((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req)) {
-          return true;
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req)) {
+        return true;
       }
     }
     return false;
@@ -148,10 +159,12 @@ public final class Sanwaf {
 
   /**
    * Test if a threat is detected in a value
+   * 
    * <pre>
    * Threats detected are derived from all shields configurations
    * No error attributes are set.
    * </pre>
+   * 
    * @param value
    *          the string you want to scan for threats
    * @return boolean true/false if a threat was detected
@@ -161,10 +174,13 @@ public final class Sanwaf {
   }
 
   /**
-   * Test if a threat is detected in a value using a given XML Configuration provided
+   * Test if a threat is detected in a value using a given XML Configuration
+   * provided
+   * 
    * <pre>
    * configure sanwaf with xml inline for validations
    * </pre>
+   * 
    * @param value
    *          the shields name that you want to execute the stringPatterns from
    * @param sXml
@@ -178,6 +194,7 @@ public final class Sanwaf {
 
   /**
    * Test if a threat is detected in a value using a given shield
+   * 
    * <pre>
    * Threats detected are derived from the provided shield's configuration
    * The shields stringPatterns will be executed against the value
@@ -190,6 +207,7 @@ public final class Sanwaf {
    *  public static String getTrackingId(HttpServletRequest req)
    *  public static String getErrors(HttpServletRequest req)
    * </pre>
+   * 
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
@@ -199,7 +217,7 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, ServletRequest req) {
-    if(req != null && onErrorAddTrackId) {
+    if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
     return checkValueForShieldThreats(value, shieldName, req);
@@ -207,6 +225,7 @@ public final class Sanwaf {
 
   /**
    * Test if a threat is detected in a value using XML provided
+   * 
    * <pre>
    * Threats detected are derived from the XML provided
    * XML must conform to Sanwaf.xml specifications
@@ -220,6 +239,7 @@ public final class Sanwaf {
    *  public static String getTrackingId(HttpServletRequest req)
    *  public static String getErrors(HttpServletRequest req)
    * </pre>
+   * 
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
@@ -237,7 +257,7 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreat(String value, String shieldName, ServletRequest req, String xml) {
-    if(req != null && onErrorAddTrackId) {
+    if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
     Item item = ItemFactory.parseItem(null, new Xml(xml), logger);
@@ -251,11 +271,13 @@ public final class Sanwaf {
 
   /**
    * Test if a threat is detected in a value using a given shield
+   * 
    * <pre>
    * Threats detected are derived from the provided shield's configuration
    * The shields stringPatterns will be executed against the value
    * No error attributes are set.
    * </pre>
+   * 
    * @param value
    *          the string you want to scan for threats
    * @param shieldName
@@ -273,6 +295,7 @@ public final class Sanwaf {
 
   /**
    * Retrieve an allow-listed parameter/header/cookie
+   * 
    * <pre>
    *  The header/cookie/parameter value will be returned IFF the its
    *  name is set in any Shield's Metadata block
@@ -284,6 +307,7 @@ public final class Sanwaf {
    *      </secured>
    *    </metadata>
    * </pre>
+   * 
    * @param request
    *          HttpServletRequest Object to pull the header/cookie/parameter
    *          value from
@@ -306,6 +330,7 @@ public final class Sanwaf {
 
   /**
    * Dynamically reload sanwaf
+   * 
    * @return void
    */
   public final void reLoad() throws IOException {
@@ -314,10 +339,13 @@ public final class Sanwaf {
 
   /**
    * Get the Sanwaf Tracking ID
+   * 
    * <pre>
    * useful for displaying to your users in case they call support. this allows
    * you to pull the exact exception from the log file
+   * 
    * <pre>
+   * 
    * @param req
    *          HttpServletRequest the request object where
    *          Sanwaf.isThreatDetected() returned true.
@@ -333,10 +361,12 @@ public final class Sanwaf {
 
   /**
    * Get Sanwaf Errors
+   * 
    * <pre>
    *  Returns all threats found for a give request object in JSON format
    *  used to display errors to the user.
    * </pre>
+   * 
    * @param req
    *          HttpServletRequest the request object where
    *          Sanwaf.isThreatDetected() returned true.
@@ -352,9 +382,11 @@ public final class Sanwaf {
 
   /**
    * Get Sanwaf Detections
+   * 
    * <pre>
    *  Returns all threats detected & not blocked found for a give request object in JSON format
    * </pre>
+   * 
    * @param req
    *          HttpServletRequest the request object where
    *          Sanwaf.isThreatDetected() returned true.
@@ -420,9 +452,8 @@ public final class Sanwaf {
     onErrorLogParmDetectionsVerbose = Boolean.parseBoolean(errorBlockXml.get(XML_LOG_PARM_DETECT_VERB));
 
     ItemFactory.setErrorMessages(globalErrorMessages, xml);
-    logger.info("\tAddTrackId=" + onErrorAddTrackId 
-        + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
-        + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose="+onErrorLogParmDetectionsVerbose);
+    logger.info("\tAddTrackId=" + onErrorAddTrackId + "\n\tAddErrors=" + onErrorAddParmErrors + "\n\tLogErrors=" + onErrorLogParmErrors + "\n\tLogErrorsVerbose=" + onErrorLogParmErrorsVerbose
+        + "\n\tAddDetections=" + onErrorAddParmDetections + "\n\tLogDetects=" + onErrorLogParmDetections + "\n\tLogDetectsVerbose=" + onErrorLogParmDetectionsVerbose);
 
     String[] xmls = xml.getAll(XML_SHIELD);
     for (String item : xmls) {

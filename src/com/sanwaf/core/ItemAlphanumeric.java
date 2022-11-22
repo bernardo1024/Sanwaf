@@ -7,14 +7,15 @@ import javax.servlet.ServletRequest;
 
 class ItemAlphanumeric extends Item {
   static final String INVALID_AN = "Invalid Alphanumeric: ";
+
   ItemAlphanumeric(ItemData id) {
     super(id);
   }
-  
+
   @Override
   List<Point> getErrorPoints(Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if(maskError.length() > 0) {
+    if (maskError.length() > 0) {
       return points;
     }
     int start = -1;
@@ -37,7 +38,7 @@ class ItemAlphanumeric extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     ModeError me = isModeError(req, value);
-    if(me != null) {
+    if (me != null) {
       return handleMode(me.error, value, INVALID_AN, req);
     }
     int i = 0;
@@ -54,7 +55,7 @@ class ItemAlphanumeric extends Item {
     return (c < 0x30 || (c >= 0x3a && c <= 0x40) || (c > 0x5a && c <= 0x60) || c > 0x7a);
   }
 
-  @Override 
+  @Override
   Types getType() {
     return Types.ALPHANUMERIC_AND_MORE;
   }

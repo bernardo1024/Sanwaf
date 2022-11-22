@@ -18,7 +18,7 @@ final class ItemConstant extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     ModeError me = isModeError(req, value);
-    if(me != null) {
+    if (me != null) {
       return handleMode(me.error, value, INVALID_CONSTANT, req);
     }
     return handleMode(!constants.contains(value), value, INVALID_CONSTANT + constants, req);
@@ -36,7 +36,7 @@ final class ItemConstant extends Item {
   @Override
   List<Point> getErrorPoints(Shield shield, String value) {
     List<Point> points = new ArrayList<>();
-    if(maskError.length() > 0) {
+    if (maskError.length() > 0) {
       return points;
     }
     points.add(new Point(0, value.length()));
@@ -55,14 +55,14 @@ final class ItemConstant extends Item {
   String getProperties() {
     StringBuilder sb = new StringBuilder();
     sb.append("\"constant\":\"");
-    for(String s : constants) {
+    for (String s : constants) {
       sb.append(Metadata.jsonEncode(s + " "));
     }
     sb.append("\"");
     return sb.toString();
   }
-  
-  @Override 
+
+  @Override
   Types getType() {
     return Types.CONSTANT;
   }

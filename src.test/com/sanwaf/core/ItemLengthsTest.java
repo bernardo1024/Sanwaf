@@ -137,7 +137,7 @@ public class ItemLengthsTest {
     assertEquals(true, shield.threat(req, shield.parameters, "lengthNN2_6_6", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "lengthNN2_6_6", null));
   }
-  
+
   @Test
   public void TestMaxMinLength() {
     Shield shield = UnitTestUtil.getShield(sanwaf, "ParmLength");

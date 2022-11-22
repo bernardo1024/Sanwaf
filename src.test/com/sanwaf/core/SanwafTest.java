@@ -59,7 +59,7 @@ public class SanwafTest {
 
     String s = sanwaf.getErrors(request);
     assertTrue(s.indexOf("{\"name\":\"NumericDelimited\",") >= 0);
-    
+
     s = sanwaf.getDetects(request);
     assertTrue(s == null || s.length() == 0);
   }

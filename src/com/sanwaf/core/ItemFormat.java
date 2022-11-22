@@ -29,16 +29,18 @@ final class ItemFormat extends Item {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(mode == Modes.DISABLED) { return false; }
-    if(formatsBlocks.isEmpty()) {
+    if (mode == Modes.DISABLED) {
+      return false;
+    }
+    if (formatsBlocks.isEmpty()) {
       return false;
     }
     if (!required && value.length() == 0) {
       return false;
     }
     boolean foundValidFormat = false;
-    for(List<String> formatBlocks : formatsBlocks) {
-      if(!formatInError(value, formatBlocks)) {
+    for (List<String> formatBlocks : formatsBlocks) {
+      if (!formatInError(value, formatBlocks)) {
         foundValidFormat = true;
         break;
       }
@@ -47,38 +49,35 @@ final class ItemFormat extends Item {
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks) {
-    if(formatBlocks.isEmpty()) {
+    if (formatBlocks.isEmpty()) {
       return false;
     }
 
     int formatlen = formatBlocks.size();
-    if (!(formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)")) 
-        && value.length() != formatlen) {
+    if (!(formatString.contains("dd") || formatString.contains("mm") || formatString.contains("yy") || formatString.contains("yyyy)")) && value.length() != formatlen) {
       return true;
     }
- 
+
     for (int i = 0; i < value.length(); i++) {
       String c = String.valueOf(value.charAt(i));
       String formatBlock = formatBlocks.get(i);
-      
+
       formatBlock = resolveDateVariables(formatBlock);
-      
-      
-      if(formatBlock.startsWith("#[")){
+
+      if (formatBlock.startsWith("#[")) {
         formatBlock = formatBlock.substring(2, formatBlock.length() - 1);
 
-        if(formatBlock.contains(",")) {
+        if (formatBlock.contains(",")) {
           List<String> validNums = Arrays.asList(formatBlock.split(","));
-          if(!validNums.contains(c)) {
+          if (!validNums.contains(c)) {
             return true;
           }
-        }
-        else {
+        } else {
           String[] maxMin = formatBlock.split("-");
-          if(maxMin.length != 2) {
+          if (maxMin.length != 2) {
             return false;
           }
-        
+
           int minNum = 0;
           int maxNum = 0;
           int maxLen = 0;
@@ -86,42 +85,37 @@ final class ItemFormat extends Item {
             minNum = Integer.parseInt(maxMin[0]);
             maxNum = Integer.parseInt(maxMin[1]);
             maxLen = (maxNum + "").length();
-          }catch(NumberFormatException e) {
+          } catch (NumberFormatException e) {
             return false;
           }
-   
-          if(c.charAt(0) < '0' || c.charAt(0) > '9'){
+
+          if (c.charAt(0) < '0' || c.charAt(0) > '9') {
             return true;
           }
-   
+
           StringBuilder cBlock = new StringBuilder(c);
-          if(maxLen > 1){
-            for(int j = 1; j < maxLen; j++){
-              if(i + j <= value.length() - 1) {
+          if (maxLen > 1) {
+            for (int j = 1; j < maxLen; j++) {
+              if (i + j <= value.length() - 1) {
                 char n = value.charAt(i + j);
-                if(n >= '0' && n <= '9'){
+                if (n >= '0' && n <= '9') {
                   cBlock.append(n);
-                }
-                else {
+                } else {
                   return true;
                 }
               }
             }
           }
-          if(Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum){
+          if (Integer.parseInt(cBlock.toString()) >= minNum && Integer.parseInt(cBlock.toString()) <= maxNum) {
             i += maxLen - 1;
-          }
-          else{
+          } else {
             return true;
           }
         }
-      }
-      else{
+      } else {
         char cF = formatBlock.charAt(0);
         char cC = c.charAt(0);
-        if ((cF == 'x') || (cF == '#' && cC >= '0' && cC <= '9') || 
-            ((cF == 'A' || cF == 'c') && cC >= 'A' && cC <= 'Z') || 
-            ((cF == 'a' || cF == 'c')  && cC >= 'a' && cC <= 'z') ) {
+        if ((cF == 'x') || (cF == '#' && cC >= '0' && cC <= '9') || ((cF == 'A' || cF == 'c') && cC >= 'A' && cC <= 'Z') || ((cF == 'a' || cF == 'c') && cC >= 'a' && cC <= 'z')) {
           continue;
         }
         if (cC != unEscapedChar(cF)) {
@@ -135,7 +129,7 @@ final class ItemFormat extends Item {
   private String resolveDateVariables(String format) {
     String newMdy = "";
     String parsedValue = format;
-    String[] dateOrder = {"dd", "mm", "yyyy", "yy"};
+    String[] dateOrder = { "dd", "mm", "yyyy", "yy" };
 
     for (int i = 0; i < dateOrder.length; i++) {
       int last = 0;
@@ -187,7 +181,7 @@ final class ItemFormat extends Item {
     }
     return parsedValue;
   }
-  
+
   private String adjustDate(String parsedValue, int last, String newMdy) {
     int newValue = Integer.parseInt(newMdy);
     if (parsedValue.substring(last, last + 1).equals("(")) {
@@ -203,7 +197,8 @@ final class ItemFormat extends Item {
     }
     return String.valueOf(newValue);
   }
-  private String escapeChars(String s){
+
+  private String escapeChars(String s) {
     s = s.replaceAll("\\\\#", "\t");
     s = s.replaceAll("\\\\A", "\n");
     s = s.replaceAll("\\\\a", "\r");
@@ -222,25 +217,41 @@ final class ItemFormat extends Item {
 
     return s;
   }
-  
-  private char unEscapedChar(char c){
-    switch(c){    
-      case '\t': return '#';
-      case '\n': return 'A';
-      case '\r': return 'a';
-      case '\f': return 'c';
-      case '\b': return '[';
-      case '\0': return ']';
-      case '\1': return '|';
-      case '\2': return 'x';
-      case '\3': return ':';
-      case '\4': return '=';
-      case '\5': return '(';
-      case '\6': return ')';
-      case '\7': return '+';
-      case '\016': return '-';
-      case '\017': return ';';
-      default: return c;
+
+  private char unEscapedChar(char c) {
+    switch (c) {
+    case '\t':
+      return '#';
+    case '\n':
+      return 'A';
+    case '\r':
+      return 'a';
+    case '\f':
+      return 'c';
+    case '\b':
+      return '[';
+    case '\0':
+      return ']';
+    case '\1':
+      return '|';
+    case '\2':
+      return 'x';
+    case '\3':
+      return ':';
+    case '\4':
+      return '=';
+    case '\5':
+      return '(';
+    case '\6':
+      return ')';
+    case '\7':
+      return '+';
+    case '\016':
+      return '-';
+    case '\017':
+      return ';';
+    default:
+      return c;
     }
   }
 
@@ -260,55 +271,53 @@ final class ItemFormat extends Item {
       parseFormats(formatString);
     }
   }
-  
+
   private void parseFormats(String format) {
-    if(format.length() == 0) {
+    if (format.length() == 0) {
       return;
     }
     String[] formats = format.split("\\|\\|");
-    
-    for(String thisFormat : formats) {
+
+    for (String thisFormat : formats) {
       formatsBlocks.add(parseFormat(thisFormat));
     }
   }
-  
-  private List<String> parseFormat(String format){
+
+  private List<String> parseFormat(String format) {
     List<String> formatBlocks = new ArrayList<>();
     format = escapeChars(format);
     int pos = 0;
     int last = 0;
     int end = 0;
     int dash = 0;
-    
-    while(true){
+
+    while (true) {
       String block = "";
       int numDigits = 0;
-      pos = format.indexOf('#', last); 
-      if(pos < 0){
+      pos = format.indexOf('#', last);
+      if (pos < 0) {
         addRemainderCharsAsBlocks(format, last, formatBlocks);
         break;
       }
-      if(format.length() > pos + 1 && format.charAt(pos + 1) == '['){
+      if (format.length() > pos + 1 && format.charAt(pos + 1) == '[') {
         end = format.indexOf(']', pos);
-        if(format.contains(",")) {
+        if (format.contains(",")) {
           numDigits = 0;
-        }
-        else {
+        } else {
           dash = format.indexOf('-', pos);
-          if(dash > 0 && end > 0) {
+          if (dash > 0 && end > 0) {
             numDigits = end - (dash + 1);
           }
         }
         block = format.substring(last, end + 1);
         last = end + 1;
-      }
-      else{
+      } else {
         block = format.substring(last, pos + 1);
         last = pos + 1;
       }
-      
+
       block = addStartingCharsAsBlocks(block, formatBlocks);
-      if(block == null) {
+      if (block == null) {
         formatBlocks = new ArrayList<>();
         break;
       }
@@ -319,15 +328,15 @@ final class ItemFormat extends Item {
   }
 
   private void addPlaceholderBlocks(int numDigits, List<String> formatBlocks) {
-    for(int i = 0; i < numDigits - 1; i++){
+    for (int i = 0; i < numDigits - 1; i++) {
       formatBlocks.add("");
     }
   }
 
   private String addStartingCharsAsBlocks(String block, List<String> formatBlocks) {
-    if(!block.startsWith("#")){
+    if (!block.startsWith("#")) {
       int x = block.indexOf('#');
-      if(x < 0) {
+      if (x < 0) {
         return null;
       }
       String s = block.substring(0, x);
@@ -338,17 +347,17 @@ final class ItemFormat extends Item {
   }
 
   private void addRemainderCharsAsBlocks(String format, int last, List<String> formatBlocks) {
-    if(last < format.length()) {
+    if (last < format.length()) {
       formatBlocks.addAll(Arrays.asList(format.substring(last, format.length()).split("")));
     }
   }
-  
+
   @Override
   String getProperties() {
     return "\"format\":\"" + Metadata.jsonEncode(formatString) + "\"";
   }
-  
-  @Override 
+
+  @Override
   Types getType() {
     return Types.FORMAT;
   }

@@ -16,7 +16,7 @@ final class ItemNumericDelimited extends ItemNumeric {
   @Override
   List<Point> getErrorPoints(final Shield shield, final String value) {
     List<Point> points = new ArrayList<>();
-    if(maskError.length() > 0) {
+    if (maskError.length() > 0) {
       return points;
     }
 
@@ -33,7 +33,9 @@ final class ItemNumericDelimited extends ItemNumeric {
 
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
-    if(mode == Modes.DISABLED) { return false; }
+    if (mode == Modes.DISABLED) {
+      return false;
+    }
     String[] ns = value.split(delimiter);
     for (String n : ns) {
       if (super.inError(req, shield, n)) {
@@ -62,8 +64,8 @@ final class ItemNumericDelimited extends ItemNumeric {
   String getProperties() {
     return "\"delimiter\":\"" + Metadata.jsonEncode(delimiter) + "\"";
   }
-  
-  @Override 
+
+  @Override
   Types getType() {
     return Types.NUMERIC_DELIMITED;
   }

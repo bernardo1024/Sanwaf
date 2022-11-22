@@ -13,7 +13,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SanwafIsThreatTest {
   static Sanwaf sanwaf;
@@ -51,7 +50,7 @@ public class SanwafIsThreatTest {
     assertTrue(trackId != null);
     String s = sanwaf.getErrors(request);
     assertTrue(s != null);
-    
+
     request = new MockHttpServletRequest();
     result = sanwaf.isThreat("< script>alert(1)</ script>", null, request);
     assertTrue(result == false);
@@ -59,7 +58,7 @@ public class SanwafIsThreatTest {
     assertTrue(trackId != null);
     s = sanwaf.getErrors(request);
     assertTrue(s == null);
-    
+
     request = new MockHttpServletRequest();
     result = sanwaf.isThreat("<script>alert(1)</script>", null, request);
     assertEquals(true, result);
@@ -89,7 +88,7 @@ public class SanwafIsThreatTest {
 
     sanwaf.onErrorAddParmErrors = orig;
   }
-  
+
   @Test
   public void testSanWafIsThreatWithShieldName() {
     boolean result = sanwaf.checkValueForShieldThreats("<script>alert(1)</script>", "XSS", null);
@@ -98,7 +97,7 @@ public class SanwafIsThreatTest {
     result = sanwaf.checkValueForShieldThreats("<script>alert(1)</script>", "OTHER", null);
     assertTrue(result == false);
   }
-    
+
   @Test
   public void testSanWafIsThreatNumeric() {
     boolean result = Sanwaf.isThreat("abc123", "<item><name>numeric</name><type>n</type><max></max><min></min><msg></msg><uri></uri></item>");
@@ -155,25 +154,29 @@ public class SanwafIsThreatTest {
 
   @Test
   public void testSanWafIsThreatXRegex() {
-    boolean result = Sanwaf.isThreat("noName", "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    boolean result = Sanwaf.isThreat("noName",
+        "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == true);
 
     result = Sanwaf.isThreat("abc123!!!", "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == true);
 
-    result = Sanwaf.isThreat("abc123!!!", "<item><name>noXmldefined</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    result = Sanwaf.isThreat("abc123!!!",
+        "<item><name>noXmldefined</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == true);
 
     result = Sanwaf.isThreat("abc123!!!", "<item><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == true);
 
-    result = Sanwaf.isThreat("123.123.1234", "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    result = Sanwaf.isThreat("123.123.1234",
+        "<item><name>regex</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == false);
 
     result = Sanwaf.isThreat("123.123.1234", "<item><name></name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == false);
 
-    result = Sanwaf.isThreat("123.123.1234", "<item><name>noXmldefined</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
+    result = Sanwaf.isThreat("123.123.1234",
+        "<item><name>noXmldefined</name><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
     assertTrue(result == false);
 
     result = Sanwaf.isThreat("123.123.1234", "<item><type>x{(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{3})(?:[ .-]{1})(?:[0-9]{4})}</type><max>12</max><min>12</min><msg></msg><uri></uri></item>");
@@ -233,9 +236,6 @@ public class SanwafIsThreatTest {
   public void testSanWafIsThreatDynamicXmlInvalidShieldName() {
     boolean result = Sanwaf.isThreat("<script>alert(1)</script>", "<item><name>string</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>");
     assertTrue(result == false);
-  }  
+  }
 
-  
-  
-  
 }

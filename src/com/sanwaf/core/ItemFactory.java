@@ -37,11 +37,12 @@ public class ItemFactory {
   static final String XML_ITEM_MASK_ERROR = "mask-err";
 
   ItemFactory() {
-    //no instances allowed
+    // no instances allowed
   }
 
   static Item parseItem(Shield shield, Xml xml, com.sanwaf.log.Logger logger) {
-    //TODO: Cache the dynamic creation of Items - hash regex as key and look up in table. if found, return, else build new
+    // TODO: Cache the dynamic creation of Items - hash regex as key and look up
+    // in table. if found, return, else build new
     return parseItem(shield, xml, false, logger);
   }
 
@@ -87,14 +88,14 @@ public class ItemFactory {
     if (sMinVal.length() > 0) {
       item.minValue = Double.valueOf(sMinVal);
     }
-    
+
     item.maskError = xml.get(XML_ITEM_MASK_ERROR);
 
     if (includeEnpointAttributes) {
       item.related = removeRelatedSpace(xml.get(XML_ITEM_RELATED));
     }
-    if(item instanceof ItemDependentFormat) {
-      ((ItemDependentFormat)item).setAdditionalFields();
+    if (item instanceof ItemDependentFormat) {
+      ((ItemDependentFormat) item).setAdditionalFields();
     }
     return item;
   }
@@ -131,10 +132,10 @@ public class ItemFactory {
       return new ItemAlphanumeric(id);
     } else if (t.equals(CHAR)) {
       return new ItemChar(id);
-    } 
-    
+    }
+
     id.type = ensureComplexTypeFormat(id.type);
-    
+
     if (t.equals(NUMERIC_DELIMITED)) {
       return new ItemNumericDelimited(id, false);
     } else if (t.equals(INTEGER_DELIMITED)) {

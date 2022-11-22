@@ -51,7 +51,6 @@ public class AttributesTest {
     resetSanwafAtts();
   }
 
-  
   static boolean onErrorAddParmDetections = false;
   static boolean onErrorAddParmErrors = false;
   static boolean onErrorAddTrackId = false;
@@ -59,6 +58,7 @@ public class AttributesTest {
   static boolean onErrorLogParmDetectionsVerbose = false;
   static boolean onErrorLogParmErrors = false;
   static boolean onErrorLogParmErrorsVerbose = false;
+
   private void setSanwafAtts(boolean b) {
     onErrorAddParmDetections = sanwaf.onErrorAddParmDetections;
     onErrorAddParmErrors = sanwaf.onErrorAddParmErrors;
@@ -75,6 +75,7 @@ public class AttributesTest {
     sanwaf.onErrorLogParmErrors = b;
     sanwaf.onErrorLogParmErrorsVerbose = b;
   }
+
   private static void resetSanwafAtts() {
     sanwaf.onErrorAddParmDetections = onErrorAddParmDetections;
     sanwaf.onErrorAddParmErrors = onErrorAddParmErrors;
@@ -84,5 +85,5 @@ public class AttributesTest {
     sanwaf.onErrorLogParmErrors = onErrorLogParmErrors;
     sanwaf.onErrorLogParmErrorsVerbose = onErrorLogParmErrorsVerbose;
   }
-  
+
 }

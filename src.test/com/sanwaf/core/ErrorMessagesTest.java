@@ -35,7 +35,7 @@ public class ErrorMessagesTest {
     String s = p.modifyErrorMsg(req, "some {0} String");
     assertTrue(s.contains("?"));
   }
- 
+
   @Test
   public void numericDelimietedDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -44,7 +44,7 @@ public class ErrorMessagesTest {
     String s = p.modifyErrorMsg(req, "some {0} String");
     assertTrue(s.contains(","));
   }
-  
+
   @Test
   public void constantDatatatypeErrorMsgTest() {
     MockHttpServletRequest req = new MockHttpServletRequest();

@@ -34,7 +34,7 @@ public class RegexMatchFlagTest {
 
   @Test
   public void testCustomMatchFail() {
-//  <item><name>customMatchFail</name><type>r{date-MatchFail}</type></item>
+    // <item><name>customMatchFail</name><type>r{date-MatchFail}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customMatchFail", "416-555-5555");
     assertTrue(sanwaf.isThreatDetected(request));
@@ -42,7 +42,7 @@ public class RegexMatchFlagTest {
 
   @Test
   public void testCustomMatchPass() {
-//  <item><name>customMatchPass</name><type>r{date-MatchPass}</type></item>
+    // <item><name>customMatchPass</name><type>r{date-MatchPass}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customMatchPass", "416-555-5555");
     assertTrue(!sanwaf.isThreatDetected(request));
@@ -50,7 +50,7 @@ public class RegexMatchFlagTest {
 
   @Test
   public void testCustomNoMatch() {
-//  <item><name>customNoMatch</name><type>r{date-NoMatch}</type></item>
+    // <item><name>customNoMatch</name><type>r{date-NoMatch}</type></item>
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("customNoMatch", "416-555-5555");
     assertTrue(!sanwaf.isThreatDetected(request));

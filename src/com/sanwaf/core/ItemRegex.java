@@ -37,24 +37,24 @@ final class ItemRegex extends Item {
   @Override
   boolean inError(final ServletRequest req, final Shield shield, final String value) {
     ModeError me = isModeError(req, value);
-    if(me != null) {
+    if (me != null) {
       return handleMode(me.error, value, FAILED_CUSTOM_PATTERN + patternName + " (" + patternString + ")", req);
     }
     if (rule == null) {
-      if(shield == null) {
+      if (shield == null) {
         return false;
       }
       rule = shield.customRulePatterns.get(patternName);
     }
-    if(rule.mode == Modes.DISABLED) {
+    if (rule.mode == Modes.DISABLED) {
       return false;
     }
     boolean match = rule.pattern.matcher(value).find();
-    if((rule.failOnMatch && match) || (!rule.failOnMatch && !match)) {
-      if(rule.mode == Modes.DETECT || rule.mode == Modes.DETECT_ALL) {
+    if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match)) {
+      if (rule.mode == Modes.DETECT || rule.mode == Modes.DETECT_ALL) {
         handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);
       }
-      if(rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
+      if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
         handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);
         return true;
       }
@@ -64,10 +64,9 @@ final class ItemRegex extends Item {
 
   private void setPattern(ItemData id) {
     String value = id.type;
-    if(value.length() > 100) {
+    if (value.length() > 100) {
       patternString = value.substring(0, 100);
-    }
-    else {
+    } else {
       patternString = value;
     }
 
@@ -84,18 +83,17 @@ final class ItemRegex extends Item {
       }
     }
   }
-  
+
   @Override
   String getProperties() {
-    if(rule != null && rule.pattern != null) {
+    if (rule != null && rule.pattern != null) {
       return "\"regex\":\"" + Metadata.jsonEncode(rule.pattern.toString()) + "\"";
-    }
-    else {
+    } else {
       return "\"regex\":\"" + Metadata.jsonEncode(patternString) + "\"";
     }
   }
-  
-  @Override 
+
+  @Override
   Types getType() {
     return Types.REGEX;
   }

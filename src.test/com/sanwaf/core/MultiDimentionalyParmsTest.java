@@ -136,7 +136,7 @@ public class MultiDimentionalyParmsTest {
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("notdefined[1]", "<script>alert(1)</script>");
     assertEquals(false, sanwaf.isThreatDetected(r));
-    
+
     r = new MockHttpServletRequest();
     r.addParameter("notDefinedNoBrackets1", "<script>alert(1)</script>");
     assertEquals(true, sanwaf.isThreatDetected(r));
@@ -168,7 +168,7 @@ public class MultiDimentionalyParmsTest {
     r.addParameter("foo10", "1234567890");
     assertEquals(false, sanwaf.isThreatDetected(r));
   }
-  
+
   @Test
   public void testInvalidArray() throws IOException {
     Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
@@ -177,10 +177,10 @@ public class MultiDimentionalyParmsTest {
     sh.parameters.enabled = true;
     Metadata.initA2Zindex(sh.parameters.index);
     sh.parameters.index.put("f", Arrays.asList(Metadata.INDEX_PARM_MARKER + "foo"));
-    
+
     MockHttpServletRequest r = new MockHttpServletRequest();
     r.addParameter("foo0", "<script>alert(1)</script>");
     assertEquals(false, sw.isThreatDetected(r));
   }
-  
+
 }

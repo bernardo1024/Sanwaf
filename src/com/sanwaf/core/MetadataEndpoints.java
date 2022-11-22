@@ -18,7 +18,7 @@ public class MetadataEndpoints {
   boolean caseSensitive = true;
   Map<String, Metadata> endpointParameters = new HashMap<>();
   Shield shield;
-  
+
   MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger) {
     this.shield = shield;
     this.logger = logger;
@@ -49,8 +49,8 @@ public class MetadataEndpoints {
       String strict = endpointXml.get(XML_STRICT);
       String items = endpointXml.get(ItemFactory.XML_ITEMS);
       Metadata parameters = new Metadata(shield, items, caseSensitive, true, strict, logger);
-      
-      for(String uri : uris) {
+
+      for (String uri : uris) {
         endpointParameters.put(uri, parameters);
       }
     }
@@ -79,8 +79,8 @@ public class MetadataEndpoints {
   }
 
   boolean isRelateValid(String related, String value, ServletRequest req, Metadata meta) {
-    //check if simple equals condition
-    if(related.endsWith(":=")) {
+    // check if simple equals condition
+    if (related.endsWith(":=")) {
       return isRelatedEqual(related, value, req, meta);
     }
 

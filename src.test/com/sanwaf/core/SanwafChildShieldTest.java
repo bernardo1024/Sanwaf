@@ -52,22 +52,21 @@ public class SanwafChildShieldTest {
   @Test
   public void testIsThreatNoMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     String value = "javascript: should pass short string has no javascript: test";
-    Boolean result = sanwaf. isThreat(value);
+    Boolean result = sanwaf.isThreat(value);
     assertTrue(!result);
   }
 
   @Test
   public void testIsThreatMaxViolation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     String value = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 javascript: should fail";
-    Boolean result = sanwaf. isThreat(value);
+    Boolean result = sanwaf.isThreat(value);
     assertTrue(result);
   }
-  
+
   @Test
   public void testHasInvalidChildShield() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     Shield shield = UnitTestUtil.getShield(sanwaf, "xss-invalid-child-shield");
     assertTrue(shield.childShield == null);
   }
-
 
 }

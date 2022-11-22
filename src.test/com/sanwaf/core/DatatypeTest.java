@@ -54,8 +54,10 @@ public class DatatypeTest {
   @Test
   public void testInteger() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    //assertEquals(false, shield.threat(req, shield.parameters, "Integer", "12345"));
-    //assertEquals(false, shield.threat(req, shield.parameters, "Integer", "0123456789"));
+    // assertEquals(false, shield.threat(req, shield.parameters, "Integer",
+    // "12345"));
+    // assertEquals(false, shield.threat(req, shield.parameters, "Integer",
+    // "0123456789"));
     assertEquals(false, shield.threat(req, shield.parameters, "Integer", "-12345"));
     assertEquals(true, shield.threat(req, shield.parameters, "Integer", "-12345.67"));
     assertEquals(true, shield.threat(req, shield.parameters, "Integer", "foo.12"));
@@ -94,6 +96,7 @@ public class DatatypeTest {
     list = p.getErrorPoints(shield, null);
     assertEquals(true, list.size() == 0);
   }
+
   @Test
   public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
@@ -220,11 +223,11 @@ public class DatatypeTest {
     assertFalse(p.inError(req, shield, null));
     assertTrue(p.inError(req, shield, "1234567890123"));
   }
-  
+
   @Test
   public void testOpenErrorPoints() {
-//    <item><name>openErrorPoints</name><type>o</type><max>5</max><min>5</min></item>
-//    <item><name>openErrorPointsMask</name><type>o</type><max>5</max><min>5</min><mask-err>***</mask-err></item>
+    // <item><name>openErrorPoints</name><type>o</type><max>5</max><min>5</min></item>
+    // <item><name>openErrorPointsMask</name><type>o</type><max>5</max><min>5</min><mask-err>***</mask-err></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "openErrorPoints", "123456"));
     String s = sanwaf.getErrors(req);
@@ -261,7 +264,7 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "Regex", null));
     assertEquals(true, shield.threat(req, shield.parameters, "RegexRequired", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "RegexRequired", null));
-}
+  }
 
   @Test
   public void testRegexType() {
@@ -330,7 +333,9 @@ public class DatatypeTest {
   public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345678901"));//violates max setting
+    assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345678901"));// violates
+                                                                                     // max
+                                                                                     // setting
     assertEquals(false, shield.threat(req, shield.parameters, "Java", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "JavaRequired", null));
     assertEquals(true, shield.threat(req, shield.parameters, "JavaRequired", ""));
@@ -441,7 +446,7 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZzZ"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zzz"));
-    
+
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", " Aac 0Zzz"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "{Aac 0Zzz"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "-Aac 0Zzz"));
@@ -474,17 +479,17 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", ""));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", null));
   }
-  
+
   @Test
   public void testFormat2() {
-    //<item><name>parmformat2</name><type>f{#[1-12] / #[21-35]}</type>
+    // <item><name>parmformat2</name><type>f{#[1-12] / #[21-35]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 30"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "01 / 30"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 21"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 35"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "11 / 29"));
-    
+
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "a0 / 25"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "z0 / 25"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "/0 / 25"));
@@ -504,7 +509,7 @@ public class DatatypeTest {
 
   @Test
   public void testFormat2brackets() {
-    //<item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
+    // <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]01"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]02"));
@@ -516,13 +521,13 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]08"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]09"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]10"));
-    
+
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]00"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]99"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", " ]01"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[ 01"));
 
-    //<item><name>parmformat3</name><type>f{#[1-9]}</type>
+    // <item><name>parmformat3</name><type>f{#[1-9]}</type>
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "1"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "2"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "3"));
@@ -535,7 +540,7 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "10"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "0"));
 
-    //<item><name>parmformat4</name><type>f{#[3,4,5,6]###-####-####-####}</type></item>
+    // <item><name>parmformat4</name><type>f{#[3,4,5,6]###-####-####-####}</type></item>
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "3123-1234-1234-1234"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "4123-1234-1234-1234"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "5123-1234-1234-1234"));
@@ -548,10 +553,10 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-12"));
 
   }
-  
+
   @Test
   public void testBadFormats() {
-    //<item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
+    // <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat1", "@"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat2", "@"));
@@ -559,42 +564,41 @@ public class DatatypeTest {
     assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat4", "@"));
   }
 
-  
   @Test
   public void testMultiFormats() {
-    //<item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
-    //<item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
-    //<item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A## A###}</type></item>
+    // <item><name>parmMultiFormat1</name><type>f{#####||#####-####}</type></item>
+    // <item><name>parmMultiFormat2</name><type>f{#####||#####-####||A#A-#A#}</type></item>
+    // <item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A##
+    // A###}</type></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345-6789"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat1", "@"));
-    
+
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345-6789"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "A1B-2C3"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat2", "@"));
-    
+
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345-6789"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A1B-2C3"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B345"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
-    
+
     assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormatInvalid", "A12 B5"));
   }
 
-  
   @Test
   public void testDependentFormats() {
-//    <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-//    <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-//    <item><name>depformatMultiple</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-//    <item><name>depformatRequired</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
-//    <item><name>depformatInvalidFormatBadParent</name><type>d{foobar:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-//    <item><name>depformatInvalidFormat</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-//    <item><name>depformatInvalidFormat1</name><type>d{depformatParent:US=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-//    <item><name>depformatInvalidFormat2</name><type>d{depformatParent}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformatParent</name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformat</name><type>d{depformatParent:US=#####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformatMultiple</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformatRequired</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req>true</req><related></related></item>
+    // <item><name>depformatInvalidFormatBadParent</name><type>d{foobar:US=#####||#####-####;Canada=A#A-#A#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformatInvalidFormat</name><type>d{depformatParent:US=#####||#####-####;Canada=A#A-#A#</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformatInvalidFormat1</name><type>d{depformatParent:US=}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>depformatInvalidFormat2</name><type>d{depformatParent}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformat", "12345");
@@ -606,25 +610,25 @@ public class DatatypeTest {
     req.addParameter("depformat", "A1A-1A1");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(true));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "Canada");
     req.addParameter("depformat", "A1A-1A1");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(false));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "Canada");
     req.addParameter("depformat", "12345");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(true));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatMultiple", "12345-1234");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(false));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatMultiple", "A1A-1A1");
@@ -654,19 +658,19 @@ public class DatatypeTest {
     req.addParameter("depformatRequired", "12345");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(false));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatRequired", "");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(true));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormatBadParent", "aaaaa");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(false));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat", "aaaaa");
@@ -690,7 +694,7 @@ public class DatatypeTest {
     req.addParameter("depformatInvalidFormat3", "aaaaa");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(false));
-    
+
     req = new MockHttpServletRequest();
     req.addParameter("depformatParent", "US");
     req.addParameter("depformatInvalidFormat4", "aaaaa");
@@ -726,8 +730,8 @@ public class DatatypeTest {
     req.addParameter("depformatInvalidFormat9", "aaaaa");
     result = sanwaf.isThreatDetected(req);
     assertTrue(result.equals(false));
-}
-  
+  }
+
   @Test
   public void testDepFormatType() {
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "d {depformatParent:US=#####;Canada=A#A-#A#", "error msg1", null, Integer.MAX_VALUE, 0);
@@ -741,22 +745,27 @@ public class DatatypeTest {
     assertTrue(p.dependentElementName.equals("depformatParent"));
     assertTrue(p.depFormatString.equals("depformatParent:US=#####;Canada=A#A-#A#"));
     assertTrue(p.formats.size() == 2);
-}
-  
+  }
+
   @Test
   public void testFormatEscapceChars() {
-    //<item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-    //<item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-    //<item><name>parmformatEscapedXchar2</name><type>f{xxx #}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-    //<item><name>parmformatEscapedXchar3</name><type>f{xxx A}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-    //<item><name>parmformatEscapedXchar4</name><type>f{xxx a}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-    //<item><name>parmformatEscapedXchar5</name><type>f{xxx c}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-    //<item><name>parmformatEscapedXchar6</name><type>f{xxx #[1-3]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedChars</name><type>f{\#\A\a\c\x\[\]\(\)\|\:\=\+\-\;#}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedXchar1</name><type>f{xxx}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedXchar2</name><type>f{xxx
+    // #}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedXchar3</name><type>f{xxx
+    // A}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedXchar4</name><type>f{xxx
+    // a}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedXchar5</name><type>f{xxx
+    // c}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+    // <item><name>parmformatEscapedXchar6</name><type>f{xxx
+    // #[1-3]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aacx[]()|:=+-;1"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
-  
+
     assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@#"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ 9"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ A"));
@@ -776,40 +785,41 @@ public class DatatypeTest {
 
   @Test
   public void testFormatsWithDates() {
-    //<item><name>parmFormatWithDate1</name><type>f{#[yy-yy(+10)]}</type></item>
-    //<item><name>parmFormatWithDate2</name><type>f{#[yyyy-yyyy(+10)]}</type></item>
-    //<item><name>parmFormatWithDate3</name><type>f{#[dd-dd(+5)]}</type></item>
-    //<item><name>parmFormatWithDate4</name><type>f{#[mm-mm(+5)]}</type></item>
-    //<item><name>parmFormatWithDateInvalid5</name><type>f{#[yy-yy(+10]}</type></item>
-    //<item><name>parmFormatWithDateInvalid6</name><type>f{dd-dd+5]}</type></item>
-    //<item><name>parmFormatWithDateInvalid7</name><type>f{mm mm(+5)}</type></item>
-    //<item><name>parmFormatWithDateOverflowMonth</name><type>f{#[mm-mm(+12)]}</type></item>
-    //<item><name>parmFormatWithDateOverflowDay</name><type>f{#[dd-dd(+31)]}</type></item>
+    // <item><name>parmFormatWithDate1</name><type>f{#[yy-yy(+10)]}</type></item>
+    // <item><name>parmFormatWithDate2</name><type>f{#[yyyy-yyyy(+10)]}</type></item>
+    // <item><name>parmFormatWithDate3</name><type>f{#[dd-dd(+5)]}</type></item>
+    // <item><name>parmFormatWithDate4</name><type>f{#[mm-mm(+5)]}</type></item>
+    // <item><name>parmFormatWithDateInvalid5</name><type>f{#[yy-yy(+10]}</type></item>
+    // <item><name>parmFormatWithDateInvalid6</name><type>f{dd-dd+5]}</type></item>
+    // <item><name>parmFormatWithDateInvalid7</name><type>f{mm
+    // mm(+5)}</type></item>
+    // <item><name>parmFormatWithDateOverflowMonth</name><type>f{#[mm-mm(+12)]}</type></item>
+    // <item><name>parmFormatWithDateOverflowDay</name><type>f{#[dd-dd(+31)]}</type></item>
 
     Calendar c = Calendar.getInstance();
     int yyyy = c.get(Calendar.YEAR);
     int yy = Integer.parseInt(String.valueOf(yyyy).substring(2));
     int dd = c.get(Calendar.DAY_OF_MONTH);
     int mm = c.get(Calendar.MONTH) + 1;
-    
+
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowMonth", "12"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowDay", "31"));
 
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy+10)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy+11)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy-1)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy + 10)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy + 11)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy - 1)));
 
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy-10)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy-11)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy+1)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy - 10)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy - 11)));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy + 1)));
 
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy+10)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy + 10)));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy-10)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy - 10)));
 
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate3", String.valueOf(dd)));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm)));
@@ -817,7 +827,7 @@ public class DatatypeTest {
 
   @Test
   public void testParmFormatIP() {
-    //<item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
+    // <item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "111.111.111.111"));
     assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "255.255.255.255"));
@@ -829,5 +839,5 @@ public class DatatypeTest {
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1"));
     assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
   }
-  
+
 }
