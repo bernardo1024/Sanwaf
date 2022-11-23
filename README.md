@@ -28,7 +28,7 @@
        - Dynamically disable Browser Validation and run against Server (uses embedded Jetty)
 
 # Sanwaf-Server
-Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. 
+Sanwaf, short for Sanitation Web Application Firewall, is a filter/interceptor that is added to applications to increase the security posture.  It is a new security control meant to augment traditional WAFs on occasions where WAF rules need to be loosened, or when you allowlist parameters, headers, cookies, or URIs. Sanwaf can also be configured as a reverse proxy for an isolated control layer.
 
 Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server.  A hacker can try to send malicious payloads to compromise your applications.  Sanwaf can be configured to detect attack payloads and will prevent submitted data from impacting your system.  
 	
@@ -41,7 +41,7 @@ SanWaf is a dependency-free code so it is very easy to add to your Java applicat
 ## Compatibility
 The following section details the compatibility of SanWaf
 
-JAVA  	- tested with JDK 1.6, 1.7, 1.8, 1.9
+JAVA  	- tested with JDK 1.6, 1.7, 1.8, 1.9+
 
 Note that Sanwaf is written with no dependencies, so will probably work with any version of java. 
 
@@ -89,7 +89,8 @@ Create an authentication filter to validate all the incoming request objects.
 When/If an error is detected, you pull the error info with these methods:
 
 	String sanwafTrackId = sanwaf.getTrackId(request);
-	String parmsInErrorJson = sanwaf.getParmErrors(request);
+	String parmsInErrorJson = sanwaf.getErrors(request); //for BLOCK mode
+	String parmsInDetectJson = sanwawf.getDetects(request); //for DETECT & DETECT_APP modes
 	
 To use Sanwaf to read allowlisted headers/cookies/parameters:
 
@@ -164,12 +165,14 @@ Also note the **secured section** contains the following groups: endpoints, para
 	<metadata>
 
 		<enabled>
+			<endpoints>true/false</endpoints>
 			<parameters>true/false</parameters>
 			<headers>true/false</headers>
 			<cookies>true/false</cookies>
 		</enabled>
 
 		<caseSensitive>
+			<endpoints>true/false</endpoints>
 			<parameters>true/false</parameters>
 			<headers>true/false</headers>
 			<cookies>true/false</cookies>
@@ -179,13 +182,13 @@ Also note the **secured section** contains the following groups: endpoints, para
 			<endpoints>
 			</endpoints>
 			<parameters>
-				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</parameters>
 			<headers>
-				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</headers>
 			<cookies>
-				<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+				<item><name></name><mode></mode><type></type><max></max><min></min><msg></msg><uri></uri></item>
 			</cookies>
 		</secured>
 
@@ -200,6 +203,12 @@ Also note the **secured section** contains the following groups: endpoints, para
 	
 #### Endpoint Structure
 	- Endpoints are groupings of parameters so additional validation can occur, such as strict parameters values and simple to complex relationships
+	- <mode></mode> defines how the endpoint will be processed. valid modes are: BLOCK/DISABLED/DETECT/DETECT_ALL
+		where:
+		  BLOCK      - request will be blocked for the given endpoint
+		  DISABLED   - endpoint will be ignored
+		  DETECT     - log hits to warnings log the first item detected
+		  DETECT_ALL - log hits to warnings log all items that match 
 	- <uri></uri> defines the endpoint (use the ::: separator to specify multiple URIs)
 	- <strict></strict> indicates to fail if any items specfied are missing 
 	   or if non-defined items are in the request (missing or extra parms cause failure)
@@ -212,6 +221,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 			the Sanwaf-ui-2-server scans your files looking for the attributes and automatically generates the XML
 	<endpoints>
 		<endpoint>
+			<mode></mode>
 			<uri></uri>
 			<strict></strict>
 			<items>
