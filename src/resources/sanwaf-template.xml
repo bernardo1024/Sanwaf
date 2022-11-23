@@ -5,7 +5,7 @@
 <!-- 
 	OVERVIEW
 	********
-	Sanwaf - Sanitation Web Application Filter is a filter/interceptor added to application for increased protection.
+	Sanwaf - Sanitation Web Application Filter is a filter/intercepter added to application for increased protection.
 
 	Web Severs receive requests with Headers, Cookies, Parameters being sent from an untrusted client to your server.  
 	A hacker can try to use these submissions in an attack by attaching payloads to try to hack your server.
@@ -15,7 +15,7 @@
 
 	IMPLEMENTATION
 	**************
-		Create an Filter or Interceptor to and call the Sanwaf.isThreatDetected() method to validate incoming requests.
+		Create an Filter or Intercepter to and call the Sanwaf.isThreatDetected() method to validate incoming requests.
 		For examples:
 	
 			public class SanwafFilter implements Filter {
@@ -372,7 +372,7 @@
               <value> - the pattern in a regular string format (no escaping quotes, backslashes...)
                      NOTE: 	Do NOT wrap regex in "/.../i" format.
                         All regex's are compiled with ignore case enabled
-                      - To store regex patterns in seperate files you can use the format:
+                      - To store regex patterns in separate files you can use the format:
                           file=<filename>|<key>
                           where
                           "file="     - marker indicating to pull regex from a file
