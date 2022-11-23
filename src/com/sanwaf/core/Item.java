@@ -188,7 +188,7 @@ abstract class Item {
 
     if (shield != null) {
       String errMsg = getErrorMessage(req, shield, this);
-      if (required && value.length() == 0) {
+      if (required && value != null && value.length() == 0) {
         errMsg += getErrorMessage(req, shield, this, ItemFactory.XML_REQUIRED_MSG);
       }
       if (value != null && (value.length() < min || value.length() > max)) {
