@@ -82,6 +82,7 @@
       <endpoints>
         <endpoint>
           <uri></uri>
+          <mode></mode>
           <items>
             <item><name></name><mode></mode><type></type><max></max><min></min><msg></msg></item>
           </items>
@@ -254,10 +255,27 @@
         EXAMPLE:      if you want to use a country element to determine the type of format to apply (zip or postal code):
                         data-sw-type="d{country:USA=#####||#####-####;Canada=A#A-#A#}"  
 
+
+
+  MODES:
+  *****
+  Valid modes are BLOCK, DISABLED, DETECT, DETECT_ALL
+    where:
+      BLOCK      - request will be blocked 
+      DISABLED   - regex will be ignored
+      DETECT     - log hits to warnings log, only the first item detected
+      DETECT_ALL - log hits to warnings log all items detected 
+  Modes can be applied to shields, endpoints, parameters, headers, cookies, customregex list, stringregex list
+  
+	  Mode order or precedence
+	  -shield (mode used as a default if not specified for the items below )
+	    -customregex (if mode specified, takes precedence over the item (parm/header/cookie) setting) 
+	    -stringregex (if mode specified, takes precedence over the item (parm/header/cookie) setting)
+	    -endpoints   (if mode specified, this overrides the item (parm/header/cookie) setting)
+	    -parameters  (uses shield mode if not specified)
+	    -headers     (uses shield mode if not specified)
+	    -cookies     (uses shield mode if not specified)
  -->
-
-
-
 
 <sanwaf>
 	<global-settings>
