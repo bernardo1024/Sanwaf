@@ -357,7 +357,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 					For example, only provide the value for <regex>:
 						/<regex>/gimsuy  
 					- To store regex patterns in separate files you can use the format:
-					     file=filename:::key
+					     file=filename|key
 					     where
 					     "file="     - marker indicating to pull regex from a file
 					     "filename"  - relative path to a file containing the regex
