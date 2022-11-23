@@ -248,7 +248,6 @@ Also note the **secured section** contains the following groups: endpoints, para
 		<mask-err></mask-err>
 		<related></related>
 	</item>
-	
 
 	where
 	<name></name>		- parameter/header/cookie name
@@ -357,13 +356,12 @@ Also note the **secured section** contains the following groups: endpoints, para
 					Regex must not include the '/' markers nor any flags.  
 					For example, only provide the value for <regex>:
 						/<regex>/gimsuy  
-					- To store regex patterns in seperate files you can use the format:
+					- To store regex patterns in separate files you can use the format:
 					     file=filename:::key
 					     where
 					     "file="     - marker indicating to pull regex from a file
 					     "filename"  - relative path to a file containing the regex
 					     "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
-						
 			FORMAT: 	r{CustomRegexName}   - for example: r{telephone}
 
 	(Inline Regex)
