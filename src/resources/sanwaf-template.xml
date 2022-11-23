@@ -202,12 +202,12 @@
 			                Regex must not include the '/' markers nor any flags.  
 			                For example, only provide the value for "<regex>" below:
                         /<regex>/gimsuy  
-							        - use the detect & detect-all settings to log findings and not block requests
-							        where:
-							          BLOCK      - request will be blocked for the given endpoint
-							          DISABLED   - endpoint will be ignored
-							          DETECT     - log hits to warnings log the first item detected
-							          DETECT_ALL - log hits to warnings log all items that match 
+						          - To store regex patterns in separate files you can use the format:
+						               file=filename|key
+						               where
+						               "file="     - marker indicating to pull regex from a file
+						               "filename"  - relative path to a file containing the regex
+						               "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
         FORMAT:       r{CustomRegexName}  - for example: r{telephone} - where "telephone" is defined in the customPatterns xml section
   
   (Inline Regex)
