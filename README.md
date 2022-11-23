@@ -225,7 +225,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 			<uri></uri>
 			<strict></strict>
 			<items>
-				<item><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
+				<item><mode></mode><name></name><type></type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 			</items>
 		</endpoint>
 	</endpoints>
@@ -233,7 +233,21 @@ Also note the **secured section** contains the following groups: endpoints, para
 
 ### Item Format of the Secured Section
 
-	<item><name></name><type></type><max></max><min></min><msg></msg><uri></uri></item>
+	<item>
+		<name></name>
+		<mode></mode>
+		<display></display>
+		<type></type>
+		<max></max>
+		<min></min>
+		<max-value></max-value>
+		<min-value></min-value>
+		<msg></msg>
+		<uri></uri>
+		<req></req>
+		<mask-err></mask-err>
+		<related></related>
+	</item>
 	
 
 	where
@@ -242,6 +256,15 @@ Also note the **secured section** contains the following groups: endpoints, para
 				- for example:
 					- <name>parameter1</name>
 					- <name>parameter1:::parameter2:::parameter3</name> 
+	<mode></mode>           - the mode of the items (detect, detect-all/detectall/detect_all, disabled, block(default))
+				  - the mode controls how the item will be processed
+				  - use the detect & detect-all settings to log findings and not block requests
+					where:
+					  BLOCK      - request will be blocked for the given endpoint
+					  DISABLED   - endpoint will be ignored
+					  DETECT     - log hits to warnings log the first item detected
+					  DETECT_ALL - log hits to warnings log all items that match 
+
 	<display></display>	- the value to use in error messages to reference the element. if not provided, name will be used
 	<type></type>		- the parameter datatype (see Custom Datatypes above) (defaults to 's' if not specified)
 	<max></max>		- the max length allowed for this parameter (defaults to Interger.MAX_VALUE if not specified)
@@ -259,9 +282,9 @@ Also note the **secured section** contains the following groups: endpoints, para
 				- Establishes a relationship that must be met between parameters
 	
 
-#### Example
+#### Examples
 
-	<item><name>telephone</name><type>r{telephone}</type><max>12</max><min>1</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
+	<item><name>telephone</name><mode>block</mode><type>r{telephone}</type><max>12</max><min>1</min><msg>Invalid Telephone number entered, must be in the format 555-555-5555</msg><uri>/put/accounts</uri></item>
 	<item><name>fname:::lname</name><type>s</type><max>30</max><min>1</min><msg>must be between 1-30 chars</msg></item>
 	<item><name>sex</name><type>k{male,female,other}</type><msg>only male/female/other are allowed</msg></item>
 	<item><name>count</name><type>n</type><uri>/uri1:::uri2:::uri3</uri></item>
@@ -313,7 +336,7 @@ Also note the **secured section** contains the following groups: endpoints, para
 	
 	(String) 
 	s 		DESCRIPTION:	Any string.  
-					All regex's in the stringPatterns are executed against the string				
+					All regex's in the stringPatterns section are executed against the string				
 			FORMAT: 	s
 			EXAMPLE:	"Hello this string does not contain a XSS payload"
 
@@ -334,6 +357,13 @@ Also note the **secured section** contains the following groups: endpoints, para
 					Regex must not include the '/' markers nor any flags.  
 					For example, only provide the value for <regex>:
 						/<regex>/gimsuy  
+					- To store regex patterns in seperate files you can use the format:
+					     file=filename:::key
+					     where
+					     "file="     - marker indicating to pull regex from a file
+					     "filename"  - relative path to a file containing the regex
+					     "key"       - the XML key to use to pull the regex from the file.  if null, or not provided, the entire contents of the file will be used as the source of XML
+						
 			FORMAT: 	r{CustomRegexName}   - for example: r{telephone}
 
 	(Inline Regex)
@@ -392,7 +422,7 @@ Add Sanwaf as a dependency to your code:
 	<dependency>
 		<groupId>com.sanwaf</groupId>
 		<artifactId>sanwaf</artifactId>
-		<version>0.1.6</version>
+		<version>0.1.9</version>
 		<scope>compile</scope>
 	</dependency>
 
@@ -411,14 +441,14 @@ Sample Filter Code:
 	
 	public class SampleAuthenticationFilter implements Filter {
 		// instantiate Sanwaf (if you dont specify an xml file, sanwaf.xml will be used if in your classpath)
-		static SanWaf sanwaf = new SanWaf(new SampleSystemOutLogger(), "/your-sanwaf-config-file.xml");
+		static SanWaf sanwaf = new SanWaf(new SimpleLogger(), "/your-sanwaf-config-file.xml");
 	
 		public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws SecurityException{
 			// call Sanwaf to check if requests are valid or not
 			if (sanwaf.isThreatDetected(req)) {
 				// Up to you how you want to handle this the error condition.
 				// Here we are throwing a SecurityException, passing the tracking ID and errors in json format  
-				throw new SecurityException(Sanwaf.getTrackId(request) + ", " + Sanwaf.getParmErrors(request));
+				throw new SecurityException(Sanwaf.getTrackId(request) + ", " + Sanwaf.getErrors(request));
 			}
 			filterChain.doFilter(req, resp);
 		}
@@ -448,7 +478,10 @@ Here is a simple example of creating a custom logger.
 		public void error(String msg) {
 			log.error(msg);
 		}
-
+		@Override
+		public void warn(String s) {
+			log.warm(java.util.logging.Level.WARNING, "Sanwaf-warn:\t{0}", s);
+		}
 		@Override
 		public void info(String msg) {
 			if(log.isInfoEnabled()) {
