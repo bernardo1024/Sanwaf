@@ -46,25 +46,25 @@ public class SanwafIsThreatTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", null, request);
     assertTrue(result == true);
-    String trackId = sanwaf.getTrackingId(request);
+    String trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
-    String s = sanwaf.getErrors(request);
+    String s = Sanwaf.getErrors(request);
     assertTrue(s != null);
 
     request = new MockHttpServletRequest();
     result = sanwaf.isThreat("< script>alert(1)</ script>", null, request);
     assertTrue(result == false);
-    trackId = sanwaf.getTrackingId(request);
+    trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
-    s = sanwaf.getErrors(request);
+    s = Sanwaf.getErrors(request);
     assertTrue(s == null);
 
     request = new MockHttpServletRequest();
     result = sanwaf.isThreat("<script>alert(1)</script>", null, request);
     assertEquals(true, result);
-    trackId = sanwaf.getTrackingId(request);
+    trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
-    s = sanwaf.getErrors(request);
+    s = Sanwaf.getErrors(request);
     assertTrue(s != null);
   }
 
@@ -75,15 +75,15 @@ public class SanwafIsThreatTest {
     sanwaf.onErrorAddParmErrors = false;
     boolean result = sanwaf.isThreat("<script>alert(1)</script>", null, request);
     assertTrue(result == true);
-    String trackId = sanwaf.getTrackingId(request);
+    String trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
-    String s = sanwaf.getErrors(request);
+    String s = Sanwaf.getErrors(request);
     assertTrue(s != null);
 
     request = new MockHttpServletRequest();
     result = sanwaf.isThreat("valid text", null, request);
     assertTrue(result == false);
-    s = sanwaf.getErrors(request);
+    s = Sanwaf.getErrors(request);
     assertTrue(s == null);
 
     sanwaf.onErrorAddParmErrors = orig;

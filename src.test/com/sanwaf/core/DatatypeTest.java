@@ -230,12 +230,12 @@ public class DatatypeTest {
     // <item><name>openErrorPointsMask</name><type>o</type><max>5</max><min>5</min><mask-err>***</mask-err></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "openErrorPoints", "123456"));
-    String s = sanwaf.getErrors(req);
+    String s = Sanwaf.getErrors(req);
     assertTrue(s != null && s.contains("\"value\":\"123456\"") && s.contains("\"samplePoints\":"));
 
     req = new MockHttpServletRequest();
     assertTrue(shield.threat(req, shield.parameters, "openErrorPointsMask", "123456"));
-    s = sanwaf.getErrors(req);
+    s = Sanwaf.getErrors(req);
     assertTrue(s != null && s.contains("\"value\":\"***\""));
   }
 

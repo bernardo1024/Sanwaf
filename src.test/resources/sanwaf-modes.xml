@@ -173,7 +173,7 @@
             <item><mode>detect</mode><name>dependentparent</name><type>s</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><mode>detect</mode><name>dependentformat</name><type>d{dependentparent:123=####}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
-            <item><mode>detect</mode><name>endpointRegex</name><type>x{^[^\s@]+@[^\s@]+$}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg>Must be a proper email address</msg><req></req><related></related></item>
+            <item><mode>detect</mode><name>endpointRegex</name><type>x{DETECT}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>regexParmNoModeWithRegexDetectMode</name><type>r{date-DETECT-ALL}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
           </parameters>

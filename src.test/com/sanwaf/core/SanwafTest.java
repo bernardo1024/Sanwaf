@@ -54,7 +54,7 @@ public class SanwafTest {
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
 
-    String trackId = sanwaf.getTrackingId(request);
+    String trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
 
     String s = sanwaf.getErrors(request);
@@ -72,7 +72,7 @@ public class SanwafTest {
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
 
-    String trackId = sanwaf.getTrackingId(request);
+    String trackId = Sanwaf.getTrackingId(request);
     assertTrue(trackId != null);
 
     String s = sanwaf.getErrors(request);
@@ -91,7 +91,7 @@ public class SanwafTest {
     sanwaf.onErrorAddParmErrors = false;
     Boolean result = sanwaf.isThreatDetected(request);
     assertTrue(result.equals(true));
-    assertTrue(sanwaf.getTrackingId(request) == null);
+    assertTrue(Sanwaf.getTrackingId(request) == null);
     assertTrue(sanwaf.getErrors(request) == null);
 
     sanwaf.onErrorAddTrackId = trackID;

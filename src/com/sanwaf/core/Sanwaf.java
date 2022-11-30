@@ -351,7 +351,7 @@ public final class Sanwaf {
    *          Sanwaf.isThreatDetected() returned true.
    * @return String returns the Sanwaf Tracking ID
    */
-  static public String getTrackingId(HttpServletRequest req) {
+  public static String getTrackingId(HttpServletRequest req) {
     Object o = req.getAttribute(ATT_TRANS_ID);
     if (o != null) {
       return String.valueOf(o);
@@ -372,7 +372,7 @@ public final class Sanwaf {
    *          Sanwaf.isThreatDetected() returned true.
    * @return String Returns all threats found in JSON format
    */
-  static public String getErrors(HttpServletRequest req) {
+  public static String getErrors(HttpServletRequest req) {
     Object o = req.getAttribute(ATT_LOG_ERROR);
     if (o != null) {
       return String.valueOf(o);
@@ -392,7 +392,7 @@ public final class Sanwaf {
    *          Sanwaf.isThreatDetected() returned true.
    * @return String Returns all threats found in JSON format
    */
-  static public String getDetects(HttpServletRequest req) {
+  public static String getDetects(HttpServletRequest req) {
     Object o = req.getAttribute(ATT_LOG_DETECT);
     if (o != null) {
       return String.valueOf(o);

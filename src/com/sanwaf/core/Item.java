@@ -7,7 +7,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 abstract class Item {
-  static final String FAILED_PATTERN = "Failed Pattern: ";
   static final String INVALID_SIZE = "Invalid Size";
   static final String INVALID_URI = "Invalid URI";
   com.sanwaf.log.Logger logger;
@@ -103,25 +102,25 @@ abstract class Item {
   }
 
   boolean handleMode(boolean isError, String value, String more, ServletRequest req) {
-    return handleMode(isError, value, more, req, true);
+    return handleMode(isError, value, more, req, Modes.BLOCK, true);
   }
 
-  boolean handleMode(boolean isError, String value, String more, ServletRequest req, boolean log) {
+  boolean handleMode(boolean isError, String value, String more, ServletRequest req, Modes action, boolean log) {
     if (isError && mode == Modes.BLOCK) {
       if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmErrors)) {
-        logger.error(toJson(value, more, req, true));
+        logger.error(toJson(value, action, more, req, true));
       }
       if (log && req != null && (shield == null || shield.sanwaf.onErrorAddParmErrors)) {
-        appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, more, req, true), req);
+        appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, action, more, req, true), req);
       }
       return isError;
     }
     if (isError && (mode == Modes.DETECT || mode == Modes.DETECT_ALL)) {
       if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections)) {
-        logger.warn(toJson(value, more, req, true));
+        logger.warn(toJson(value, action, more, req, true));
       }
       if (log && req != null && (shield == null || shield.sanwaf.onErrorAddParmDetections)) {
-        appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, more, req, true), req);
+        appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, action, more, req, true), req);
       }
     }
     return false;
@@ -145,10 +144,10 @@ abstract class Item {
   }
 
   public String toString() {
-    return toJson(null, null, null, true);
+    return toJson(null, null, null, null, true);
   }
 
-  public String toJson(String value, String more, ServletRequest req, boolean verbose) {
+  public String toJson(String value, Modes action, String more, ServletRequest req, boolean verbose) {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
 
@@ -169,6 +168,12 @@ abstract class Item {
     sb.append("\"item\":{\"name\":\"").append(Metadata.jsonEncode(name)).append("\"");
     sb.append(",\"display\":\"").append(Metadata.jsonEncode(display)).append("\"");
     sb.append(",\"mode\":\"").append(mode).append("\"");
+    if(action != null) {
+      sb.append(",\"action\":\"").append(action).append("\"");
+    }
+    else {
+      sb.append(",\"action\":\"").append("").append("\"");
+    }
     sb.append(",\"type\":\"").append(getType()).append("\"");
 
     if (value != null && value.length() > 0) {

@@ -52,7 +52,7 @@ final class ItemRegex extends Item {
     boolean match = rule.pattern.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match)) {
       if (rule.mode == Modes.DETECT || rule.mode == Modes.DETECT_ALL) {
-        handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);
+        handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req, rule.mode, true);
       }
       if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
         handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);

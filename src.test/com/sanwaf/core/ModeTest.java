@@ -252,7 +252,7 @@ public class ModeTest {
     request.addParameter("dependentparent", "123");
     request.addParameter("dependentformat", "<script>abc23@!##");
     assertTrue(!sanwaf.isThreatDetected(request));
-    String s = sanwaf.getDetects(request);
+    String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.length() > 0);
 
   }
