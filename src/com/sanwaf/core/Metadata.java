@@ -23,15 +23,16 @@ class Metadata {
   Map<String, List<String>> index = new HashMap<>();
   Shield shield;
 
-  Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger) {
+  Metadata(Shield shield, Xml xml, String type, com.sanwaf.log.Logger logger, boolean isDetect) {
     this.logger = logger;
     this.shield = shield;
-    load(shield, xml, type);
+    load(shield, xml, type, isDetect);
   }
 
+  //used for endpoints
   Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger) {
     this.logger = logger;
-    load(shield, itemsString, caseSensitive, includeEndpointAttributes);
+    loadEndpoints(shield, itemsString, caseSensitive, includeEndpointAttributes);
 
     if ("true".equalsIgnoreCase(endpointIsStrict)) {
       this.endpointIsStrict = true;
@@ -41,42 +42,7 @@ class Metadata {
     }
   }
 
-  String getFromIndex(String key) {
-    if (key == null) {
-      return "";
-    }
-    List<String> list = index.get(key.substring(0, 1));
-    if (list == null) {
-      return null;
-    }
-
-    for (String s : list) {
-      int last = 0;
-      while (true) {
-        if (s.length() != 2) {
-          return resolveStarAtEndOfWord(key, list);
-        }
-        int start = key.indexOf(s.charAt(0), last);
-        if (start <= 0) {
-          break;
-        }
-        int end = key.indexOf(s.charAt(1), start + 1);
-        last = end + 1;
-        key = key.substring(0, start + 1) + key.substring(end, key.length());
-      }
-    }
-    return key;
-  }
-
-  private String resolveStarAtEndOfWord(String key, List<String> list) {
-    String k2 = stripEosNumbers(key);
-    if (list.contains(INDEX_PARM_MARKER + k2)) {
-      return k2;
-    }
-    return null;
-  }
-
-  void load(Shield shield, Xml xml, String type) {
+  void load(Shield shield, Xml xml, String type, boolean isDetect) {
     initA2Zindex(index);
 
     String metadataBlock = xml.get(XML_METADATA);
@@ -96,25 +62,18 @@ class Metadata {
     Xml subBlockXml = new Xml(subBlock);
     String[] xmlItems = subBlockXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems) {
-      loadItem(shield, itemString, false);
+      loadItem(shield, itemString, false, isDetect);
     }
   }
 
-  void load(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
-    initA2Zindex(index);
-    enabled = true;
-    this.caseSensitive = caseSensitive;
-
-    Xml itemsXml = new Xml(itemsString);
-    String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
-    for (String itemString : xmlItems) {
-      loadItem(shield, itemString, includeEndpointAttributes);
-    }
-  }
-
-  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes) {
+  private void loadItem(Shield shield, String itemString, boolean includeEnpointAttributes, boolean isDetect) {
     Xml xml = new Xml(itemString);
     Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
+    //do we want to load this item for the provided isDetect parm
+    if((isDetect && item.mode != null && item.mode == Modes.BLOCK) ||
+       (!isDetect && (item.mode != null && (item.mode == Modes.DETECT || item.mode == Modes.DETECT_ALL)))) {
+      return;
+    }
     String namesString = xml.get(ItemFactory.XML_ITEM_NAME);
 
     if (namesString.contains(Shield.SEPARATOR)) {
@@ -137,6 +96,18 @@ class Metadata {
         }
         items.put(item.name, item);
       }
+    }
+  }
+
+  void loadEndpoints(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
+    initA2Zindex(index);
+    enabled = true;
+    this.caseSensitive = caseSensitive;
+
+    Xml itemsXml = new Xml(itemsString);
+    String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
+    for (String itemString : xmlItems) {
+      loadItem(shield, itemString, includeEndpointAttributes, false);
     }
   }
 
@@ -208,5 +179,40 @@ class Metadata {
       s = s.replace("\"", "\\\"");
       return s.replace("/", "\\/");
     }
+  }
+
+  String getFromIndex(String key) {
+    if (key == null) {
+      return "";
+    }
+    List<String> list = index.get(key.substring(0, 1));
+    if (list == null) {
+      return null;
+    }
+
+    for (String s : list) {
+      int last = 0;
+      while (true) {
+        if (s.length() != 2) {
+          return resolveStarAtEndOfWord(key, list);
+        }
+        int start = key.indexOf(s.charAt(0), last);
+        if (start <= 0) {
+          break;
+        }
+        int end = key.indexOf(s.charAt(1), start + 1);
+        last = end + 1;
+        key = key.substring(0, start + 1) + key.substring(end, key.length());
+      }
+    }
+    return key;
+  }
+
+  private String resolveStarAtEndOfWord(String key, List<String> list) {
+    String k2 = stripEosNumbers(key);
+    if (list.contains(INDEX_PARM_MARKER + k2)) {
+      return k2;
+    }
+    return null;
   }
 }

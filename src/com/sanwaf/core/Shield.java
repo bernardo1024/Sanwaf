@@ -34,6 +34,9 @@ final class Shield {
   Metadata parameters = null;
   Metadata cookies = null;
   Metadata headers = null;
+  Metadata parametersDetect = null;
+  Metadata cookiesDetect = null;
+  Metadata headersDetect = null;
   MetadataEndpoints endpoints = null;
 
   Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger) {
@@ -78,6 +81,10 @@ final class Shield {
     while (names.hasMoreElements()) {
       k = (String) names.nextElement();
       values = req.getParameterValues(k);
+      //log all detects first
+      for (String v : values) {
+        threat(req, parametersDetect, k, v);
+      }
       for (String v : values) {
         if (threat(req, parameters, k, v)) {
           return true;
@@ -93,6 +100,14 @@ final class Shield {
       String s = String.valueOf(names.nextElement());
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
       while (headerEnumeration.hasMoreElements()) {
+        threat(req, headersDetect, s, (String) headerEnumeration.nextElement());
+      }
+    }
+    names = ((HttpServletRequest) req).getHeaderNames();
+    while (names.hasMoreElements()) {
+      String s = String.valueOf(names.nextElement());
+      Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
+      while (headerEnumeration.hasMoreElements()) {
         if (threat(req, headers, s, (String) headerEnumeration.nextElement())) {
           return true;
         }
@@ -104,6 +119,9 @@ final class Shield {
   private boolean cookieThreatDetected(ServletRequest req) {
     Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
     if (cookieArray != null) {
+      for (Cookie c : cookieArray) {
+        threat(req, cookiesDetect, c.getName(), c.getValue());
+      }
       for (Cookie c : cookieArray) {
         if (threat(req, cookies, c.getName(), c.getValue())) {
           return true;
@@ -316,9 +334,12 @@ final class Shield {
       }
     }
     endpoints = new MetadataEndpoints(this, shieldXml, logger);
-    parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger);
-    cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger);
-    headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger);
+    parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, false);
+    parametersDetect = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, true);
+    cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, false);
+    cookiesDetect = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, true);
+    headers = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, false);
+    headersDetect = new Metadata(this, shieldXml, Metadata.XML_HEADERS, logger, true);
   }
 
   private void loadChildShield(Sanwaf sanwaf, Xml xml, String childShieldName, Logger logger) {

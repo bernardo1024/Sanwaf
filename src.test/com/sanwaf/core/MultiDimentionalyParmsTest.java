@@ -173,7 +173,7 @@ public class MultiDimentionalyParmsTest {
   public void testInvalidArray() throws IOException {
     Sanwaf sw = new Sanwaf(new UnitTestLogger(), "/sanwaf-multiDim.xml");
     Shield sh = UnitTestUtil.getShield(sw, "MultiDimTest");
-    sh.parameters = new Metadata(shield, new Xml(""), "", sw.logger);
+    sh.parameters = new Metadata(shield, new Xml(""), "", sw.logger, false);
     sh.parameters.enabled = true;
     Metadata.initA2Zindex(sh.parameters.index);
     sh.parameters.index.put("f", Arrays.asList(Metadata.INDEX_PARM_MARKER + "foo"));
