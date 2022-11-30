@@ -45,6 +45,9 @@ final class ItemRegex extends Item {
         return false;
       }
       rule = shield.customRulePatterns.get(patternName);
+      if(rule == null) {
+        rule = shield.customRulePatternsDetect.get(patternName);
+      }
     }
     if (rule.mode == Modes.DISABLED) {
       return false;

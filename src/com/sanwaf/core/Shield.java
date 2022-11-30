@@ -17,6 +17,7 @@ import com.sanwaf.core.Sanwaf.AllowListType;
 import com.sanwaf.log.Logger;
 
 final class Shield {
+  private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   private static final String REGEX_FILE_MARKER = "file=";
   Sanwaf sanwaf = null;
   Logger logger = null;
@@ -31,6 +32,8 @@ final class Shield {
   List<String> regexAlwaysExclusions = new ArrayList<>();
   Map<String, Rule> rulePatterns = new HashMap<>();
   Map<String, Rule> customRulePatterns = new HashMap<>();
+  Map<String, Rule> rulePatternsDetect = new HashMap<>();
+  Map<String, Rule> customRulePatternsDetect = new HashMap<>();
   Metadata parameters = null;
   Metadata cookies = null;
   Metadata headers = null;
@@ -358,14 +361,14 @@ final class Shield {
     String autoBlock = xml.get(XML_REGEX_PATTERNS_AUTO);
     Xml autoBlockXml = new Xml(autoBlock);
     String[] items = autoBlockXml.getAll(ItemFactory.XML_ITEM);
-    setRulePattern(items, rulePatterns, "fail");
+    setRulePattern(items, rulePatterns, rulePatternsDetect, "fail");
     String customBlock = xml.get(XML_REGEX_PATTERNS_CUSTOM);
     Xml customBlockXml = new Xml(customBlock);
     items = customBlockXml.getAll(ItemFactory.XML_ITEM);
-    setRulePattern(items, customRulePatterns, "pass");
+    setRulePattern(items, customRulePatterns, customRulePatternsDetect, "pass");
   }
 
-  private void setRulePattern(String[] items, Map<String, Rule> patterns, String defaultMatch) {
+  private void setRulePattern(String[] items, Map<String, Rule> patterns, Map<String, Rule> patternsDetect, String defaultMatch) {
     for (String item : items) {
       Xml itemBlockXml = new Xml(item);
       String key = itemBlockXml.get(XML_KEY);
@@ -384,7 +387,13 @@ final class Shield {
         if (match == null || match.length() == 0) {
           match = defaultMatch;
         }
-        patterns.put(key.toLowerCase(), new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match));
+        Rule r = new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match);
+        if(r.mode == Modes.BLOCK) {
+          patterns.put(key.toLowerCase(), r);
+        }
+        else {
+          patternsDetect.put(key.toLowerCase(), r);
+        }
       }
     }
   }
@@ -436,12 +445,18 @@ final class Shield {
 
       sb.append("\nStringRegexs:\n");
       for (Map.Entry<String, Rule> e : rulePatterns.entrySet()) {
-        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append("\tfailOnMatch=").append(e.getValue().failOnMatch).append("\n");
+        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
+      }
+      for (Map.Entry<String, Rule> e : rulePatternsDetect.entrySet()) {
+        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
       }
 
       sb.append("\n" + XML_REGEX_PATTERNS_CUSTOM + ":\n");
       for (Map.Entry<String, Rule> e : customRulePatterns.entrySet()) {
-        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append("\tfailOnMatch=").append(e.getValue().failOnMatch).append("\n");
+        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
+      }
+      for (Map.Entry<String, Rule> e : customRulePatternsDetect.entrySet()) {
+        sb.append("\t").append(e.getValue().mode).append("\t").append(e.getKey()).append("=").append(e.getValue().pattern).append(FAIL_ON_MATCH).append(e.getValue().failOnMatch).append("\n");
       }
 
       if (regexAlways) {

@@ -44,9 +44,9 @@ final class ItemString extends Item {
     boolean inError = false;
     if (shield != null) {
       //first process the detects & detect all - ignore the return value for detect
-      inError = isInErrorForPatterns(req, shield, value, Modes.DETECT, inError);
+      isInErrorForPatterns(req, shield.rulePatternsDetect, value);
       //then do the blocks
-      inError = isInErrorForPatterns(req, shield, value, Modes.BLOCK, inError);
+      inError = isInErrorForPatterns(req, shield.rulePatterns, value);
     }
     if (mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
       return false;
@@ -54,25 +54,22 @@ final class ItemString extends Item {
     return inError;
   }
 
-  private boolean isInErrorForPatterns(final ServletRequest req, final Shield shield, final String value, Modes mode, boolean inError) {
-    for (Map.Entry<String, Rule> rule : shield.rulePatterns.entrySet()) {
+  private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value) {
+    boolean inError = false;
+    for (Map.Entry<String, Rule> rule : patterns.entrySet()) {
       Modes ruleMode = rule.getValue().mode;
-      if (ruleMode == Modes.DISABLED ||
-          (mode == Modes.DETECT && ruleMode == Modes.BLOCK) ||
-          (mode == Modes.BLOCK && (ruleMode == Modes.DETECT || ruleMode == Modes.DETECT_ALL )) ) {
-        continue;
-      }
-      
-      boolean match = rule.getValue().pattern.matcher(value).find();
-      if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match)) {
-        if (rule.getValue().mode == Modes.BLOCK) {
-          inError = true;
-          handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
-        } else {
-          handleMode(true, value, MATCHED_PATTERN + rule.getKey() + " (" + ruleMode + ")", req, ruleMode, true);
-        }
-        if (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL) {
-          break;
+      if (ruleMode != Modes.DISABLED) {
+        boolean match = rule.getValue().pattern.matcher(value).find();
+        if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match)) {
+          if (rule.getValue().mode == Modes.BLOCK) {
+            inError = true;
+            handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
+          } else {
+            handleMode(true, value, MATCHED_PATTERN + rule.getKey() + " (" + ruleMode + ")", req, ruleMode, true);
+          }
+          if (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL) {
+            break;
+          }
         }
       }
     }
