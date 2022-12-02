@@ -71,7 +71,7 @@ class Metadata {
     Xml xml = new Xml(itemString);
     Item item = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
     //do we want to load this item for the provided isDetect parm
-    if((isDetect && item.mode != null && item.mode == Modes.BLOCK) ||
+    if((isDetect && item.mode != null && (item.mode == Modes.BLOCK || item.mode == Modes.DISABLED)) ||
        (!isDetect && (item.mode != null && (item.mode == Modes.DETECT || item.mode == Modes.DETECT_ALL)))) {
       return;
     }

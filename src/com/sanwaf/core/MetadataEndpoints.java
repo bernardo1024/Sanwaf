@@ -63,7 +63,7 @@ public class MetadataEndpoints {
     parameters.endpointMode = Modes.getMode(mx.get(ItemFactory.XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
 
     if((!isDetect && parameters.endpointMode == Modes.BLOCK) ||
-        isDetect && (parameters.endpointMode == Modes.BLOCK && !isDetectParms || parameters.endpointMode == Modes.DETECT_ALL)) {
+        (isDetect && (parameters.endpointMode == Modes.DETECT || parameters.endpointMode == Modes.DETECT_ALL))) {
      if(isDetectParms) {
         setEndpointParametersForUris(endpointParametersDetect, uris, parameters);
       }
