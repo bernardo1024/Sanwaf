@@ -118,7 +118,7 @@ public class GetAllErrorsTest {
     String s = sanwaf.getAllErrors(request);
     assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
     assertTrue(s != null && s.contains(""));
-    s = sanwaf.getDetects(request);
+    s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains(""));
   }
 

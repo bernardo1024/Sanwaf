@@ -140,8 +140,8 @@ public class ModeTest {
     request.setRequestURI("/foo/bar/test.jsp");
     request.addParameter("modeeParameter-DETECT", "foobarfoobar");
     assertTrue(!sanwaf.isThreatDetected(request));
-    String s = sanwaf.getDetects(request);
-    assertTrue(s != null && s.contains(""));
+    String s = Sanwaf.getDetects(request);
+    assertTrue(s != null && s.contains("modeeParameter-DETECT"));
 
     request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/test.jsp");
