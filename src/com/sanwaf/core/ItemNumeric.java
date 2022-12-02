@@ -81,13 +81,13 @@ class ItemNumeric extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return handleMode(me.error, value, INVALID_MAX_MIN, req);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, INVALID_MAX_MIN, req), doAllBlocks);
     }
     if (isMaxMinValueError(value)) {
-      return handleMode(true, value, INVALID_MAX_MIN, req);
+      return returnBasedOnDoAllBlocks(handleMode(true, value, INVALID_MAX_MIN, req), doAllBlocks);
     }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
@@ -99,7 +99,7 @@ class ItemNumeric extends Item {
         } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;
         } else {
-          return handleMode(true, value, INVALID_NUMBER, req);
+          return returnBasedOnDoAllBlocks(handleMode(true, value, INVALID_NUMBER, req), doAllBlocks);
         }
       }
     }

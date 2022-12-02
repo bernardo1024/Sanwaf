@@ -41,6 +41,7 @@ final class Shield {
   Metadata cookiesDetect = null;
   Metadata headersDetect = null;
   MetadataEndpoints endpoints = null;
+  MetadataEndpoints endpointsDetect = null;
 
   Shield(Sanwaf sanwaf, Xml xml, Xml shieldXml, Logger logger) {
     this.sanwaf = sanwaf;
@@ -49,35 +50,63 @@ final class Shield {
     logStartup();
   }
 
-  boolean threatDetected(ServletRequest req) {
-    return ((endpoints.enabled && endpointsThreatDetected(req)) || (parameters.enabled && parameterThreatDetected(req)) || (headers.enabled && headerThreatDetected(req))
-        || (cookies.enabled && cookieThreatDetected(req)));
+  boolean threatDetected(ServletRequest req, boolean doAllBlocks) {
+    return ((endpoints.enabled && endpointsThreatDetected(req, doAllBlocks)) || 
+            (parameters.enabled && parameterThreatDetected(req, doAllBlocks)) || 
+            (headers.enabled && headerThreatDetected(req, doAllBlocks)) || 
+            (cookies.enabled && cookieThreatDetected(req, doAllBlocks)));
   }
 
-  private boolean endpointsThreatDetected(ServletRequest req) {
+  private boolean endpointsThreatDetected(ServletRequest req, boolean doAllBlocks) {
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
-    Metadata metadata = endpoints.endpointParameters.get(uri);
-    if (metadata == null) {
-      return false;
-    }
-
+    Enumeration<?> names = null;
     String k = null;
     String[] values = null;
-    Enumeration<?> names = req.getParameterNames();
-    while (names.hasMoreElements()) {
-      k = (String) names.nextElement();
-      values = req.getParameterValues(k);
-      for (String v : values) {
-        if (threat(req, metadata, k, v, true)) {
-          return true;
+    
+    if(!doAllBlocks) {
+      Metadata metadataDetectDetect = endpointsDetect.endpointParametersDetect.get(uri);
+      Metadata metadataDetectBlock = endpointsDetect.endpointParametersBlock.get(uri);
+      names = req.getParameterNames();
+      if (metadataDetectDetect != null) {
+        while (names.hasMoreElements()) {
+          k = (String) names.nextElement();
+          values = req.getParameterValues(k);
+          for (String v : values) {
+            if(metadataDetectDetect.endpointMode == Modes.DISABLED) {
+              continue;
+            }
+            threat(req, metadataDetectDetect, k, v, true, doAllBlocks);
+            threat(req, metadataDetectBlock, k, v, true, doAllBlocks);
+          }
+        }
+      }
+    }
+
+    names = req.getParameterNames();
+    Metadata metadataBlockDetect = endpoints.endpointParametersDetect.get(uri);
+    Metadata metadataBlockBlock = endpoints.endpointParametersBlock.get(uri);
+    if (metadataBlockDetect != null) {
+      while (names.hasMoreElements()) {
+        k = (String) names.nextElement();
+        values = req.getParameterValues(k);
+        if(!doAllBlocks && metadataBlockDetect.endpointMode != Modes.DISABLED) {
+          for (String v : values) {
+            threat(req, metadataBlockDetect, k, v, true, doAllBlocks);
+          }
+        }
+        for (String v : values) {
+          if(metadataBlockBlock != null && metadataBlockBlock.endpointMode != Modes.DISABLED && 
+              threat(req, metadataBlockBlock, k, v, true, doAllBlocks) && !doAllBlocks){
+              return true;
+          }
         }
       }
     }
     return false;
   }
 
-  private boolean parameterThreatDetected(ServletRequest req) {
+  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks) {
     String k = null;
     String[] values = null;
     Enumeration<?> names = req.getParameterNames();
@@ -85,11 +114,13 @@ final class Shield {
       k = (String) names.nextElement();
       values = req.getParameterValues(k);
       //log all detects first
-      for (String v : values) {
-        threat(req, parametersDetect, k, v);
+      if(!doAllBlocks) {
+        for (String v : values) {
+          threat(req, parametersDetect, k, v, false, doAllBlocks);
+        }
       }
       for (String v : values) {
-        if (threat(req, parameters, k, v)) {
+        if (threat(req, parameters, k, v, false, doAllBlocks) && !doAllBlocks) {
           return true;
         }
       }
@@ -97,21 +128,23 @@ final class Shield {
     return false;
   }
 
-  private boolean headerThreatDetected(ServletRequest req) {
+  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks) {
     Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
-    while (names.hasMoreElements()) {
-      String s = String.valueOf(names.nextElement());
-      Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
-      while (headerEnumeration.hasMoreElements()) {
-        threat(req, headersDetect, s, (String) headerEnumeration.nextElement());
+    if(!doAllBlocks) {
+      while (names.hasMoreElements()) {
+        String s = String.valueOf(names.nextElement());
+        Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
+        while (headerEnumeration.hasMoreElements()) {
+          threat(req, headersDetect, s, (String) headerEnumeration.nextElement(), false, doAllBlocks);
+        }
       }
+      names = ((HttpServletRequest) req).getHeaderNames();
     }
-    names = ((HttpServletRequest) req).getHeaderNames();
     while (names.hasMoreElements()) {
       String s = String.valueOf(names.nextElement());
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
       while (headerEnumeration.hasMoreElements()) {
-        if (threat(req, headers, s, (String) headerEnumeration.nextElement())) {
+        if (threat(req, headers, s, (String) headerEnumeration.nextElement(), false, doAllBlocks) && !doAllBlocks) {
           return true;
         }
       }
@@ -119,34 +152,37 @@ final class Shield {
     return false;
   }
 
-  private boolean cookieThreatDetected(ServletRequest req) {
+  private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks) {
     Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
-    if (cookieArray != null) {
+    if(cookieArray == null){
+      return false;
+    }
+    if (!doAllBlocks) {
       for (Cookie c : cookieArray) {
-        threat(req, cookiesDetect, c.getName(), c.getValue());
+        threat(req, cookiesDetect, c.getName(), c.getValue(), false, doAllBlocks);
       }
-      for (Cookie c : cookieArray) {
-        if (threat(req, cookies, c.getName(), c.getValue())) {
-          return true;
-        }
-      }
+    }
+    for (Cookie c : cookieArray) {
+      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks) && !doAllBlocks) {
+        return true;
+     }
     }
     return false;
   }
 
   boolean threat(String v) {
-    return threat(null, null, "", v);
-  }
-
-  boolean threat(ServletRequest req, Metadata meta, String key, String value) {
-    return threat(req, meta, key, value, false);
+    return threat(null, null, "", v, false, false);
   }
 
   boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint) {
-    return threat(req, meta, key, value, isEndpoint, false);
+    return threat(req, meta, key, value, isEndpoint, false, false);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceStringPatterns) {
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks) {
+    return threat(req, meta, key, value, isEndpoint, false, doAllBlocks);
+  }
+
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceStringPatterns, boolean doAllBlocks) {
     if (value == null) {
       return false;
     }
@@ -160,7 +196,8 @@ final class Shield {
       if (item == null) {
         if (forceStringPatterns) {
           item = new ItemString();
-        } else {
+        } 
+        else {
           return meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
         }
       }
@@ -168,14 +205,14 @@ final class Shield {
       item = new ItemString();
     }
 
-    return isInError(req, meta, value, isEndpoint, item);
+    return isInError(req, meta, value, isEndpoint, item, doAllBlocks);
   }
 
-  private boolean isInError(ServletRequest req, Metadata meta, String value, boolean isEndpoint, Item item) {
+  private boolean isInError(ServletRequest req, Metadata meta, String value, boolean isEndpoint, Item item, boolean doAllBlocks) {
     if (item.required && value.length() == 0) {
       return true;
     }
-    return (isEndpoint && isEndpointThreat(item, value, req, meta)) || item.inError(req, this, value);
+    return (isEndpoint && isEndpointThreat(item, value, req, meta)) || item.inError(req, this, value, doAllBlocks);
   }
 
   private Item getItemFromMetaOrIndex(Metadata meta, String key) {
@@ -197,7 +234,7 @@ final class Shield {
     if (MetadataEndpoints.isStrictError(req, meta)) {
       return true;
     }
-    return item.related.length() > 0 && !endpoints.isRelateValid(item.related, value, req, meta);
+    return item.related != null && item.related.length() > 0 && !endpoints.isRelateValid(item.related, value, req, meta);
   }
 
   private boolean handleChildShield(ServletRequest req, String value) {
@@ -205,7 +242,7 @@ final class Shield {
       if (req == null) {
         return childShield.threat(value);
       } else {
-        return childShield.threatDetected(req);
+        return childShield.threatDetected(req, false);
       }
     }
     return false;
@@ -336,7 +373,8 @@ final class Shield {
         }
       }
     }
-    endpoints = new MetadataEndpoints(this, shieldXml, logger);
+    endpoints = new MetadataEndpoints(this, shieldXml, logger, false);
+    endpointsDetect = new MetadataEndpoints(this, shieldXml, logger, true);
     parameters = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, false);
     parametersDetect = new Metadata(this, shieldXml, Metadata.XML_PARAMETERS, logger, true);
     cookies = new Metadata(this, shieldXml, Metadata.XML_COOKIES, logger, false);
@@ -474,7 +512,7 @@ final class Shield {
         appendPItemMapToSB(cookies.items, sb, "\tCookies");
         appendPItemMapToSB(parameters.items, sb, "\tParameters");
         sb.append("\tEndpoints\n");
-        appendEndpoints(endpoints, sb, "\t");
+        appendEndpoints(endpoints, endpointsDetect, sb, "\t");
       }
     }
     logger.info(sb.toString());
@@ -488,14 +526,19 @@ final class Shield {
     }
   }
 
-  static void appendEndpoints(MetadataEndpoints endpoints, StringBuilder sb, String label) {
-    Iterator<Map.Entry<String, Metadata>> it = endpoints.endpointParameters.entrySet().iterator();
+  static void appendEndpoints(MetadataEndpoints endpoints, MetadataEndpoints endpointsDetect, StringBuilder sb, String label) {
+    Iterator<Map.Entry<String, Metadata>> it = endpoints.endpointParametersBlock.entrySet().iterator();
+    appendItemToSb(sb, label, it);
+
+    it = endpointsDetect.endpointParametersDetect.entrySet().iterator();
+    appendItemToSb(sb, label, it);
+  }
+
+  private static void appendItemToSb(StringBuilder sb, String label, Iterator<Map.Entry<String, Metadata>> it) {
     while (it.hasNext()) {
       Map.Entry<String, Metadata> pair = it.next();
       appendPItemMapToSB(pair.getValue().items, sb, label + pair.getKey());
-      // it.remove(); // avoids a ConcurrentModificationException
     }
-
   }
 
   static void appendPItemMapToSB(Map<String, Item> map, StringBuilder sb, String label) {

@@ -47,7 +47,7 @@ abstract class Item {
   }
 
   // implemented by Types
-  abstract boolean inError(ServletRequest req, Shield shield, String value);
+  abstract boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks);
 
   abstract List<Point> getErrorPoints(Shield shield, String value);
 
@@ -106,11 +106,15 @@ abstract class Item {
   }
 
   boolean handleMode(boolean isError, String value, String more, ServletRequest req, Modes action, boolean log) {
+    return handleMode(isError, value, more, req, action, log, false);
+  }
+
+  boolean handleMode(boolean isError, String value, String more, ServletRequest req, Modes action, boolean log, boolean doAllBlocks) {
     if (isError && mode == Modes.BLOCK) {
-      if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmErrors)) {
+      if (logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors)) {
         logger.error(toJson(value, action, more, req, true));
       }
-      if (log && req != null && (shield == null || shield.sanwaf.onErrorAddParmErrors)) {
+      if ((log || doAllBlocks) && req != null && (shield == null || shield.sanwaf.onErrorAddParmErrors)) {
         appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, action, more, req, true), req);
       }
       return isError;
@@ -137,6 +141,13 @@ abstract class Item {
       old = old.substring(1, old.length() - 1) + ",";
     }
     req.setAttribute(att, "[" + old + value + "]");
+  }
+  
+  boolean returnBasedOnDoAllBlocks(boolean b, boolean doAllBlocks) {
+    if(doAllBlocks) {
+      return false;
+    }
+    return b;
   }
 
   String getProperties() {

@@ -30,7 +30,7 @@ final class ItemDependentFormat extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, Shield shield, final String value) {
+  boolean inError(final ServletRequest req, Shield shield, final String value, boolean doAllBlocks) {
     if (mode == Modes.DISABLED) {
       return false;
     }
@@ -39,7 +39,7 @@ final class ItemDependentFormat extends Item {
       return false;
     }
     ItemFormat format = getFormatForValue(elementValue);
-    return handleMode((format != null && format.inError(req, shield, value)), value, INVALID_DEP_FORMAT + depFormatString, req);
+    return returnBasedOnDoAllBlocks(handleMode((format != null && format.inError(req, shield, value, doAllBlocks)), value, INVALID_DEP_FORMAT + depFormatString, req), doAllBlocks);
   }
 
   private ItemFormat getFormatForValue(String value) {

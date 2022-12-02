@@ -604,6 +604,18 @@ public class EndpointsTest {
 
   }
 
+  
+  @Test
+  public void testEndpointStrictWithLess() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    // related-simple-child<related>related-simple-parent</related>
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request = new MockHttpServletRequest();
+    request.setRequestURI("/foo/bar/strictWithLess.jsp");
+    request.addParameter("foobar", "aaa");
+    boolean isThreat = sanwaf.isThreatDetected(request);
+    assertTrue(isThreat);
+  }
+
   @Test
   public void testEndpointStrictTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
     // related-simple-child<related>related-simple-parent</related>
@@ -659,18 +671,6 @@ public class EndpointsTest {
     request.addParameter("parm2", "aaa");
     request.addParameter("parm3", "aaa");
     request.addParameter("parmEXTRA", "aaa");
-    isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(isThreat);
-
-    request = new MockHttpServletRequest();
-    request.setRequestURI("/foo/bar/strictWithLess.jsp");
-    request.addParameter("foobar", "aaa");
-    isThreat = sanwaf.isThreatDetected(request);
-    assertTrue(isThreat);
-
-    request = new MockHttpServletRequest();
-    request.setRequestURI("/foo/bar/strictWithLessWord.jsp");
-    request.addParameter("foobar", "aaa");
     isThreat = sanwaf.isThreatDetected(request);
     assertTrue(isThreat);
 

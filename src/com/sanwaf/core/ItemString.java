@@ -36,25 +36,27 @@ final class ItemString extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return handleMode(me.error, value, FAILED_PATTERN, req);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, FAILED_PATTERN, req), doAllBlocks);
     }
     boolean inError = false;
     if (shield != null) {
       //first process the detects & detect all - ignore the return value for detect
-      isInErrorForPatterns(req, shield.rulePatternsDetect, value);
+      if(!doAllBlocks) {
+        isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
+      }
       //then do the blocks
-      inError = isInErrorForPatterns(req, shield.rulePatterns, value);
+      inError = isInErrorForPatterns(req, shield.rulePatterns, value, doAllBlocks);
     }
-    if (mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
+    if (doAllBlocks || mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
       return false;
     }
     return inError;
   }
 
-  private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value) {
+  private boolean isInErrorForPatterns(final ServletRequest req, Map<String, Rule> patterns, final String value, boolean doAllBlocks) {
     boolean inError = false;
     for (Map.Entry<String, Rule> rule : patterns.entrySet()) {
       Modes ruleMode = rule.getValue().mode;
@@ -63,15 +65,18 @@ final class ItemString extends Item {
         if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match)) {
           if (rule.getValue().mode == Modes.BLOCK) {
             inError = true;
-            handleMode(true, value, FAILED_PATTERN + rule.getKey(), req);
+            handleMode(true, value, FAILED_PATTERN + rule.getKey(), req, ruleMode, true, doAllBlocks);
           } else {
             handleMode(true, value, MATCHED_PATTERN + rule.getKey() + " (" + ruleMode + ")", req, ruleMode, true);
           }
-          if (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL) {
+          if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL)) {
             break;
           }
         }
       }
+    }
+    if(doAllBlocks) {
+      return false;
     }
     return inError;
   }

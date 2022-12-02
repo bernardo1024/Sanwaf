@@ -16,12 +16,12 @@ final class ItemConstant extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return handleMode(me.error, value, INVALID_CONSTANT, req);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, INVALID_CONSTANT, req), doAllBlocks);
     }
-    return handleMode(!constants.contains(value), value, INVALID_CONSTANT + constants, req);
+    return returnBasedOnDoAllBlocks(handleMode(!constants.contains(value), value, INVALID_CONSTANT + constants, req), doAllBlocks);
   }
 
   @Override

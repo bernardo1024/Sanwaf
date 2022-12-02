@@ -16,16 +16,17 @@ public class MetadataEndpoints {
   com.sanwaf.log.Logger logger;
   boolean enabled = false;
   boolean caseSensitive = true;
-  Map<String, Metadata> endpointParameters = new HashMap<>();
+  Map<String, Metadata> endpointParametersBlock = new HashMap<>();
+  Map<String, Metadata> endpointParametersDetect = new HashMap<>();
   Shield shield;
 
-  MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger) {
+  MetadataEndpoints(Shield shield, Xml xml, com.sanwaf.log.Logger logger, boolean isDetect) {
     this.shield = shield;
     this.logger = logger;
-    load(shield, xml);
+    load(shield, xml, isDetect);
   }
 
-  void load(Shield shield, Xml xml) {
+  void load(Shield shield, Xml xml, boolean isDetect) {
     String metadataBlock = xml.get(Metadata.XML_METADATA);
     Xml metadataBlockXml = new Xml(metadataBlock);
     String securedBlock = metadataBlockXml.get(Metadata.XML_SECURED);
@@ -48,16 +49,38 @@ public class MetadataEndpoints {
       String[] uris = endpointXml.get(ItemFactory.XML_ITEM_URI).split(":::");
       String strict = endpointXml.get(XML_STRICT);
       String items = endpointXml.get(ItemFactory.XML_ITEMS);
-      Metadata parameters = new Metadata(shield, items, caseSensitive, true, strict, logger);
+      Metadata parametersBlock = new Metadata(shield, items, caseSensitive, true, strict, logger, false);
+      Metadata parametersDetect = new Metadata(shield, items, caseSensitive, true, strict, logger, true);
+      setendpointparms(shield, isDetect, false, endpointString, uris, parametersBlock);
+      setendpointparms(shield, isDetect, true, endpointString, uris, parametersDetect);
+    }
+  }
 
-      for (String uri : uris) {
-        endpointParameters.put(uri, parameters);
+  private void setendpointparms(Shield shield, boolean isDetect, boolean isDetectParms, String endpointString, String[] uris, Metadata parameters) {
+    int start = endpointString.indexOf("<items>");
+    int end = endpointString.indexOf("</items>");
+    Xml mx = new Xml(endpointString.substring(0, start) + endpointString.substring(end + "</items>".length()));
+    parameters.endpointMode = Modes.getMode(mx.get(ItemFactory.XML_ITEM_MODE), (shield != null ? shield.mode : Modes.BLOCK));
+
+    if((!isDetect && parameters.endpointMode == Modes.BLOCK) ||
+        isDetect && (parameters.endpointMode == Modes.BLOCK && !isDetectParms || parameters.endpointMode == Modes.DETECT_ALL)) {
+     if(isDetectParms) {
+        setEndpointParametersForUris(endpointParametersDetect, uris, parameters);
+      }
+      else {
+        setEndpointParametersForUris(endpointParametersBlock, uris, parameters);
       }
     }
   }
 
+  private void setEndpointParametersForUris(Map<String, Metadata> endpoints, String[] uris, Metadata parameters) {
+    for (String uri : uris) {
+      endpoints.put(uri, parameters);
+    }
+  }
+
   static boolean isStrictError(ServletRequest req, Metadata meta) {
-    if (meta.endpointIsStrict) {
+    if (meta != null && meta.endpointIsStrict) {
       if (!meta.endpointIsStrictAllowLess) {
         for (String name : meta.items.keySet()) {
           String s = req.getParameter(name);

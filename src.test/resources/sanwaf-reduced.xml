@@ -2,7 +2,8 @@
 <!DOCTYPE xml>
 <sanwaf>
 	<global-settings>
-		<enabled>true</enabled>
+    <enabled>true</enabled>
+    <verbose>true</verbose>
 	</global-settings>
 	
 	<shields>

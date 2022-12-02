@@ -28,7 +28,7 @@ final class ItemFormat extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     if (mode == Modes.DISABLED) {
       return false;
     }
@@ -45,7 +45,7 @@ final class ItemFormat extends Item {
         break;
       }
     }
-    return handleMode(!foundValidFormat, value, INVALID_FORMAT + formatString, req);
+    return returnBasedOnDoAllBlocks(handleMode(!foundValidFormat, value, INVALID_FORMAT + formatString, req), doAllBlocks);
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks) {

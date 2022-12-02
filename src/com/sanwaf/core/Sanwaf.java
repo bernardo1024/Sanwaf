@@ -116,7 +116,11 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req) {
-    return isThreatDetected(req, null);
+    return isThreatDetected(req, null, false);
+  }
+
+  boolean isThreatDetected(ServletRequest req, boolean doAllBlocks) {
+    return isThreatDetected(req, null, doAllBlocks);
   }
 
   /**
@@ -141,7 +145,7 @@ public final class Sanwaf {
    *          list of string shield names you want run against
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreatDetected(ServletRequest req, List<String> shieldList) {
+  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks) {
     if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
@@ -150,7 +154,7 @@ public final class Sanwaf {
       return false;
     }
     for (Shield sh : shields) {
-      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req)) {
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks)) {
         return true;
       }
     }
@@ -189,7 +193,7 @@ public final class Sanwaf {
    */
   public static boolean isThreat(String value, String sXml) {
     Item item = ItemFactory.parseItem(null, new Xml(sXml), false, null);
-    return item.inError(null, null, value);
+    return item.inError(null, null, value, false);
   }
 
   /**
@@ -266,7 +270,7 @@ public final class Sanwaf {
       logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
       return false;
     }
-    return item.inError(req, sh, value);
+    return item.inError(req, sh, value, false);
   }
 
   /**
@@ -286,7 +290,7 @@ public final class Sanwaf {
    */
   public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req) {
     for (Shield sh : shields) {
-      if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(req, null, "", value)) {
+      if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(req, null, "", value, false)) {
         return true;
       }
     }
@@ -364,7 +368,8 @@ public final class Sanwaf {
    * 
    * <pre>
    *  Returns all threats found for a give request object in JSON format
-   *  used to display errors to the user.
+   *  used to display errors to the user.  Note that this method only returns
+   *  the first error found.
    * </pre>
    * 
    * @param req
@@ -373,6 +378,37 @@ public final class Sanwaf {
    * @return String Returns all threats found in JSON format
    */
   public static String getErrors(HttpServletRequest req) {
+    Object o = req.getAttribute(ATT_LOG_ERROR);
+    if (o != null) {
+      return String.valueOf(o);
+    }
+    return null;
+  }
+  
+  /**
+   * Get All Sanwaf Errors
+   * 
+   * <pre>
+   *  Returns all threats found for a give request object in JSON format
+   *  used to display errors to the user.
+   *  This method returns all errors detected.
+   * </pre>
+   * 
+   * @param req
+   *          HttpServletRequest the request object where
+   *          Sanwaf.isThreatDetected() returned true.
+   * @return String Returns all threats found in JSON format
+   */
+  public String getAllErrors(HttpServletRequest req) {
+    if(req == null) {
+      return null;
+    }
+    if (onErrorAddParmErrors) {
+      //clear out the one from the block
+      req.setAttribute(ATT_LOG_ERROR, "");
+    }
+    //call all blocks, dont worry about the detects as they will have already been processed.
+    isThreatDetected(req, null, true);
     Object o = req.getAttribute(ATT_LOG_ERROR);
     if (o != null) {
       return String.valueOf(o);

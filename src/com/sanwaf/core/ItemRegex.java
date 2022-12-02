@@ -35,10 +35,10 @@ final class ItemRegex extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return handleMode(me.error, value, FAILED_CUSTOM_PATTERN + patternName + " (" + patternString + ")", req);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, FAILED_CUSTOM_PATTERN + patternName + " (" + patternString + ")", req), doAllBlocks);
     }
     if (rule == null) {
       if (shield == null) {
@@ -59,7 +59,7 @@ final class ItemRegex extends Item {
       }
       if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
         handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);
-        return true;
+        return !doAllBlocks;
       }
     }
     return false;

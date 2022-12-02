@@ -36,16 +36,16 @@ class ItemAlphanumeric extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return handleMode(me.error, value, INVALID_AN, req);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, INVALID_AN, req), doAllBlocks);
     }
     int i = 0;
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c)) {
-        return handleMode(true, value, INVALID_AN, req);
+        return returnBasedOnDoAllBlocks(handleMode(true, value, INVALID_AN, req), doAllBlocks);
       }
     }
     return false;

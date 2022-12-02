@@ -145,7 +145,6 @@
               </items>
             </endpoint>
           </endpoints>
-
           <parameters>
             <item><mode>detect</mode><name>modeParameter-DETECT</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>
             <item><mode>detect</mode><name>modeParameter-DETECT2</name><type>s</type><max></max><min></min><msg></msg><uri></uri></item>
@@ -175,7 +174,6 @@
 
             <item><mode>detect</mode><name>endpointRegex</name><type>x{DETECT}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
             <item><name>regexParmNoModeWithRegexDetectMode</name><type>r{date-DETECT-ALL}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
-
           </parameters>
           <headers>
             <item><mode>detect</mode><name>modeHeader-DETECT</name><type>n{,}</type><max></max><min></min><msg></msg><uri></uri></item>

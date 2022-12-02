@@ -19,6 +19,7 @@ class Metadata {
   boolean caseSensitive = true;
   boolean endpointIsStrict = false;
   boolean endpointIsStrictAllowLess = false;
+  Modes endpointMode = Modes.BLOCK;
   Map<String, Item> items = new HashMap<>();
   Map<String, List<String>> index = new HashMap<>();
   Shield shield;
@@ -30,9 +31,9 @@ class Metadata {
   }
 
   //used for endpoints
-  Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger) {
+  Metadata(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, String endpointIsStrict, com.sanwaf.log.Logger logger, boolean isDetect) {
     this.logger = logger;
-    loadEndpoints(shield, itemsString, caseSensitive, includeEndpointAttributes);
+    loadEndpoints(shield, itemsString, caseSensitive, includeEndpointAttributes, isDetect);
 
     if ("true".equalsIgnoreCase(endpointIsStrict)) {
       this.endpointIsStrict = true;
@@ -99,7 +100,7 @@ class Metadata {
     }
   }
 
-  void loadEndpoints(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes) {
+  void loadEndpoints(Shield shield, String itemsString, boolean caseSensitive, boolean includeEndpointAttributes, boolean isDetect) {
     initA2Zindex(index);
     enabled = true;
     this.caseSensitive = caseSensitive;
@@ -107,7 +108,7 @@ class Metadata {
     Xml itemsXml = new Xml(itemsString);
     String[] xmlItems = itemsXml.getAll(ItemFactory.XML_ITEM);
     for (String itemString : xmlItems) {
-      loadItem(shield, itemString, includeEndpointAttributes, false);
+      loadItem(shield, itemString, includeEndpointAttributes, isDetect);
     }
   }
 

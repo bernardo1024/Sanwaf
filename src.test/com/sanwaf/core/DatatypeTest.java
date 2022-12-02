@@ -30,41 +30,41 @@ public class DatatypeTest {
   @Test
   public void testNumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "lengthN_0_5", "12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "0123456789"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "-12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "-12345.67"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "foo.12"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.bar"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.34.56.78"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "- 12345.67"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", null));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "NumericRequired", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "NumericRequired", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "10"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "2"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "5"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "11"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "1"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "abc"));
+    assertEquals(false, shield.threat(req, shield.parameters, "lengthN_0_5", "12345", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "0123456789", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "-12345", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "-12345.67", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "foo.12", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.bar", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "12.34.56.78", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric", "- 12345.67", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", null, false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "NumericRequired", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "NumericRequired", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "10", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "2", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "5", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "11", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "1", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Numeric-maxval10-minval2", "abc", false, false));
   }
 
   @Test
   public void testInteger() {
     MockHttpServletRequest req = new MockHttpServletRequest();
     // assertEquals(false, shield.threat(req, shield.parameters, "Integer",
-    // "12345"));
+    // "12345", false, false));
     // assertEquals(false, shield.threat(req, shield.parameters, "Integer",
-    // "0123456789"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "-12345"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "-12345.67"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "foo.12"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "12.bar"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "12.34.56.78"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "- 12345"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Integer", " 12345"));
+    // "0123456789", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Integer", "-12345", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "-12345.67", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "foo.12", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "12.bar", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "12.34.56.78", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", "- 12345", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Integer", " 12345", false, false));
   }
 
   @Test
@@ -72,7 +72,7 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
-    assertEquals(true, p.inError(req, shield, "12,34,56"));
+    assertEquals(true, p.inError(req, shield, "12,34,56", false));
 
     List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
@@ -87,7 +87,7 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "i{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
-    assertEquals(true, p.inError(req, shield, "12,34,56"));
+    assertEquals(true, p.inError(req, shield, "12,34,56", false));
 
     List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
@@ -100,49 +100,49 @@ public class DatatypeTest {
   @Test
   public void testAlphanumeric() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", "abcdefghijklmnopqrstuvwxyz0123456789"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.a"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.a...."));
-    assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.abc"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", null));
-    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericRequired", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", "abcdefghijklmnopqrstuvwxyz0123456789", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.a", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.a....", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Alphanumeric", "1239.abc", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", null, false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Alphanumeric", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericRequired", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericRequired", "", false, false));
   }
 
   @Test
   public void testAlphanumericSizeError() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericSizeError", "123"));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericSizeError", "1234"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "123456"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "1234567"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "12345678"));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericSizeError", "123456789"));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericSizeError", "123", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericSizeError", "1234", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "12345", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "123456", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "1234567", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericSizeError", "12345678", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericSizeError", "123456789", false, false));
   }
 
   @Test
   public void testAlphanumericAndMore() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "abcde"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "1?234"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "1?a1b2c?3d4"));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMore", "123-456"));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMore", "123_456"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", null));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreRequired", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMoreRequired", ""));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "abcde", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "1?234", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "1?a1b2c?3d4", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMore", "123-456", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMore", "123_456", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMore", null, false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreRequired", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMoreRequired", "", false, false));
   }
 
   @Test
   public void testAlphanumericAndMoreInvalidConfig() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig1", "abc123? :"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig2", "1?234"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig3", "1?a1b2c?3d4"));
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig4", "abc123"));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig1", "abc123? :", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig2", "1?234", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig3", "1?a1b2c?3d4", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreInvalidConfig4", "abc123", false, false));
   }
 
   @Test
@@ -150,9 +150,9 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "a{,}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore(id);
-    assertEquals(false, p.inError(req, shield, ""));
-    assertEquals(false, p.inError(req, shield, "abcde"));
-    assertEquals(true, p.inError(req, shield, "abcde?fg"));
+    assertEquals(false, p.inError(req, shield, "", false));
+    assertEquals(false, p.inError(req, shield, "abcde", false));
+    assertEquals(true, p.inError(req, shield, "abcde?fg", false));
 
     List<Point> list = p.getErrorPoints(shield, "abcde?fg");
     assertEquals(true, list.size() == 1);
@@ -167,61 +167,61 @@ public class DatatypeTest {
   @Test
   public void testAlphanumericAndMoreTypeSpecialChars() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a b\tc\nd\re"));
-    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a \\"));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a b\tc\nd\re", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "AlphanumericAndMoreSpecialChars", "a \\", false, false));
   }
 
   @Test
   public void testAlphanumericAndMoreTypeCurlyBraces() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreCurlyBraces", "{a}"));
+    assertEquals(false, shield.threat(req, shield.parameters, "AlphanumericAndMoreCurlyBraces", "{a}", false, false));
   }
 
   @Test
   public void testChar() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", "a"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", "1"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", "-"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", " "));
-    assertEquals(true, shield.threat(req, shield.parameters, "Char", "12"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Char", "123456"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Char", "<asdffff."));
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "Char", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "CharRequired", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "CharRequired", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "Char", "a", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Char", "1", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Char", "-", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Char", " ", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Char", "12", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Char", "123456", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Char", "<asdffff.", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Char", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Char", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "CharRequired", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "CharRequired", null, false, false));
 
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
     ItemChar p = new ItemChar(id);
-    assertTrue(p.inError(req, shield, "12345"));
-    assertFalse(p.inError(req, shield, "1"));
-    assertFalse(p.inError(req, shield, ""));
-    assertFalse(p.inError(req, shield, null));
+    assertTrue(p.inError(req, shield, "12345", false));
+    assertFalse(p.inError(req, shield, "1", false));
+    assertFalse(p.inError(req, shield, "", false));
+    assertFalse(p.inError(req, shield, null, false));
   }
 
   @Test
   public void testOpen() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", "a"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", "1 "));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", "-a"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", "%$"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", ")9)_!@#$%^&*()_+=-`1234567890-=[]\\{>?>?<,./}|"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", "<asdffff."));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "Open", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "OpenRequired", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "OpenRequired", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "a", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "1 ", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "-a", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "%$", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", ")9)_!@#$%^&*()_+=-`1234567890-=[]\\{>?>?<,./}|", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "<asdffff.", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Open", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "OpenRequired", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "OpenRequired", null, false, false));
 
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "o", "error msg1", null, 10, 0);
     ItemOpen p = new ItemOpen(id);
-    assertFalse(p.inError(req, shield, "12345"));
-    assertFalse(p.inError(req, shield, "1"));
-    assertFalse(p.inError(req, shield, ""));
-    assertFalse(p.inError(req, shield, null));
-    assertTrue(p.inError(req, shield, "1234567890123"));
+    assertFalse(p.inError(req, shield, "12345", false));
+    assertFalse(p.inError(req, shield, "1", false));
+    assertFalse(p.inError(req, shield, "", false));
+    assertFalse(p.inError(req, shield, null, false));
+    assertTrue(p.inError(req, shield, "1234567890123", false));
   }
 
   @Test
@@ -229,12 +229,12 @@ public class DatatypeTest {
     // <item><name>openErrorPoints</name><type>o</type><max>5</max><min>5</min></item>
     // <item><name>openErrorPointsMask</name><type>o</type><max>5</max><min>5</min><mask-err>***</mask-err></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertTrue(shield.threat(req, shield.parameters, "openErrorPoints", "123456"));
+    assertTrue(shield.threat(req, shield.parameters, "openErrorPoints", "123456", false, false));
     String s = Sanwaf.getErrors(req);
     assertTrue(s != null && s.contains("\"value\":\"123456\"") && s.contains("\"samplePoints\":"));
 
     req = new MockHttpServletRequest();
-    assertTrue(shield.threat(req, shield.parameters, "openErrorPointsMask", "123456"));
+    assertTrue(shield.threat(req, shield.parameters, "openErrorPointsMask", "123456", false, false));
     s = Sanwaf.getErrors(req);
     assertTrue(s != null && s.contains("\"value\":\"***\""));
   }
@@ -242,28 +242,28 @@ public class DatatypeTest {
   @Test
   public void testRegex() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "CustomRegexSSN", "555-55-5555"));
-    assertEquals(true, shield.threat(req, shield.parameters, "CustomRegexSSN", "abc-de-fghi"));
-    assertEquals(true, shield.threat(req, shield.parameters, "CustomRegexSSN", "5555555555"));
+    assertEquals(false, shield.threat(req, shield.parameters, "CustomRegexSSN", "555-55-5555", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "CustomRegexSSN", "abc-de-fghi", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "CustomRegexSSN", "5555555555", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "CustomTel", "555-555-5555"));
-    assertEquals(true, shield.threat(req, shield.parameters, "CustomTel", "55-555-55556"));
+    assertEquals(false, shield.threat(req, shield.parameters, "CustomTel", "555-555-5555", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "CustomTel", "55-555-55556", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "CustomDate", "20160101"));
-    assertEquals(false, shield.threat(req, shield.parameters, "CustomDate", "2016-01-01"));
+    assertEquals(true, shield.threat(req, shield.parameters, "CustomDate", "20160101", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "CustomDate", "2016-01-01", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "lengthR_0_11", "555-55-5555"));
-    assertEquals(true, shield.threat(req, shield.parameters, "lengthR_0_11", "abc-de-fghi"));
+    assertEquals(false, shield.threat(req, shield.parameters, "lengthR_0_11", "555-55-5555", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthR_0_11", "abc-de-fghi", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-5555"));
-    assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "abc-de-fghi"));
-    assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-55"));
-    assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-5555-55"));
+    assertEquals(false, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-5555", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "abc-de-fghi", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-55", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "lengthR2_0_11", "555-55-5555-55", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "Regex", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "Regex", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "RegexRequired", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "RegexRequired", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "Regex", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Regex", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "RegexRequired", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "RegexRequired", null, false, false));
   }
 
   @Test
@@ -273,10 +273,10 @@ public class DatatypeTest {
     ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName != null && p.patternName.length() > 0);
 
-    assertEquals(false, p.inError(req, shield, "416-555-5555"));
-    assertEquals(true, p.inError(req, shield, "abc-def-ghij"));
-    assertEquals(true, p.inError(req, shield, "a"));
-    assertEquals(true, p.inError(req, shield, "abc-def-ghij-klmn"));
+    assertEquals(false, p.inError(req, shield, "416-555-5555", false));
+    assertEquals(true, p.inError(req, shield, "abc-def-ghij", false));
+    assertEquals(true, p.inError(req, shield, "a", false));
+    assertEquals(true, p.inError(req, shield, "abc-def-ghij-klmn", false));
 
     List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
@@ -299,17 +299,17 @@ public class DatatypeTest {
   @Test
   public void testConstantType() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FOO"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "BAR"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FAR"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Constant", null));
-    assertEquals(false, shield.threat(req, shield.parameters, "Constant", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "ConstantRequired", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "ConstantRequired", ""));
-    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "foo"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "bar"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "far"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "FOOO"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FOO", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "BAR", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "FAR", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Constant", null, false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Constant", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "ConstantRequired", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "ConstantRequired", "", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "foo", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "bar", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "far", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Constant", "FOOO", false, false));
 
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "rk FOO,BAR", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
@@ -332,17 +332,17 @@ public class DatatypeTest {
   @Test
   public void testJava() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345"));
-    assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345678901"));// violates
+    assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "Java", "12345678901", false, false));// violates
                                                                                      // max
                                                                                      // setting
-    assertEquals(false, shield.threat(req, shield.parameters, "Java", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "JavaRequired", null));
-    assertEquals(true, shield.threat(req, shield.parameters, "JavaRequired", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "Java", "10"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Java", null));
-    assertEquals(false, shield.threat(req, shield.parameters, "Java", "0001"));
-    assertEquals(false, shield.threat(req, shield.parameters, "Java", "0000"));
+    assertEquals(false, shield.threat(req, shield.parameters, "Java", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "JavaRequired", null, false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "JavaRequired", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Java", "10", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Java", null, false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Java", "0001", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "Java", "0000", false, false));
   }
 
   @Test
@@ -385,26 +385,26 @@ public class DatatypeTest {
   @Test
   public void testJavaInvalidClass() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "JavaInvalidClass", "0000");
+    boolean b = shield.threat(req, shield.parameters, "JavaInvalidClass", "0000", false, false);
     assertEquals(true, b);
 
     req = new MockHttpServletRequest();
-    b = shield.threat(req, shield.parameters, "JavaInvalidClass2", "0000");
+    b = shield.threat(req, shield.parameters, "JavaInvalidClass2", "0000", false, false);
     assertEquals(true, b);
 
     req = new MockHttpServletRequest();
-    b = shield.threat(req, shield.parameters, "JavaInvalidClassEmpty", "0000");
+    b = shield.threat(req, shield.parameters, "JavaInvalidClassEmpty", "0000", false, false);
     assertEquals(true, b);
 
     req = new MockHttpServletRequest();
-    b = shield.threat(req, shield.parameters, "JavaInvalidClassNoPackage", "0000");
+    b = shield.threat(req, shield.parameters, "JavaInvalidClassNoPackage", "0000", false, false);
     assertEquals(true, b);
   }
 
   @Test
   public void testJavaInvalidMethod() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    boolean b = shield.threat(req, shield.parameters, "JavaInvalidMethod", "0000");
+    boolean b = shield.threat(req, shield.parameters, "JavaInvalidMethod", "0000", false, false);
     assertEquals(false, b);
   }
 
@@ -426,131 +426,131 @@ public class DatatypeTest {
   @Test
   public void testFormat() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", "(123) 456-7890 abc ABC"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat", "BAR"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", "(123) 456-7890 abc ABC", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat", "BAR", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat", null, false, false));
   }
 
   @Test
   public void testFormatRequired() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", "(123) 456-7890 abc ABC"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired", "BAR"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", "(123) 456-7890 abc ABC", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired", "BAR", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired", null, false, false));
   }
 
   @Test
   public void testFormat2Required() {
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZzZ"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zzz"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZzZ", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zzz", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", " Aac 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "{Aac 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "-Aac 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "# ac 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#{ac 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#-ac 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A c 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A{c 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A-c 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa  0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa{ 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa- 0Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac zZzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac {Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac -Zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0zzz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0{zz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0-zz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 00zz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z0z"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZZz"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z{z"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z-z"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz "));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz0"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz{"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz-"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", " Aac 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "{Aac 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "-Aac 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "# ac 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#{ac 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#-ac 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A c 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A{c 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#A-c 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa  0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa{ 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aa- 0Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac zZzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac {Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac -Zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0zzz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0{zz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0-zz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 00zz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z0z", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0ZZz", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z{z", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Z-z", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz ", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz0", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz{", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "#Aac 0Zz-", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "BAR"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", null));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "BAR", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatRequired2", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatRequired2", null, false, false));
   }
 
   @Test
   public void testFormat2() {
     // <item><name>parmformat2</name><type>f{#[1-12] / #[21-35]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 30"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "01 / 30"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 21"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 35"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "11 / 29"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 30", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "01 / 30", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 21", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "12 / 35", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "11 / 29", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "a0 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "z0 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "/0 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", ":0 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "00 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "13 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "93 / 25"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 20"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 36"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 99"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "a0 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "z0 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "/0 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", ":0 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "00 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "13 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "93 / 25", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 20", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 36", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "01 / 99", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "0z / 9b"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2", "0z / 9b", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", ""));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", null));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", "", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2", null, false, false));
   }
 
   @Test
   public void testFormat2brackets() {
     // <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]01"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]02"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]03"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]04"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]05"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]06"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]07"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]08"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]09"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]10"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]01", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]02", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]03", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]04", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]05", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]06", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]07", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]08", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]09", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat2brackets", "[]10", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]00"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]99"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", " ]01"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[ 01"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]00", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[]99", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", " ]01", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat2brackets", "[ 01", false, false));
 
     // <item><name>parmformat3</name><type>f{#[1-9]}</type>
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "1"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "2"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "3"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "4"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "5"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "6"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "7"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "8"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "9"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "10"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "0"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "1", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "2", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "3", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "4", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "5", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "6", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "7", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "8", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat3", "9", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "10", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat3", "0", false, false));
 
     // <item><name>parmformat4</name><type>f{#[3,4,5,6]###-####-####-####}</type></item>
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "3123-1234-1234-1234"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "4123-1234-1234-1234"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "5123-1234-1234-1234"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "6123-1234-1234-1234"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "1123-1234-1234-1234"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "2123-1234-1234-1234"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "7123-1234-1234-1234"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "8123-1234-1234-1234"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-1234"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-12"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "3123-1234-1234-1234", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "4123-1234-1234-1234", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "5123-1234-1234-1234", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformat4", "6123-1234-1234-1234", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "1123-1234-1234-1234", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "2123-1234-1234-1234", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "7123-1234-1234-1234", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "8123-1234-1234-1234", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-1234", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformat4", "9123-1234-1234-12", false, false));
 
   }
 
@@ -558,10 +558,10 @@ public class DatatypeTest {
   public void testBadFormats() {
     // <item><name>parmformat2brackets</name><type>f{\[\]#[1-10]}</type>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat1", "@"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat2", "@"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat3", "@"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat4", "@"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat1", "@", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat2", "@", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat3", "@", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmbadformat4", "@", false, false));
   }
 
   @Test
@@ -571,22 +571,22 @@ public class DatatypeTest {
     // <item><name>parmMultiFormat3</name><type>f{#####||#####-####||A#A-#A#||A##
     // A###}</type></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345-6789"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat1", "@"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat1", "12345-6789", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat1", "@", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345-6789"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "A1B-2C3"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat2", "@"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "12345-6789", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat2", "A1B-2C3", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat2", "@", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345-6789"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A1B-2C3"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B345"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "12345-6789", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A1B-2C3", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B345", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormatInvalid", "A12 B5"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmMultiFormatInvalid", "A12 B5", false, false));
   }
 
   @Test
@@ -763,24 +763,24 @@ public class DatatypeTest {
     // #[1-3]}</type><max></max><min></min><max-value></max-value><min-value></min-value><msg></msg><req></req><related></related></item>
 
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aacx[]()|:=+-;1"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedChars", "#Aacx[]()|:=+-;1", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmMultiFormat3", "A12 B5", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@#"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ 9"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ A"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar4", "a9$ a"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ x"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ X"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 1"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@#", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ 9", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ A", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar4", "a9$ a", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ x", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ X", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 1", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@# "));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ a"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ a"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar4", "a9$ A"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ 0"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ 0"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 0"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar1", "!@# ", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar2", "a9$ a", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar3", "a9$ a", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar4", "a9$ A", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ 0", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar5", "a9$ 0", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmformatEscapedXchar6", "a9$ 0", false, false));
   }
 
   @Test
@@ -803,41 +803,41 @@ public class DatatypeTest {
     int mm = c.get(Calendar.MONTH) + 1;
 
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowMonth", "12"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowDay", "31"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowMonth", "12", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDateOverflowDay", "31", false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy + 10)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy + 11)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy - 1)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy), false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy + 10), false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy + 11), false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1", String.valueOf(yy - 1), false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy - 10)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy - 11)));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy + 1)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy), false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy - 10), false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy - 11), false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatWithDate1a", String.valueOf(yy + 1), false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy + 10)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy - 10)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy), false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2", String.valueOf(yyyy + 10), false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy), false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate2a", String.valueOf(yyyy - 10), false, false));
 
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate3", String.valueOf(dd)));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm)));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate3", String.valueOf(dd), false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatWithDate4", String.valueOf(mm), false, false));
   }
 
   @Test
   public void testParmFormatIP() {
     // <item><name>parmFormatIP</name><type>f{#[0-255].#[0-255].#[0-255].#[0-255]}</type></item>
     MockHttpServletRequest req = new MockHttpServletRequest();
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "111.111.111.111"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "255.255.255.255"));
-    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "000.000.000.000"));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "111.111.111.111", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "255.255.255.255", false, false));
+    assertEquals(false, shield.threat(req, shield.parameters, "parmFormatIP", "000.000.000.000", false, false));
 
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1.1"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1.1"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1"));
-    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1"));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1.1", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1.1", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1.1.1", false, false));
+    assertEquals(true, shield.threat(req, shield.parameters, "parmFormatIP", "1", false, false));
   }
 
 }
