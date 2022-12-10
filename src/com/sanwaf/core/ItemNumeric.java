@@ -84,10 +84,10 @@ class ItemNumeric extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, INVALID_MAX_MIN, req), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
     }
     if (isMaxMinValueError(value)) {
-      return returnBasedOnDoAllBlocks(handleMode(true, value, INVALID_MAX_MIN, req), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
     }
     boolean foundDot = false;
     for (int i = 0; i < value.length(); i++) {
@@ -99,7 +99,7 @@ class ItemNumeric extends Item {
         } else if (!isInt && c == '.' && !foundDot) {
           foundDot = true;
         } else {
-          return returnBasedOnDoAllBlocks(handleMode(true, value, INVALID_NUMBER, req), doAllBlocks);
+          return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
         }
       }
     }

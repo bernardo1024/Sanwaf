@@ -48,7 +48,7 @@ public class ModeDetectLoggingTest {
     request.addParameter("endpointRegex", "abc");
     sanwaf.isThreatDetected(request);
     String s = outContent.toString();
-    assertTrue(s.contains("inline-regex: DETECT"));
+    assertTrue(s.contains("\"DETECT\",\"type\":\"INLINE_REGEX\""));
   }
   
   @Test
@@ -82,7 +82,7 @@ public class ModeDetectLoggingTest {
     request.addParameter("endpointRegex", "abc");
     sanwaf.isThreatDetected(request);
     s = outContent.toString();
-    assertTrue(s.contains("inline-regex: DETECT"));
+    assertTrue(s.contains("\"DETECT\",\"type\":\"INLINE_REGEX\""));
 
     request = new MockHttpServletRequest();
     request.addParameter("max-min-value", "abclkajdflkjasdklfjaskldfjaskldfjlkasjflkasjflkasdjfklasjfklasdjflkasdjfk");

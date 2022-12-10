@@ -198,6 +198,7 @@ final class Shield {
           item = new ItemString();
         } 
         else {
+          //TODO: if true, then we need to log error & detects
           return meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
         }
       }
@@ -205,15 +206,21 @@ final class Shield {
       item = new ItemString();
     }
 
-    return isInError(req, meta, value, isEndpoint, item, doAllBlocks);
+    if (item.required && value.length() == 0) {
+      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
+      return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
+    }
+    
+    String relmsg = item.isRelateValid(value, req, meta);
+    if(relmsg != null) {
+      item.relatedErrMsg = relmsg;
+      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
+      return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
+    }
+
+    return (isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks)) || item.inError(req, this, value, doAllBlocks);
   }
 
-  private boolean isInError(ServletRequest req, Metadata meta, String value, boolean isEndpoint, Item item, boolean doAllBlocks) {
-    if (item.required && value.length() == 0) {
-      return true;
-    }
-    return (isEndpoint && isEndpointThreat(item, value, req, meta)) || item.inError(req, this, value, doAllBlocks);
-  }
 
   private Item getItemFromMetaOrIndex(Metadata meta, String key) {
     Item item = getItemFromMetadata(meta, key);
@@ -230,11 +237,13 @@ final class Shield {
     return item;
   }
 
-  private boolean isEndpointThreat(Item item, String value, ServletRequest req, Metadata meta) {
+  private boolean isEndpointStrictValid(Item item, String value, ServletRequest req, Metadata meta, boolean doAllBlocks) {
     if (MetadataEndpoints.isStrictError(req, meta)) {
+      //TODO: log endpoint strict error msg
+      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
       return true;
     }
-    return item.related != null && item.related.length() > 0 && !endpoints.isRelateValid(item.related, value, req, meta);
+    return false;
   }
 
   private boolean handleChildShield(ServletRequest req, String value) {

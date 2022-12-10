@@ -326,8 +326,8 @@
 			<java><![CDATA[ Invalid value provided.]]></java>
       <format><![CDATA[  Failed to conform to format: {0}]]></format>
       <dependentFormat><![CDATA[ Failed to conform to dependent format: {0}]]></dependentFormat>
-      <invalidLength><![CDATA[ <br/>Invalid length. Must be between {0} and {1} characters]]></invalidLength>
-      <required><![CDATA[ <br/>Is a Required field]]></required>
+      <invalidLength><![CDATA[ - invalid length. Must be between {0} and {1} characters]]></invalidLength>
+      <required><![CDATA[ - is a required field]]></required>
 		</errorMessages>
 	</global-settings>
 	

@@ -139,10 +139,6 @@ public class GetAllErrorsTest {
 
 
 
-
-
-
-
   @Test
   public void testEndpointNoMode() {
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -187,15 +183,7 @@ public class GetAllErrorsTest {
     assertTrue(!sanwaf.isThreatDetected(request));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT_ALL\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);//hits detect & detectall string regex patterns
+    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);//hits detect & detectall string regex patterns
   }
-
-
-  
-  
-
-
-
-
 
 }

@@ -39,7 +39,11 @@ final class ItemDependentFormat extends Item {
       return false;
     }
     ItemFormat format = getFormatForValue(elementValue);
-    return returnBasedOnDoAllBlocks(handleMode((format != null && format.inError(req, shield, value, doAllBlocks)), value, INVALID_DEP_FORMAT + depFormatString, req), doAllBlocks);
+    
+    if(format != null && format.inError(req, shield, value, doAllBlocks)){
+      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
+    }
+    return false;
   }
 
   private ItemFormat getFormatForValue(String value) {

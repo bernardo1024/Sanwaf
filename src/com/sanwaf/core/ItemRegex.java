@@ -11,6 +11,7 @@ final class ItemRegex extends Item {
   static final String FAILED_CUSTOM_PATTERN = "Failed Custom Pattern: ";
   String patternName = null;
   String patternString = null;
+  boolean isInline = false;
   Rule rule = null;
 
   ItemRegex(ItemData id) {
@@ -38,7 +39,7 @@ final class ItemRegex extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, FAILED_CUSTOM_PATTERN + patternName + " (" + patternString + ")", req), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
     }
     if (rule == null) {
       if (shield == null) {
@@ -55,10 +56,10 @@ final class ItemRegex extends Item {
     boolean match = rule.pattern.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match)) {
       if (rule.mode == Modes.DETECT || rule.mode == Modes.DETECT_ALL) {
-        handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req, rule.mode, true);
+        handleMode(true, value, req, rule.mode, true);
       }
       if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
-        handleMode(true, value, FAILED_CUSTOM_PATTERN + patternName, req);
+        handleMode(true, value, req, rule.mode, true);
         return !doAllBlocks;
       }
     }
@@ -74,6 +75,7 @@ final class ItemRegex extends Item {
     }
 
     if (value.startsWith(ItemFactory.INLINE_REGEX)) {
+      isInline = true;
       rule = new Rule();
       rule.pattern = Pattern.compile(value.substring(ItemFactory.INLINE_REGEX.length(), value.length() - 1), Pattern.CASE_INSENSITIVE);
       rule.mode = id.mode;
@@ -98,6 +100,9 @@ final class ItemRegex extends Item {
 
   @Override
   Types getType() {
+    if(isInline) {
+      return Types.INLINE_REGEX;
+    }
     return Types.REGEX;
   }
 }

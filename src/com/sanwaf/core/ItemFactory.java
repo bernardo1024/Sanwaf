@@ -121,7 +121,7 @@ public class ItemFactory {
     if (pos > 0) {
       t = t.substring(0, pos + ItemFactory.SEP_START.length());
     }
-
+System.out.println("\t\t\titem name="+id.name + ", type="+id.type);
     if (t.equals(NUMERIC)) {
       return new ItemNumeric(id, false);
     } else if (t.equals(OPEN)) {
@@ -129,6 +129,7 @@ public class ItemFactory {
     } else if (t.equals(INTEGER)) {
       return new ItemNumeric(id, true);
     } else if (t.equals(ALPHANUMERIC)) {
+      System.out.println("\t\t\tFOUND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return new ItemAlphanumeric(id);
     } else if (t.equals(CHAR)) {
       return new ItemChar(id);

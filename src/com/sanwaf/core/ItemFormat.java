@@ -45,7 +45,11 @@ final class ItemFormat extends Item {
         break;
       }
     }
-    return returnBasedOnDoAllBlocks(handleMode(!foundValidFormat, value, INVALID_FORMAT + formatString, req), doAllBlocks);
+
+    if(!foundValidFormat) {
+      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
+    }
+    return false;
   }
 
   private boolean formatInError(final String value, List<String> formatBlocks) {

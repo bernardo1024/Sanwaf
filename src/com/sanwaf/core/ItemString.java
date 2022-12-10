@@ -39,7 +39,7 @@ final class ItemString extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, FAILED_PATTERN, req), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
     }
     boolean inError = false;
     if (shield != null) {
@@ -65,9 +65,9 @@ final class ItemString extends Item {
         if ((rule.getValue().failOnMatch && match) || (!rule.getValue().failOnMatch && !match)) {
           if (rule.getValue().mode == Modes.BLOCK) {
             inError = true;
-            handleMode(true, value, FAILED_PATTERN + rule.getKey(), req, ruleMode, true, doAllBlocks);
+            handleMode(true, value, req, ruleMode, true, doAllBlocks);
           } else {
-            handleMode(true, value, MATCHED_PATTERN + rule.getKey() + " (" + ruleMode + ")", req, ruleMode, true);
+            handleMode(true, value, req, ruleMode, true);
           }
           if (doAllBlocks || (mode != Modes.DETECT_ALL && ruleMode != Modes.DETECT_ALL)) {
             break;

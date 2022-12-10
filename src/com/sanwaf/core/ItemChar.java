@@ -16,12 +16,15 @@ final class ItemChar extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, INVALID_CHAR, req), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
     }
     if (value == null) {
       return false;
     }
-    return returnBasedOnDoAllBlocks(handleMode((value.length() > 1), value, INVALID_CHAR, req), doAllBlocks);
+    if(value.length() > 1) {
+      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
+    }
+    return false;
   }
 
   @Override

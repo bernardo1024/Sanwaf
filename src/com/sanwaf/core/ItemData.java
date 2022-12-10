@@ -10,8 +10,7 @@ class ItemData {
   String msg;
   String uri;
   Modes mode;
-  String match;
-
+  
   ItemData(Shield shield, String name, Modes mode, String display, String type, String msg, String uri, int max, int min) {
     this.name = name;
     this.display = display;

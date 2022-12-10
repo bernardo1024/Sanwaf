@@ -50,7 +50,7 @@ public class ErrorMessagesTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "k{foo,bar,far}", "", null, Integer.MAX_VALUE, 0);
     ItemConstant p = new ItemConstant(id);
-    String s = Item.getErrorMessage(req, shield, p);
+    String s = p.getErrorMessage(req, shield);
     assertTrue(s.contains("foo"));
   }
 }

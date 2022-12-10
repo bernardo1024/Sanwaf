@@ -39,13 +39,14 @@ class ItemAlphanumeric extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, INVALID_AN, req), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
     }
     int i = 0;
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c)) {
-        return returnBasedOnDoAllBlocks(handleMode(true, value, INVALID_AN, req), doAllBlocks);
+        System.out.println("\t\t\ta{} isNotAplanumeric ERROR");
+        return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
       }
     }
     return false;
@@ -57,6 +58,6 @@ class ItemAlphanumeric extends Item {
 
   @Override
   Types getType() {
-    return Types.ALPHANUMERIC_AND_MORE;
+    return Types.ALPHANUMERIC;
   }
 }
