@@ -45,7 +45,6 @@ class ItemAlphanumeric extends Item {
     for (i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c)) {
-        System.out.println("\t\t\ta{} isNotAplanumeric ERROR");
         return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
       }
     }
