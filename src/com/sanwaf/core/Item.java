@@ -366,8 +366,6 @@ abstract class Item {
         errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, ItemFactory.XML_INVALID_LENGTH_MSG), min, max);
       }
       
-      //TODO: need to account for the related msge
-      String relmsg = "";
       if(relatedErrMsg != null && relatedErrMsg.length() > 0) {
         errMsg += relatedErrMsg;
       }
