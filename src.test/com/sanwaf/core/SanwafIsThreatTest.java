@@ -10,6 +10,7 @@ import com.sanwaf.core.Sanwaf;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public class SanwafIsThreatTest {
       assertTrue(false);
     }
   }
-
+  
   @Test
   public void testSanWafIsThreat() {
     boolean b = sanwaf.isThreat("<script>alert(1)</script>");

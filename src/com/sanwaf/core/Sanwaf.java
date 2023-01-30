@@ -119,8 +119,8 @@ public final class Sanwaf {
     return isThreatDetected(req, null, false);
   }
 
-  boolean isThreatDetected(ServletRequest req, boolean doAllBlocks) {
-    return isThreatDetected(req, null, doAllBlocks);
+  boolean isThreatDetected(ServletRequest req, boolean processAllBlocks) {
+    return isThreatDetected(req, null, processAllBlocks);
   }
 
   /**
@@ -143,9 +143,12 @@ public final class Sanwaf {
    *          threats
    * @param shieldList
    *          list of string shield names you want run against
+   * @param processAllBlocks
+   *          flag to control if sanwaf will stop on the first item marked as Block.  Set to true to run all blocks.
+   *          this is used with you want to get all the errors for a given request, otherwise, only the first block will be reported. 
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks) {
+  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean processAllBlocks) {
     if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
@@ -154,7 +157,7 @@ public final class Sanwaf {
       return false;
     }
     for (Shield sh : shields) {
-      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks)) {
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, processAllBlocks)) {
         return true;
       }
     }
@@ -250,9 +253,6 @@ public final class Sanwaf {
    *          the shields name that you want to execute the stringPatterns from
    *          (String data type only) or use the custom regex's specified (regex
    *          data type only)
-   * @param setErrorAttributes
-   *          boolean to indicate whether to set the tracking id and error json
-   *          to the request's attributes
    * @param req
    *          calling ServletRequest object used to test URIs
    * @param xml
@@ -286,6 +286,8 @@ public final class Sanwaf {
    *          the string you want to scan for threats
    * @param shieldName
    *          the shields name that you want to execute the stringPatterns from
+   * @param req
+   *          ServletRequest to add the error attributes
    * @return boolean true/false if a threat was detected
    */
   public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req) {
@@ -312,13 +314,12 @@ public final class Sanwaf {
    *    </metadata>
    * </pre>
    * 
-   * @param request
-   *          HttpServletRequest Object to pull the header/cookie/parameter
-   *          value from
-   * @param type
-   *          Sanwaf.AllowListType enumeration (HEADER, COOKIE, PARAMETER)
    * @param name
    *          the name of the header/cookie/parameter you want to retrieve
+   * @param type
+   *          Sanwaf.AllowListType enumeration (HEADER, COOKIE, PARAMETER)
+   * @param req
+   *          HttpServletRequest Object to pull the header/cookie/parameter value from
    * @return String the value of the requested header/cookie/parameter requested
    *         or null.
    */
