@@ -43,7 +43,7 @@ The following section details the compatibility of SanWaf
 
 **JAVA**
 	
-	- tested with JDK 1.6, 1.7, 1.8, 1.11+
+	- tested with JDK 1.6, 1.7, 1.8, 1.11, 1.17+
 
 
 **Javax / Jakarta Version Considerations**
