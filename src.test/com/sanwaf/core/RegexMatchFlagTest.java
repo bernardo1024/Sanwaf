@@ -56,3 +56,4 @@ public class RegexMatchFlagTest {
     assertTrue(!sanwaf.isThreatDetected(request));
   }
 }
+

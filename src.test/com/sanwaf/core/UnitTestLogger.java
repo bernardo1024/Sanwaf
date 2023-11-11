@@ -19,3 +19,4 @@ public class UnitTestLogger implements Logger {
     System.out.println(s);
   }
 }
+

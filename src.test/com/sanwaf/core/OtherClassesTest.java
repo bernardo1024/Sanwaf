@@ -149,3 +149,4 @@ public class OtherClassesTest {
     assert (Xml.stripXmlComments(null).equals(""));
   }
 }
+

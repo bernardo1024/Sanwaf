@@ -94,3 +94,4 @@ public class VerboseTest {
     assertTrue(s.contains("child-shield=XSS-CHILD"));
   }
 }
+

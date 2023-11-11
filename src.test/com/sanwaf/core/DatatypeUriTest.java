@@ -178,3 +178,4 @@ public class DatatypeUriTest {
     assertEquals(true, sanwaf.isThreatDetected(req));
   }
 }
+

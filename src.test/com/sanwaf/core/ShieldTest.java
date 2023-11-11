@@ -122,3 +122,4 @@ public class ShieldTest {
     assertEquals(isThreat, sanwaf.isThreatDetected(request));
   }
 }
+

@@ -54,3 +54,4 @@ public class ErrorMessagesTest {
     assertTrue(s.contains("foo"));
   }
 }
+

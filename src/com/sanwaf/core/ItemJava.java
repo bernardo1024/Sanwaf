@@ -95,3 +95,4 @@ final class ItemJava extends Item {
     return Types.JAVA;
   }
 }
+

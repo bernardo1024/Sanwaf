@@ -138,3 +138,4 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
     return Types.ALPHANUMERIC_AND_MORE;
   }
 }
+

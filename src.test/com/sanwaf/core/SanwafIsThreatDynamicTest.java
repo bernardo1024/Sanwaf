@@ -293,3 +293,4 @@ public class SanwafIsThreatDynamicTest {
     assertTrue(s == null);
   }
 }
+

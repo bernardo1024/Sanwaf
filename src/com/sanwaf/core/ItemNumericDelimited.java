@@ -70,3 +70,4 @@ final class ItemNumericDelimited extends ItemNumeric {
     return Types.NUMERIC_DELIMITED;
   }
 }
+

@@ -111,3 +111,4 @@ public class ModeDetectLoggingTest {
     assertTrue(s.contains("\"format\":\"####\""));
   }
 }
+

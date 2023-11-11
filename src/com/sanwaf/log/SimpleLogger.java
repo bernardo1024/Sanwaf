@@ -18,5 +18,4 @@ public final class SimpleLogger implements Logger {
   public void info(String s) {
     LOGGER.log(java.util.logging.Level.INFO, "Sanwaf-info:\t{0}", s);
   }
-
 }

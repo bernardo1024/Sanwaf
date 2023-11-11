@@ -366,3 +366,4 @@ final class ItemFormat extends Item {
     return Types.FORMAT;
   }
 }
+

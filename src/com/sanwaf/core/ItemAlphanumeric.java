@@ -60,3 +60,4 @@ class ItemAlphanumeric extends Item {
     return Types.ALPHANUMERIC;
   }
 }
+

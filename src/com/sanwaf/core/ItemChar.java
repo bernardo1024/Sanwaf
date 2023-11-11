@@ -42,3 +42,4 @@ final class ItemChar extends Item {
     return Types.CHAR;
   }
 }
+

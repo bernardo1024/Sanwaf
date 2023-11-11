@@ -34,3 +34,4 @@ public class DatatypeXssEncodedPayloadsTest {
     UnitTestUtil.log("XSS-SanWaf", result);
   }
 }
+

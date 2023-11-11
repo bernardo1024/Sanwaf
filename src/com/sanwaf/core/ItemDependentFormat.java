@@ -143,3 +143,4 @@ final class ItemDependentFormat extends Item {
     return Types.DEPENDENT_FORMAT;
   }
 }
+

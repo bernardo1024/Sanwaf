@@ -111,3 +111,4 @@ class ItemNumeric extends Item {
     return Types.NUMERIC;
   }
 }
+

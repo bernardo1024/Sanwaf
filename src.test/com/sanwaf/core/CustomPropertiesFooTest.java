@@ -81,3 +81,4 @@ public class CustomPropertiesFooTest {
     assertEquals(false, shield.threat(req, shield.parameters, "*foo", "<script>alert(1)</script>", false, false));
   }
 }
+
