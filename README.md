@@ -41,9 +41,23 @@ SanWaf is a dependency-free code so it is very easy to add to your Java applicat
 ## Compatibility
 The following section details the compatibility of SanWaf
 
-JAVA  	- tested with JDK 1.6, 1.7, 1.8, 1.9+
+**JAVA**
+	
+	- tested with JDK 1.6, 1.7, 1.8, 1.11+
 
-Note that Sanwaf is written with no dependencies, so will probably work with any version of java. 
+
+**Javax / Jakarta Version Considerations**
+	
+**Sanwaf 0.1.***
+
+	- uses javax.servlet-api
+
+**Sanwaf 0.2.*	**
+
+	- same feature set as 0.1.*
+	- uses jakarta.servlet-api
+
+Note that Sanwaf is written with few dependencies, so will probably work with any version of java. you can configure and compile for your needs.
 
 
 ## Building Sanwaf
@@ -339,11 +353,11 @@ Also note the **secured section** contains the following groups: endpoints, para
 			FORMAT: 	s
 			EXAMPLE:	"Hello this string does not contain a XSS payload"
 
-  	(Open) 
+	(Open) 
 	o		DESCRIPTION:  	Open value.  
                 		      	Any string provided, no regex's will run against this datatype        
         		FORMAT:       	o
-        		EXAMPLE:    	"Hello this string does contain a XSS payload <script>alert(1)</script>"
+        		EXAMPLE:    	"Hello this string does contain a XSS payload \<script\>alert(1)\<\/script\>"
 
 	(Constant)
 	k{}		DESCRIPTION: 	Constant, must be equal to one of the values specified
