@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 final class ItemDependentFormat extends Item {
   static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";
@@ -34,7 +34,10 @@ final class ItemDependentFormat extends Item {
     if (mode == Modes.DISABLED) {
       return false;
     }
-    String elementValue = req.getParameter(dependentElementName);
+    String elementValue = null;
+	  if(dependentElementName != null) {
+	  	elementValue = req.getParameter(dependentElementName);
+	  }
     if (elementValue == null) {
       return false;
     }

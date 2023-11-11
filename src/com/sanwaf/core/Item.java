@@ -3,8 +3,8 @@ package com.sanwaf.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 abstract class Item {
   static final String INVALID_SIZE = "Invalid Size";

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 final class ItemRegex extends Item {
   static final String FAILED_CUSTOM_PATTERN = "Failed Custom Pattern: ";
