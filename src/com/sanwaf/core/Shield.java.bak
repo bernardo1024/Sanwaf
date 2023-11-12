@@ -240,8 +240,7 @@ final class Shield {
   private boolean isEndpointStrictValid(Item item, String value, ServletRequest req, Metadata meta, boolean doAllBlocks) {
     if (MetadataEndpoints.isStrictError(req, meta)) {
       //TODO: log endpoint strict error msg
-      item.handleStrictError("URI Strict Parameter Error - Unknown Parameter Detected", req);
-      //item.handleMode(true, value, req, item.mode, true, doAllBlocks);
+      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
       return true;
     }
     return false;
@@ -435,8 +434,7 @@ final class Shield {
         if (match == null || match.length() == 0) {
           match = defaultMatch;
         }
-        String msg = itemBlockXml.get(ItemFactory.XML_ITEM_MSG);
-        Rule r = new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match, msg);
+        Rule r = new Rule(m, Pattern.compile(l, Pattern.CASE_INSENSITIVE), match);
         if(r.mode == Modes.BLOCK) {
           patterns.put(key.toLowerCase(), r);
         }
@@ -583,18 +581,16 @@ class Rule {
   Modes mode;
   Pattern pattern;
   boolean failOnMatch = true;
-  String msg;
 
   Rule() {
     mode = Modes.BLOCK;
   }
 
-  Rule(Modes mode, Pattern pattern, String match, String msg) {
+  Rule(Modes mode, Pattern pattern, String match) {
     this.mode = mode;
     this.pattern = pattern;
     if ("pass".equalsIgnoreCase(match)) {
       failOnMatch = false;
     }
-    this.msg = msg; 
   }
 }

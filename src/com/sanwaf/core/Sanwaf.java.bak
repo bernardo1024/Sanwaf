@@ -119,8 +119,8 @@ public final class Sanwaf {
     return isThreatDetected(req, null, false);
   }
 
-  boolean isThreatDetected(ServletRequest req, boolean doAllBlocks) {
-    return isThreatDetected(req, null, doAllBlocks);
+  boolean isThreatDetected(ServletRequest req, boolean processAllBlocks) {
+    return isThreatDetected(req, null, processAllBlocks);
   }
 
   /**
@@ -143,12 +143,12 @@ public final class Sanwaf {
    *          threats
    * @param shieldList
    *          list of string shield names you want run against
-   * @param doAllBlocks
+   * @param processAllBlocks
    *          flag to control if sanwaf will stop on the first item marked as Block.  Set to true to run all blocks.
    *          this is used with you want to get all the errors for a given request, otherwise, only the first block will be reported. 
    * @return boolean true/false if a threat was detected
    */
-  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks) {
+  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean processAllBlocks) {
     if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
@@ -157,7 +157,7 @@ public final class Sanwaf {
       return false;
     }
     for (Shield sh : shields) {
-      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks)) {
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, processAllBlocks)) {
         return true;
       }
     }
