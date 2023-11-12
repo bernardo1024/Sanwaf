@@ -52,16 +52,20 @@ The following section details the compatibility of SanWaf
 
 	- uses javax.servlet-api
 
-**Sanwaf 0.2.*	**
+**Sanwaf 0.2.***
 
 	- same feature set as 0.1.*
 	- uses jakarta.servlet-api
 
-Note: tests will fail unless compiling with JDK 17 (spring 6).  For JDK 11, set target to 11 in the POM, then from the command line: 
-	
+**Tests require JDK 17**
+
+To compile for JDK 11, do not run the tests: 
+- open POM and set <compiler.target> to 11
+- open command prompt: 
+
 	mvn install -Dmaven.test.skip=true
 
-Note that Sanwaf is written with few dependencies, so will probably work with any version of java. you can configure and compile for your needs.
+Sanwaf only has 1 dependency (javax | jakarta), so will most likely work with any version of java. 
 
 
 ## Building Sanwaf
