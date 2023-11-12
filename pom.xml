@@ -24,7 +24,7 @@
 			 to compile for jdk 11, set target below to 11
 			 then either comment out the "testResources" section below or 
 			 from the command line: "mvn install -Dmaven.test.skip=true"  -->
-		<compiler.target>11</compiler.target>
+		<compiler.target>17</compiler.target>
 		<compiler.depecation>false</compiler.depecation>
 		<complier.warnings>false</complier.warnings>
 
