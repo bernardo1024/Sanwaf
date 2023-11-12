@@ -107,13 +107,6 @@ abstract class Item {
   }
 
   boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks) {
-    return handleMode(err, value, req, action, log, doAllBlocks, false);
-  }
-
-  boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks, boolean isStrictError) {
-    if(isStrictError) {
-      return handleStrictError(value, req);
-    }
     if(!err || Modes.DISABLED == action) {
       return false;
     }
@@ -140,13 +133,13 @@ abstract class Item {
     return false;
   }
 
-  boolean handleStrictError(String value, ServletRequest req) {
+  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger) {
     ItemStrict item = new ItemStrict(value);
     logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
     appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
     return true;
   }
-  void appendAttribute(String att, String value, ServletRequest req) {
+  static void appendAttribute(String att, String value, ServletRequest req) {
     if (req == null) {
       return;
     }
@@ -201,7 +194,7 @@ abstract class Item {
     }
     String err = null;
     if(andTrueCount == andRequired.size() && orFoundTrue && value.length() == 0){
-      //TODO: fix
+      //TODO: add better message
       err = " - Invalid relationship detected";
     }
     return err;

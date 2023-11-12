@@ -7,7 +7,7 @@ import jakarta.servlet.ServletRequest;
 public class ItemStrict extends Item {
 
   ItemStrict(String s) {
-    
+	  msg = s;
   }
   
   @Override

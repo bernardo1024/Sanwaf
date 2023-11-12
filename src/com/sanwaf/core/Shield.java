@@ -17,7 +17,8 @@ import com.sanwaf.core.Sanwaf.AllowListType;
 import com.sanwaf.log.Logger;
 
 final class Shield {
-  private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
+  private static final String STRICT_PARAMETER_DETECTED = "URI Strict Parameter Error - Unknown Parameter Detected";
+private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   private static final String REGEX_FILE_MARKER = "file=";
   Sanwaf sanwaf = null;
   Logger logger = null;
@@ -198,8 +199,11 @@ final class Shield {
           item = new ItemString();
         } 
         else {
-          //TODO: if true, then we need to log error & detects
-          return meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta);
+          if(meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta)) {
+              Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger);
+        	  return true;
+          }
+          return false;
         }
       }
     } else {
@@ -239,9 +243,7 @@ final class Shield {
 
   private boolean isEndpointStrictValid(Item item, String value, ServletRequest req, Metadata meta, boolean doAllBlocks) {
     if (MetadataEndpoints.isStrictError(req, meta)) {
-      //TODO: log endpoint strict error msg
-      item.handleStrictError("URI Strict Parameter Error - Unknown Parameter Detected", req);
-      //item.handleMode(true, value, req, item.mode, true, doAllBlocks);
+      Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger);
       return true;
     }
     return false;
