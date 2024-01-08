@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

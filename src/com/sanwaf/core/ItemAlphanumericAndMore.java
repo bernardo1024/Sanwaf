@@ -3,7 +3,7 @@ package com.sanwaf.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   static final String INVALID_AN_MORE = "Invalid Alphanumeric And More: ";

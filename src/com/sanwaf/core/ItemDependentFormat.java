@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 final class ItemDependentFormat extends Item {
   static final String INVALID_DEP_FORMAT = "Invalid Dependent Format: ";

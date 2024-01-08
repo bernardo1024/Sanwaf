@@ -1,6 +1,6 @@
 package com.sanwaf.core;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 /* 
  * To use java class's in Sanwaf:

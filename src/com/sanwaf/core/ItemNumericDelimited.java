@@ -3,7 +3,7 @@ package com.sanwaf.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 final class ItemNumericDelimited extends ItemNumeric {
   String delimiter = "";
