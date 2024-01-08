@@ -79,6 +79,7 @@ class Metadata {
 
     if (namesString.contains(Shield.SEPARATOR)) {
       String[] names = namesString.split(Shield.SEPARATOR);
+      Item thisItem = item;
       for (String name : names) {
         name = refineName(name, index);
         if (name == null) {
@@ -87,7 +88,12 @@ class Metadata {
         if (!caseSensitive) {
           name = name.toLowerCase();
         }
-        items.put(name, ItemFactory.getNewItem(name, item));
+        if(thisItem == null) {
+        	thisItem = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
+        }
+        thisItem.name = name;
+        items.put(name, thisItem);
+        thisItem = null;
       }
     } else {
       item.name = refineName(item.name, index);

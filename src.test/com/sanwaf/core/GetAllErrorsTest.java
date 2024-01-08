@@ -35,7 +35,7 @@ public class GetAllErrorsTest {
     assertTrue(sanwaf.isThreatDetected(request));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
-    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 1);
+    assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 2);
     String s = sanwaf.getAllErrors(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_BLOCK\""));
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"string_NO_MODE\""));

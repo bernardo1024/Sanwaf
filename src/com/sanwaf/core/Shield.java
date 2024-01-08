@@ -108,6 +108,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   }
 
   private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks) {
+    boolean retstring = false;
     String k = null;
     String[] values = null;
     Enumeration<?> names = req.getParameterNames();
@@ -122,11 +123,11 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       }
       for (String v : values) {
         if (threat(req, parameters, k, v, false, doAllBlocks) && !doAllBlocks) {
-          return true;
+          retstring = true;
         }
       }
     }
-    return false;
+    return retstring;
   }
 
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks) {
