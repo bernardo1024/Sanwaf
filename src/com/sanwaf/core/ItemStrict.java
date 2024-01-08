@@ -2,7 +2,7 @@ package com.sanwaf.core;
 
 import java.util.List;
 
-import jakarta.servlet.ServletRequest;
+import javax.servlet.ServletRequest;
 
 public class ItemStrict extends Item {
 

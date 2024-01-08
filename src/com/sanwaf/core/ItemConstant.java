@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jakarta.servlet.ServletRequest;
+import javax.servlet.ServletRequest;
 
 final class ItemConstant extends Item {
   static final String INVALID_CONSTANT = "Invalid Constant: ";

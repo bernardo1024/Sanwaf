@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import jakarta.servlet.ServletRequest;
+import javax.servlet.ServletRequest;
 
 final class ItemString extends Item {
   static final String FAILED_PATTERN = "Failed Pattern: ";

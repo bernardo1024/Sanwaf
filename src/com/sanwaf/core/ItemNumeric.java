@@ -3,7 +3,7 @@ package com.sanwaf.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.ServletRequest;
+import javax.servlet.ServletRequest;
 
 class ItemNumeric extends Item {
   static final String INVALID_NUMBER = "Invalid Number";
