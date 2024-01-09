@@ -48,8 +48,10 @@ abstract class Item {
   }
 
   // implemented by Types
-  abstract boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks);
+  abstract boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log);
+
   abstract List<Point> getErrorPoints(Shield shield, String value);
+
   abstract Types getType();
 
   // evaluate the mode, URI & size. The method returns null if no definitive
@@ -107,25 +109,24 @@ abstract class Item {
   }
 
   boolean handleMode(boolean err, String value, ServletRequest req, Modes action, boolean log, boolean doAllBlocks) {
-    if(!err || Modes.DISABLED == action) {
+    if (!err || Modes.DISABLED == action) {
       return false;
     }
     if (Modes.BLOCK == mode) {
       if (logger != null && log && !doAllBlocks && (shield == null || shield.sanwaf.onErrorLogParmErrors)) {
         logger.error(toJson(value, mode, req, true));
       }
-      if((shield == null || shield.sanwaf.onErrorAddParmErrors)) {
+      if ((shield == null || shield.sanwaf.onErrorAddParmErrors)) {
         appendAttribute(Sanwaf.ATT_LOG_ERROR, toJson(value, mode, req, true), req);
       }
       return err;
-    }
-    else {
-      //DO DETECTS
-      if(!doAllBlocks) {
+    } else {
+      // DO DETECTS
+      if (!doAllBlocks) {
         if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections)) {
           logger.warn(toJson(value, mode, req, true));
         }
-        if((shield == null || shield.sanwaf.onErrorAddParmDetections)) {
+        if ((shield == null || shield.sanwaf.onErrorAddParmDetections)) {
           appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, mode, req, true), req);
         }
       }
@@ -133,12 +134,15 @@ abstract class Item {
     return false;
   }
 
-  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger) {
+  static boolean handleStrictError(String value, ServletRequest req, com.sanwaf.log.Logger logger, boolean log) {
     ItemStrict item = new ItemStrict(value);
-    logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
+    if (log) {
+      logger.error(item.toJson(item.msg, Modes.BLOCK, null, true));
+    }
     appendAttribute(Sanwaf.ATT_LOG_ERROR, item.toJson(value, Modes.BLOCK, null, true), req);
     return true;
   }
+
   static void appendAttribute(String att, String value, ServletRequest req) {
     if (req == null) {
       return;
@@ -147,25 +151,24 @@ abstract class Item {
     if (old == null || old.length() < 2) {
       old = "";
     } else {
-      if(old.contains(value)) {
+      if (old.contains(value)) {
         return;
       }
       old = old.substring(1, old.length() - 1) + ",";
     }
     req.setAttribute(att, "[" + old + value + "]");
   }
-  
+
   boolean returnBasedOnDoAllBlocks(boolean b, boolean doAllBlocks) {
-    if(doAllBlocks) {
+    if (doAllBlocks) {
       return false;
     }
     return b;
   }
-  
-  
-  //Item Relations code
+
+  // Item Relations code
   String isRelateValid(String value, ServletRequest req, Metadata meta) {
-    if(related == null || related.length() == 0) {
+    if (related == null || related.length() == 0) {
       return null;
     }
     // check if simple equals condition
@@ -193,14 +196,15 @@ abstract class Item {
       }
     }
     String err = null;
-    if(andTrueCount == andRequired.size() && orFoundTrue && value.length() == 0){
-      //TODO: add better message
+    if (andTrueCount == andRequired.size() && orFoundTrue && value.length() == 0) {
+      // TODO: add better message
       err = " - Invalid relationship detected";
     }
     return err;
   }
 
-  private void setAndOrConditions(String value, ServletRequest req, List<String> andOrBlocks, List<Boolean> orRequired, List<Boolean> andRequired) {
+  private void setAndOrConditions(String value, ServletRequest req, List<String> andOrBlocks, List<Boolean> orRequired,
+      List<Boolean> andRequired) {
     boolean nextIsAnd = false;
     boolean skipIteration = false;
     for (int i = 0; i < andOrBlocks.size(); i++) {
@@ -223,7 +227,8 @@ abstract class Item {
     }
   }
 
-  private void setAndOrCondition(List<Boolean> orRequired, List<Boolean> andRequired, boolean nextIsAnd, boolean value) {
+  private void setAndOrCondition(List<Boolean> orRequired, List<Boolean> andRequired, boolean nextIsAnd,
+      boolean value) {
     if (nextIsAnd) {
       andRequired.add(value);
     } else {
@@ -282,7 +287,8 @@ abstract class Item {
     return parentItem == null ? null : " - does not match \"" + parentItem.display + "\"";
   }
 
-  private List<String> parseBlocks(String s, int start, String andOr, String match, String reverseMatch, String forwardMatch) {
+  private List<String> parseBlocks(String s, int start, String andOr, String match, String reverseMatch,
+      String forwardMatch) {
     List<String> blocks = new ArrayList<>();
     int lastPos = start;
     while (true) {
@@ -307,10 +313,6 @@ abstract class Item {
     return blocks;
   }
 
-  
-  
-  
-  
 //log code
   String getProperties() {
     return null;
@@ -341,10 +343,9 @@ abstract class Item {
     sb.append("\"item\":{\"name\":\"").append(Metadata.jsonEncode(name)).append("\"");
     sb.append(",\"display\":\"").append(Metadata.jsonEncode(display)).append("\"");
     sb.append(",\"mode\":\"").append(mode).append("\"");
-    if(thisMode != null) {
+    if (thisMode != null) {
       sb.append(",\"action\":\"").append(thisMode).append("\"");
-    }
-    else {
+    } else {
       sb.append(",\"action\":\"").append("").append("\"");
     }
     sb.append(",\"type\":\"").append(getType()).append("\"");
@@ -366,10 +367,11 @@ abstract class Item {
         errMsg += getErrorMessage(req, shield, ItemFactory.XML_REQUIRED_MSG);
       }
       if (value != null && (value.length() < min || value.length() > max)) {
-        errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, ItemFactory.XML_INVALID_LENGTH_MSG), min, max);
+        errMsg += modifyInvalidLengthErrorMsg(getErrorMessage(req, shield, ItemFactory.XML_INVALID_LENGTH_MSG), min,
+            max);
       }
-      
-      if(relatedErrMsg != null && relatedErrMsg.length() > 0) {
+
+      if (relatedErrMsg != null && relatedErrMsg.length() > 0) {
         errMsg += relatedErrMsg;
       }
       sb.append(",\"error\":\"").append(Metadata.jsonEncode(errMsg)).append("\"");
@@ -423,17 +425,9 @@ abstract class Item {
       err = msg;
     }
     if (err == null) {
-      
-      
-      //NEED TO check the rule error msg first, then, shield, then global 
-      
-      
-      
-      
-      
-      
-      
-      
+
+      // NEED TO check the rule error msg first, then, shield, then global
+
       if (errorMsgKey == null) {
         errorMsgKey = getType().toString();
       }
@@ -448,13 +442,14 @@ abstract class Item {
   String modifyInvalidLengthErrorMsg(String errorMsg, int min, int max) {
     int i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER1);
     if (i >= 0) {
-      errorMsg = errorMsg.substring(0, i) + min + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      errorMsg = errorMsg.substring(0, i) + min
+          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     i = errorMsg.indexOf(ItemFactory.XML_ERROR_MSG_PLACEHOLDER2);
     if (i >= 0) {
-      errorMsg = errorMsg.substring(0, i) + max + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
+      errorMsg = errorMsg.substring(0, i) + max
+          + errorMsg.substring(i + ItemFactory.XML_ERROR_MSG_PLACEHOLDER1.length(), errorMsg.length());
     }
     return errorMsg;
   }
 }
-

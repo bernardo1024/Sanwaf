@@ -116,12 +116,32 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req) {
-    return isThreatDetected(req, null, false);
+    return isThreatDetected(req, false);
   }
 
-  boolean isThreatDetected(ServletRequest req, boolean doAllBlocks) {
-    return isThreatDetected(req, null, doAllBlocks);
+  /**
+   * Test if a threat is detected in a given request
+   * 
+   * <pre>
+   * Threats detected are derived from all shields configurations
+   * If an error is detected, attributes will be added to request for processing latter.  
+   *  Attributes added are dependent on the properties settings of:
+   *        <provideTrackId>true/false</provideTrackId>
+   *        <provideErrors>true/false</provideErrors>
+   * Use the following methods in this class to retrieve the values:
+   *  public static String getTrackingId(HttpServletRequest req)
+   *  public static String getErrors(HttpServletRequest req)
+   * </pre>
+   * 
+   * @param req
+   *          ServletRequest the ServletRequest object you want to scan for
+   *          threats
+   * @return boolean true/false if a threat was detected
+   */
+  public boolean isThreatDetected(ServletRequest req, boolean log) {
+    return isThreatDetected(req, null, false, log); 
   }
+
 
   /**
    * Test if a threat is detected in a given request for a provided list of
@@ -149,6 +169,37 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks) {
+	  return isThreatDetected(req, shieldList, doAllBlocks, false);
+  }
+
+  /**
+   * Test if a threat is detected in a given request for a provided list of
+   * Shields
+   * 
+   * <pre>
+   * Threats detected are derived from all shields configurations
+   * If an error is detected, attributes will be added to request for processing latter.  
+   *  Attributes added are dependent on the properties settings of:
+   *        <provideTrackId>true/false</provideTrackId>
+   *        <provideErrors>true/false</provideErrors>
+   * Use the following methods in this class to retrieve the values:
+   *  public static String getTrackingId(HttpServletRequest req)
+   *  public static String getErrors(HttpServletRequest req)
+   * </pre>
+   * 
+   * @param req
+   *          ServletRequest the ServletRequest object you want to scan for
+   *          threats
+   * @param shieldList
+   *          list of string shield names you want run against
+   * @param doAllBlocks
+   *          flag to control if sanwaf will stop on the first item marked as Block.  Set to true to run all blocks.
+   *          this is used with you want to get all the errors for a given request, otherwise, only the first block will be reported. 
+   * @param log
+   * 		  flag to control if sawaf will log errors detected. you can use the getAllErrors method to pull errors from the request object
+   * @return boolean true/false if a threat was detected
+   */
+  public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks, boolean log) {
     if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
@@ -157,7 +208,7 @@ public final class Sanwaf {
       return false;
     }
     for (Shield sh : shields) {
-      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks)) {
+      if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log)) {
         return true;
       }
     }
@@ -196,7 +247,7 @@ public final class Sanwaf {
    */
   public static boolean isThreat(String value, String sXml) {
     Item item = ItemFactory.parseItem(null, new Xml(sXml), false, null);
-    return item.inError(null, null, value, false);
+    return item.inError(null, null, value, false, false);
   }
 
   /**
@@ -270,7 +321,7 @@ public final class Sanwaf {
       logger.error("Invalid ShieldName provided to isThreat():" + shieldName);
       return false;
     }
-    return item.inError(req, sh, value, false);
+    return item.inError(req, sh, value, false, false);
   }
 
   /**
@@ -291,8 +342,31 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req) {
+    return checkValueForShieldThreats(value, shieldName, req, false);
+  }
+
+  /**
+   * Test if a threat is detected in a value using a given shield
+   * 
+   * <pre>
+   * Threats detected are derived from the provided shield's configuration
+   * The shields stringPatterns will be executed against the value
+   * No error attributes are set.
+   * </pre>
+   * 
+   * @param value
+   *          the string you want to scan for threats
+   * @param shieldName
+   *          the shields name that you want to execute the stringPatterns from
+   * @param req
+   *          ServletRequest to add the error attributes
+   * @param log
+   * 		  boolean value to tell sanwaf to log errors. you can get errors by calling getAllErrors(request) as errors are stored in the request attributes.
+   * @return boolean true/false if a threat was detected
+   */
+  public boolean checkValueForShieldThreats(String value, String shieldName, ServletRequest req, boolean log) {
     for (Shield sh : shields) {
-      if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(req, null, "", value, false)) {
+      if ((shieldName == null || shieldName.contains(sh.name)) && sh.threat(req, null, "", value, false, log)) {
         return true;
       }
     }

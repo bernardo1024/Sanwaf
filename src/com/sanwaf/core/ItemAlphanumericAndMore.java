@@ -64,15 +64,15 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
+      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
     }
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
-        return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, true), doAllBlocks);
+        return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, log), doAllBlocks);
       }
     }
     return false;

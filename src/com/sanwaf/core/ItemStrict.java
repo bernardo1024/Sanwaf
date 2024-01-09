@@ -11,7 +11,7 @@ public class ItemStrict extends Item {
   }
   
   @Override
-  boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks) {
+  boolean inError(ServletRequest req, Shield shield, String value, boolean doAllBlocks, boolean log) {
     return false;
   }
 
