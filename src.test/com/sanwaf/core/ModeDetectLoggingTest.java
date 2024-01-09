@@ -46,7 +46,7 @@ public class ModeDetectLoggingTest {
   public void testDatatypeDetect1() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("endpointRegex", "abc");
-    sanwaf.isThreatDetected(request);
+    sanwaf.isThreatDetected(request, true);
     String s = outContent.toString();
     assertTrue(s.contains("\"DETECT\",\"type\":\"INLINE_REGEX\""));
   }
