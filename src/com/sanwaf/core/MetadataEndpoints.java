@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.servlet.ServletRequest;
+import javax.servlet.ServletRequest;
 
 public class MetadataEndpoints {
   static final String XML_ENDPOINTS = "endpoints";
