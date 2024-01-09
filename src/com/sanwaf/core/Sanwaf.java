@@ -142,6 +142,9 @@ public final class Sanwaf {
     return isThreatDetected(req, null, false, log); 
   }
 
+  public boolean isThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
+    return isThreatDetected(req, null, doAllBlocks, log); 
+  }
 
   /**
    * Test if a threat is detected in a given request for a provided list of

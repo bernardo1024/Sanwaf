@@ -73,6 +73,9 @@ public class ItemFactory {
     if (min < -1) {
       min = 0;
     }
+    if(display != null && display.length() > 0 && display.contains(":::")) {
+      display = name;
+    }
     Item item = getNewItem(new ItemData(shield, name, mode, display, type, msg, uri, max, min));
     item.logger = logger;
     item.required = Boolean.valueOf(xml.get(XML_ITEM_REQUIRED));

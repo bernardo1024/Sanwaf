@@ -64,6 +64,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     Enumeration<?> names = null;
     String k = null;
     String[] values = null;
+    boolean threat = false;
     
     if(!doAllBlocks) {
       Metadata metadataDetectDetect = endpointsDetect.endpointParametersDetect.get(uri);
@@ -98,13 +99,16 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
         }
         for (String v : values) {
           if(metadataBlockBlock != null && metadataBlockBlock.endpointMode != Modes.DISABLED && 
-              threat(req, metadataBlockBlock, k, v, true, doAllBlocks, log) && !doAllBlocks){
-              return true;
+              threat(req, metadataBlockBlock, k, v, true, doAllBlocks, log)){
+              if(!doAllBlocks) {
+                return true;
+              }
+              threat = true;
           }
         }
       }
     }
-    return false;
+    return threat;
   }
 
   private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
@@ -122,7 +126,10 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
         }
       }
       for (String v : values) {
-        if (threat(req, parameters, k, v, false, doAllBlocks) && !doAllBlocks) {
+        if (threat(req, parameters, k, v, false, doAllBlocks)) {
+          if(!doAllBlocks) {
+            return true;
+          }
           retstring = true;
         }
       }
@@ -131,6 +138,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   }
 
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
+    boolean threat = false;
     Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
     if(!doAllBlocks) {
       while (names.hasMoreElements()) {
@@ -146,15 +154,19 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       String s = String.valueOf(names.nextElement());
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
       while (headerEnumeration.hasMoreElements()) {
-        if (threat(req, headers, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log) && !doAllBlocks) {
-          return true;
+        if (threat(req, headers, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log)) {
+          if(!doAllBlocks) {
+            return true;
+          }
+          threat = true;;
         }
       }
     }
-    return false;
+    return threat;
   }
 
   private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
+    boolean threat = false;
     Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
     if(cookieArray == null){
       return false;
@@ -165,11 +177,14 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       }
     }
     for (Cookie c : cookieArray) {
-      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log) && !doAllBlocks) {
-        return true;
+      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log)) {
+        if(!doAllBlocks) {
+          return true;
+        }
+        threat = true;
      }
     }
-    return false;
+    return threat;
   }
 
   boolean threat(String v, boolean log) {

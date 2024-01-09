@@ -32,7 +32,7 @@ public class GetAllErrorsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("string_BLOCK", "sBLOCK");
     request.addParameter("string_NO_MODE", "sBLOCK");
-    assertTrue(sanwaf.isThreatDetected(request));
+    assertTrue(sanwaf.isThreatDetected(request, true, false));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
     assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 2);

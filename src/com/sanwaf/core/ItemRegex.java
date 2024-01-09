@@ -29,7 +29,7 @@ final class ItemRegex extends Item {
       rule = shield.customRulePatterns.get(patternName);
     }
     Matcher m = rule.pattern.matcher(value);
-    if (!m.find()) {
+    if ((m.find() && rule.failOnMatch) || (!m.find() && !rule.failOnMatch)) {
       points.add(new Point(0, value.length()));
     }
     return points;
