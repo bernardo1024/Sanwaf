@@ -93,7 +93,6 @@ class Metadata {
         }
         thisItem.name = name;
         items.put(name, thisItem);
-        thisItem = null;
       }
     } else {
       item.name = refineName(item.name, index);
