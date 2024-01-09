@@ -51,14 +51,14 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     logStartup();
   }
 
-  boolean threatDetected(ServletRequest req, boolean doAllBlocks) {
-    return ((endpoints.enabled && endpointsThreatDetected(req, doAllBlocks)) || 
-            (parameters.enabled && parameterThreatDetected(req, doAllBlocks)) || 
-            (headers.enabled && headerThreatDetected(req, doAllBlocks)) || 
-            (cookies.enabled && cookieThreatDetected(req, doAllBlocks)));
+  boolean threatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
+    return ((endpoints.enabled && endpointsThreatDetected(req, doAllBlocks, log)) || 
+            (parameters.enabled && parameterThreatDetected(req, doAllBlocks, log)) || 
+            (headers.enabled && headerThreatDetected(req, doAllBlocks, log)) || 
+            (cookies.enabled && cookieThreatDetected(req, doAllBlocks, log)));
   }
 
-  private boolean endpointsThreatDetected(ServletRequest req, boolean doAllBlocks) {
+  private boolean endpointsThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     HttpServletRequest hreq = (HttpServletRequest) req;
     String uri = hreq.getRequestURI();
     Enumeration<?> names = null;
@@ -77,8 +77,8 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
             if(metadataDetectDetect.endpointMode == Modes.DISABLED) {
               continue;
             }
-            threat(req, metadataDetectDetect, k, v, true, doAllBlocks);
-            threat(req, metadataDetectBlock, k, v, true, doAllBlocks);
+            threat(req, metadataDetectDetect, k, v, true, doAllBlocks, log);
+            threat(req, metadataDetectBlock, k, v, true, doAllBlocks, log);
           }
         }
       }
@@ -93,12 +93,12 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
         values = req.getParameterValues(k);
         if(!doAllBlocks && metadataBlockDetect.endpointMode != Modes.DISABLED) {
           for (String v : values) {
-            threat(req, metadataBlockDetect, k, v, true, doAllBlocks);
+            threat(req, metadataBlockDetect, k, v, true, doAllBlocks, log);
           }
         }
         for (String v : values) {
           if(metadataBlockBlock != null && metadataBlockBlock.endpointMode != Modes.DISABLED && 
-              threat(req, metadataBlockBlock, k, v, true, doAllBlocks) && !doAllBlocks){
+              threat(req, metadataBlockBlock, k, v, true, doAllBlocks, log) && !doAllBlocks){
               return true;
           }
         }
@@ -107,7 +107,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     return false;
   }
 
-  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks) {
+  private boolean parameterThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     boolean retstring = false;
     String k = null;
     String[] values = null;
@@ -118,7 +118,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       //log all detects first
       if(!doAllBlocks) {
         for (String v : values) {
-          threat(req, parametersDetect, k, v, false, doAllBlocks);
+          threat(req, parametersDetect, k, v, false, doAllBlocks, log);
         }
       }
       for (String v : values) {
@@ -130,14 +130,14 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     return retstring;
   }
 
-  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks) {
+  private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
     if(!doAllBlocks) {
       while (names.hasMoreElements()) {
         String s = String.valueOf(names.nextElement());
         Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
         while (headerEnumeration.hasMoreElements()) {
-          threat(req, headersDetect, s, (String) headerEnumeration.nextElement(), false, doAllBlocks);
+          threat(req, headersDetect, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log);
         }
       }
       names = ((HttpServletRequest) req).getHeaderNames();
@@ -146,7 +146,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       String s = String.valueOf(names.nextElement());
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
       while (headerEnumeration.hasMoreElements()) {
-        if (threat(req, headers, s, (String) headerEnumeration.nextElement(), false, doAllBlocks) && !doAllBlocks) {
+        if (threat(req, headers, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log) && !doAllBlocks) {
           return true;
         }
       }
@@ -154,43 +154,43 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     return false;
   }
 
-  private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks) {
+  private boolean cookieThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     Cookie[] cookieArray = ((HttpServletRequest) req).getCookies();
     if(cookieArray == null){
       return false;
     }
     if (!doAllBlocks) {
       for (Cookie c : cookieArray) {
-        threat(req, cookiesDetect, c.getName(), c.getValue(), false, doAllBlocks);
+        threat(req, cookiesDetect, c.getName(), c.getValue(), false, doAllBlocks, log);
       }
     }
     for (Cookie c : cookieArray) {
-      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks) && !doAllBlocks) {
+      if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log) && !doAllBlocks) {
         return true;
      }
     }
     return false;
   }
 
-  boolean threat(String v) {
-    return threat(null, null, "", v, false, false);
+  boolean threat(String v, boolean log) {
+    return threat(null, null, "", v, false, false, false, log);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint) {
-    return threat(req, meta, key, value, isEndpoint, false, false);
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean log) {
+    return threat(req, meta, key, value, isEndpoint, false, false, log);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks) {
-    return threat(req, meta, key, value, isEndpoint, false, doAllBlocks);
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean doAllBlocks, boolean log) {
+    return threat(req, meta, key, value, isEndpoint, false, doAllBlocks, log);
   }
 
-  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceStringPatterns, boolean doAllBlocks) {
+  boolean threat(ServletRequest req, Metadata meta, String key, String value, boolean isEndpoint, boolean forceStringPatterns, boolean doAllBlocks, boolean log) {
     if (value == null) {
       return false;
     }
     int len = value.length();
     if (len < minLen || len > maxLen) {
-      return handleChildShield(req, value);
+      return handleChildShield(req, value, log);
     }
     Item item;
     if (meta != null) {
@@ -201,7 +201,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
         } 
         else {
           if(meta.endpointIsStrict && MetadataEndpoints.isStrictError(req, meta)) {
-              Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger);
+              Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
         	  return true;
           }
           return false;
@@ -223,7 +223,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
     }
 
-    return (isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks)) || item.inError(req, this, value, doAllBlocks);
+    return (isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks, log)) || item.inError(req, this, value, doAllBlocks, log);
   }
 
 
@@ -242,20 +242,20 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     return item;
   }
 
-  private boolean isEndpointStrictValid(Item item, String value, ServletRequest req, Metadata meta, boolean doAllBlocks) {
+  private boolean isEndpointStrictValid(Item item, String value, ServletRequest req, Metadata meta, boolean doAllBlocks, boolean log) {
     if (MetadataEndpoints.isStrictError(req, meta)) {
-      Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger);
+      Item.handleStrictError(STRICT_PARAMETER_DETECTED, req, logger, log);
       return true;
     }
     return false;
   }
 
-  private boolean handleChildShield(ServletRequest req, String value) {
+  private boolean handleChildShield(ServletRequest req, String value, boolean log) {
     if (childShield != null) {
       if (req == null) {
-        return childShield.threat(value);
+        return childShield.threat(value, log);
       } else {
-        return childShield.threatDetected(req, false);
+        return childShield.threatDetected(req, false, log);
       }
     }
     return false;

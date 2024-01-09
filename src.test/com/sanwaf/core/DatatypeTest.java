@@ -72,7 +72,7 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "n{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
-    assertEquals(true, p.inError(req, shield, "12,34,56", false));
+    assertEquals(true, p.inError(req, shield, "12,34,56", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
@@ -87,7 +87,7 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "i{}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemNumericDelimited p = new ItemNumericDelimited(id, false);
-    assertEquals(true, p.inError(req, shield, "12,34,56", false));
+    assertEquals(true, p.inError(req, shield, "12,34,56", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);
@@ -150,9 +150,9 @@ public class DatatypeTest {
     MockHttpServletRequest req = new MockHttpServletRequest();
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "a{,}", "error msg1", null, Integer.MAX_VALUE, 0);
     ItemAlphanumericAndMore p = new ItemAlphanumericAndMore(id);
-    assertEquals(false, p.inError(req, shield, "", false));
-    assertEquals(false, p.inError(req, shield, "abcde", false));
-    assertEquals(true, p.inError(req, shield, "abcde?fg", false));
+    assertEquals(false, p.inError(req, shield, "", false, false));
+    assertEquals(false, p.inError(req, shield, "abcde", false, false));
+    assertEquals(true, p.inError(req, shield, "abcde?fg", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "abcde?fg");
     assertEquals(true, list.size() == 1);
@@ -194,10 +194,10 @@ public class DatatypeTest {
 
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "c", "error msg1", null, 1, 0);
     ItemChar p = new ItemChar(id);
-    assertTrue(p.inError(req, shield, "12345", false));
-    assertFalse(p.inError(req, shield, "1", false));
-    assertFalse(p.inError(req, shield, "", false));
-    assertFalse(p.inError(req, shield, null, false));
+    assertTrue(p.inError(req, shield, "12345", false, false));
+    assertFalse(p.inError(req, shield, "1", false, false));
+    assertFalse(p.inError(req, shield, "", false, false));
+    assertFalse(p.inError(req, shield, null, false, false));
   }
 
   @Test
@@ -217,11 +217,11 @@ public class DatatypeTest {
 
     ItemData id = new ItemData(shield, "key1", Modes.BLOCK, "", "o", "error msg1", null, 10, 0);
     ItemOpen p = new ItemOpen(id);
-    assertFalse(p.inError(req, shield, "12345", false));
-    assertFalse(p.inError(req, shield, "1", false));
-    assertFalse(p.inError(req, shield, "", false));
-    assertFalse(p.inError(req, shield, null, false));
-    assertTrue(p.inError(req, shield, "1234567890123", false));
+    assertFalse(p.inError(req, shield, "12345", false, false));
+    assertFalse(p.inError(req, shield, "1", false, false));
+    assertFalse(p.inError(req, shield, "", false, false));
+    assertFalse(p.inError(req, shield, null, false, false));
+    assertTrue(p.inError(req, shield, "1234567890123", false, false));
   }
 
   @Test
@@ -273,10 +273,10 @@ public class DatatypeTest {
     ItemRegex p = new ItemRegex(id);
     assertTrue(p.patternName != null && p.patternName.length() > 0);
 
-    assertEquals(false, p.inError(req, shield, "416-555-5555", false));
-    assertEquals(true, p.inError(req, shield, "abc-def-ghij", false));
-    assertEquals(true, p.inError(req, shield, "a", false));
-    assertEquals(true, p.inError(req, shield, "abc-def-ghij-klmn", false));
+    assertEquals(false, p.inError(req, shield, "416-555-5555", false, false));
+    assertEquals(true, p.inError(req, shield, "abc-def-ghij", false, false));
+    assertEquals(true, p.inError(req, shield, "a", false, false));
+    assertEquals(true, p.inError(req, shield, "abc-def-ghij-klmn", false, false));
 
     List<Point> list = p.getErrorPoints(shield, "");
     assertEquals(true, list.size() == 0);

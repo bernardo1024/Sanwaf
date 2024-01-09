@@ -61,7 +61,7 @@ public class ShieldTest {
 
   @Test
   public void testThreatNoMetadata() {
-    boolean b = shield.threat("<script>alert(1)</script>");
+    boolean b = shield.threat("<script>alert(1)</script>", false);
     assertEquals(true, b);
   }
 

@@ -32,14 +32,14 @@ final class ItemNumericDelimited extends ItemNumeric {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     if (mode == Modes.DISABLED) {
       return false;
     }
     String[] ns = value.split(delimiter);
     for (String n : ns) {
-      if (super.inError(req, shield, n, doAllBlocks)) {
-        return returnBasedOnDoAllBlocks(handleMode(true, value, req, Modes.BLOCK, false, doAllBlocks), doAllBlocks);
+      if (super.inError(req, shield, n, doAllBlocks, log)) {
+        return returnBasedOnDoAllBlocks(handleMode(true, value, req, Modes.BLOCK, log, doAllBlocks), doAllBlocks);
       }
     }
     return false;

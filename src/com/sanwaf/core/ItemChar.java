@@ -13,7 +13,7 @@ final class ItemChar extends Item {
   }
 
   @Override
-  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks) {
+  boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
       return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, true), doAllBlocks);
