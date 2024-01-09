@@ -56,10 +56,10 @@ final class ItemRegex extends Item {
     boolean match = rule.pattern.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match)) {
       if (rule.mode == Modes.DETECT || rule.mode == Modes.DETECT_ALL) {
-        handleMode(true, value, req, rule.mode, true);
+        handleMode(true, value, req, rule.mode, log);
       }
       if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
-        handleMode(true, value, req, rule.mode, true);
+        handleMode(true, value, req, rule.mode, log);
         return !doAllBlocks;
       }
     }
