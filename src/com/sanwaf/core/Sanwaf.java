@@ -200,7 +200,8 @@ public final class Sanwaf {
    * @return boolean true/false if a threat was detected
    */
   public boolean isThreatDetected(ServletRequest req, List<String> shieldList, boolean doAllBlocks, boolean log) {
-    if (req != null && onErrorAddTrackId) {
+	boolean threat = false; 
+	if (req != null && onErrorAddTrackId) {
       req.setAttribute(ATT_TRANS_ID, UUID.randomUUID());
     }
 
@@ -209,10 +210,13 @@ public final class Sanwaf {
     }
     for (Shield sh : shields) {
       if ((shieldList == null || shieldList.contains(sh.name)) && sh.threatDetected(req, doAllBlocks, log)) {
-        return true;
+        if(!doAllBlocks) {
+        	return true;
+        }
+        threat = true;
       }
     }
-    return false;
+    return threat;
   }
 
   /**
