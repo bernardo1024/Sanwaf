@@ -92,6 +92,7 @@ class Metadata {
         	thisItem = ItemFactory.parseItem(shield, xml, includeEnpointAttributes, logger);
         }
         thisItem.name = name;
+        thisItem.display = name;
         items.put(name, thisItem);
       }
     } else {

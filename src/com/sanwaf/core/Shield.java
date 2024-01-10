@@ -120,13 +120,12 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
       k = (String) names.nextElement();
       values = req.getParameterValues(k);
       //log all detects first
-      if(!doAllBlocks) {
-        for (String v : values) {
-          threat(req, parametersDetect, k, v, false, doAllBlocks, log);
-        }
-      }
       for (String v : values) {
-        if (threat(req, parameters, k, v, false, doAllBlocks)) {
+        threat(req, parametersDetect, k, v, false, doAllBlocks, log);
+      }
+      //do blocks
+      for (String v : values) {
+        if (threat(req, parameters, k, v, false, doAllBlocks, log)) {
           if(!doAllBlocks) {
             return true;
           }
@@ -140,16 +139,15 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
   private boolean headerThreatDetected(ServletRequest req, boolean doAllBlocks, boolean log) {
     boolean threat = false;
     Enumeration<?> names = ((HttpServletRequest) req).getHeaderNames();
-    if(!doAllBlocks) {
-      while (names.hasMoreElements()) {
-        String s = String.valueOf(names.nextElement());
-        Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
-        while (headerEnumeration.hasMoreElements()) {
-          threat(req, headersDetect, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log);
-        }
+    while (names.hasMoreElements()) {
+      String s = String.valueOf(names.nextElement());
+      Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
+      while (headerEnumeration.hasMoreElements()) {
+        threat(req, headersDetect, s, (String) headerEnumeration.nextElement(), false, doAllBlocks, log);
       }
-      names = ((HttpServletRequest) req).getHeaderNames();
     }
+    
+    names = ((HttpServletRequest) req).getHeaderNames();
     while (names.hasMoreElements()) {
       String s = String.valueOf(names.nextElement());
       Enumeration<?> headerEnumeration = ((HttpServletRequest) req).getHeaders(s);
@@ -171,11 +169,10 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     if(cookieArray == null){
       return false;
     }
-    if (!doAllBlocks) {
-      for (Cookie c : cookieArray) {
-        threat(req, cookiesDetect, c.getName(), c.getValue(), false, doAllBlocks, log);
-      }
+    for (Cookie c : cookieArray) {
+      threat(req, cookiesDetect, c.getName(), c.getValue(), false, doAllBlocks, log);
     }
+
     for (Cookie c : cookieArray) {
       if (threat(req, cookies, c.getName(), c.getValue(), false, doAllBlocks, log)) {
         if(!doAllBlocks) {
@@ -227,18 +224,25 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     }
 
     if (item.required && value.length() == 0) {
-      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
-      return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
+      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
+      //return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
+      return true;
     }
     
     String relmsg = item.isRelateValid(value, req, meta);
     if(relmsg != null) {
       item.relatedErrMsg = relmsg;
-      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
-      return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
+      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
+      //return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
+      return true;
     }
-
-    return (isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks, log)) || item.inError(req, this, value, doAllBlocks, log);
+    
+    if((isEndpoint && isEndpointStrictValid(item, value, req, meta, doAllBlocks, log)) || 
+        item.inError(req, this, value, doAllBlocks, log)){
+      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
+      return true;
+    }
+    return false;
   }
 
 

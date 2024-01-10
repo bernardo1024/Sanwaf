@@ -39,7 +39,7 @@ final class ItemNumericDelimited extends ItemNumeric {
     String[] ns = value.split(delimiter);
     for (String n : ns) {
       if (super.inError(req, shield, n, doAllBlocks, log)) {
-        return returnBasedOnDoAllBlocks(handleMode(true, value, req, Modes.BLOCK, log, doAllBlocks), doAllBlocks);
+        return true;
       }
     }
     return false;

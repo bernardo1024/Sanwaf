@@ -19,10 +19,10 @@ final class ItemConstant extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
+      return true;
     }
-    if(!constants.contains(value)) {
-      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, log), doAllBlocks);
+    if(value != null && value.length() > 0 && !constants.contains(value)) {
+      return true;
     }
     return false;
   }

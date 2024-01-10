@@ -66,8 +66,6 @@ abstract class Item {
     } else if (isSizeError(value)) {
       me.error = true;
       me.isSize = true;
-    } else if (value != null && value.length() == 0) {
-      me.error = false;
     } else {
       return null;
     }
@@ -122,13 +120,11 @@ abstract class Item {
       return err;
     } else {
       // DO DETECTS
-      if (!doAllBlocks) {
-        if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections)) {
-          logger.warn(toJson(value, mode, req, true));
-        }
-        if ((shield == null || shield.sanwaf.onErrorAddParmDetections)) {
-          appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, mode, req, true), req);
-        }
+      if (logger != null && log && (shield == null || shield.sanwaf.onErrorLogParmDetections)) {
+        logger.warn(toJson(value, mode, req, true));
+      }
+      if ((shield == null || shield.sanwaf.onErrorAddParmDetections)) {
+        appendAttribute(Sanwaf.ATT_LOG_DETECT, toJson(value, mode, req, true), req);
       }
     }
     return false;
