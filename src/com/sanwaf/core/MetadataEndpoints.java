@@ -63,10 +63,10 @@ public class MetadataEndpoints {
     if((!isDetect && parameters.endpointMode == Modes.BLOCK) ||
         (isDetect && (parameters.endpointMode == Modes.DETECT || parameters.endpointMode == Modes.DETECT_ALL))) {
      if(isDetectParms) {
-        setEndpointParametersForUris(endpointParametersDetect, uris, parameters);
+       setEndpointParametersForUris(endpointParametersDetect, uris, parameters);
       }
       else {
-        setEndpointParametersForUris(endpointParametersBlock, uris, parameters);
+       setEndpointParametersForUris(endpointParametersBlock, uris, parameters);
       }
     }
   }

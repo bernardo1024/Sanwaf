@@ -66,7 +66,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     String[] values = null;
     boolean threat = false;
     
-    if(!doAllBlocks) {
+    if(doAllBlocks) {
       Metadata metadataDetectDetect = endpointsDetect.endpointParametersDetect.get(uri);
       Metadata metadataDetectBlock = endpointsDetect.endpointParametersBlock.get(uri);
       names = req.getParameterNames();
