@@ -126,7 +126,7 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
         }
       }
       for (String v : values) {
-        if (threat(req, parameters, k, v, false, doAllBlocks)) {
+        if (threat(req, parameters, k, v, false, doAllBlocks, log)) {
           if(!doAllBlocks) {
             return true;
           }
@@ -227,14 +227,14 @@ private static final String FAIL_ON_MATCH = "\tfailOnMatch=";
     }
 
     if (item.required && value.length() == 0) {
-      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
+      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
       return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
     }
     
     String relmsg = item.isRelateValid(value, req, meta);
     if(relmsg != null) {
       item.relatedErrMsg = relmsg;
-      item.handleMode(true, value, req, item.mode, true, doAllBlocks);
+      item.handleMode(true, value, req, item.mode, log, doAllBlocks);
       return item.returnBasedOnDoAllBlocks(true, doAllBlocks);
     }
 
