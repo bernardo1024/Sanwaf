@@ -11,6 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import com.sanwaf.core.Shield;
+import com.sanwaf.core.Sanwaf;
+
 public class ShieldTest {
   static Sanwaf sanwaf;
   static Shield shield;

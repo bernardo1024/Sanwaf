@@ -21,13 +21,13 @@ final class ItemJava extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
+      return true;
     }
     if (value.length() == 0) {
       return false;
     }
     if(runJavaMethod(javaMethod, value, req)) {
-      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, log), doAllBlocks);
+      return true;
     }
     return false;
   }

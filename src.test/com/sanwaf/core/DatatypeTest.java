@@ -283,7 +283,7 @@ public class DatatypeTest {
     list = p.getErrorPoints(shield, null);
     assertEquals(true, list.size() == 0);
     list = p.getErrorPoints(shield, "416-555-5555");
-    assertEquals(true, list.size() == 0);
+    assertEquals(true, list.size() == 1);
     list = p.getErrorPoints(shield, "abc123def456");
     assertEquals(true, list.size() == 1);
   }

@@ -47,7 +47,7 @@ final class ItemFormat extends Item {
     }
 
     if(!foundValidFormat) {
-      return returnBasedOnDoAllBlocks(handleMode(!foundValidFormat, value, req, mode, log), doAllBlocks);
+      return true;
     }
     return false;
   }

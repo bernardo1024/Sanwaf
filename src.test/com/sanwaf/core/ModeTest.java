@@ -28,6 +28,14 @@ public class ModeTest {
   }
 
   @Test
+  public void testColonedParameters() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addParameter("p1", "foo<body onload='alert(1)'>bar");
+    assertTrue(sanwaf.isThreatDetected(request, true, false));
+    assertTrue(Sanwaf.getDetects(request) != null);
+  }
+
+  @Test
   public void testParameter() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("modeParameter", "foobarfoobar");

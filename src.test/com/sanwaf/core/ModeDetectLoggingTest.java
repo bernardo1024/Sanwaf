@@ -105,10 +105,10 @@ public class ModeDetectLoggingTest {
     request = new MockHttpServletRequest();
     request.addParameter("dependentparent", "123");
     request.addParameter("dependentformat", "<script>abc23@!##");
-    sanwaf.isThreatDetected(request, true);
+    sanwaf.isThreatDetected(request, true, true);
     s = outContent.toString();
+    assertTrue(s.contains("\"formats\":{\"key\":\"123\""));
     System.out.println(s);
-    assertTrue(s.contains("\"format\":\"####\""));
   }
 }
 

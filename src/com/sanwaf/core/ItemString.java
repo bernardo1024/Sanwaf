@@ -39,18 +39,16 @@ final class ItemString extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
+      return true;
     }
     boolean inError = false;
     if (shield != null) {
       //first process the detects & detect all - ignore the return value for detect
-      if(!doAllBlocks) {
-        isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
-      }
+      isInErrorForPatterns(req, shield.rulePatternsDetect, value, doAllBlocks);
       //then do the blocks
       inError = isInErrorForPatterns(req, shield.rulePatterns, value, doAllBlocks);
     }
-    if (doAllBlocks || mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
+    if (mode == Modes.DETECT || mode == Modes.DETECT_ALL) {
       return false;
     }
     return inError;
@@ -74,9 +72,6 @@ final class ItemString extends Item {
           }
         }
       }
-    }
-    if(doAllBlocks) {
-      return false;
     }
     return inError;
   }

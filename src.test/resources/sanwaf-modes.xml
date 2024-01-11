@@ -193,6 +193,97 @@
         </secured>
       </metadata>
     </shield>
+
+        <shield>
+            <shield-settings>
+                <name>XSS_BLOCK</name>
+                <mode>block</mode>
+                <minLen>5</minLen>
+                <maxLen>99999</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>5</minLen>
+                <!-- Control whether to treat all non-secured parameters/headers/cookies as strings (regex) -->
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                </forceStringPatterns>
+                <customPatterns>
+                    <item>
+                        <key>ElementEvent</key>
+                        <mode>block</mode>
+                        <match>fail</match>
+                        <value><![CDATA[(?:<|%3c)(?:[a-z]|%(?:6[1-9a-f]|7[0-9a])).*(?:\s|\+|(?:%(?:(?:2[0b])|(?:0[acd9]))))(?:o|%[64]f)(?:n|%[64]e)(?:[a-z]|%(?:6[1-9a-f]|7[0-9a])){3,}(?:\s|\+|(?:%(?:(?:2[0b])|(?:0[acd9]))))*(?:=|%3d).*(?:\/|%2f)?(?:>|%3e)]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <endpoints>false</endpoints>
+                    <parameters>true</parameters>
+                    <headers>false</headers>
+                    <cookies>false</cookies>
+                </enabled>
+                <caseSensitive>
+                    <parameters>false</parameters>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>p1:::p2:::p3</name>
+                            <type>r{ElementEvent}</type>
+                            <match>fail</match>
+                            <msg>The text is not valid because events are not allowed in HTML element tags. Add a space before and after special characters, for example: <span style="color:blue; font-family: monospace; font-weight: bolder; font-size: 20px;">&nbsp;<&nbsp;>&nbsp;:</span></msg>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+
+        <shield>
+            <shield-settings>
+                <name>XSS_DETECT</name>
+                <mode>detect</mode>
+                <minLen>5</minLen>
+                <maxLen>99999</maxLen>
+            </shield-settings>
+            <regex-config>
+                <minLen>5</minLen>
+                <!-- Control whether to treat all non-secured parameters/headers/cookies as strings (regex) -->
+                <forceStringPatterns>
+                    <enabled>false</enabled>
+                </forceStringPatterns>
+                <customPatterns>
+                    <item>
+                        <key>ElementEvent</key>
+                        <mode>detect</mode>
+                        <match>fail</match>
+                        <value><![CDATA[(?:<|%3c)(?:[a-z]|%(?:6[1-9a-f]|7[0-9a])).*(?:\s|\+|(?:%(?:(?:2[0b])|(?:0[acd9]))))(?:o|%[64]f)(?:n|%[64]e)(?:[a-z]|%(?:6[1-9a-f]|7[0-9a])){3,}(?:\s|\+|(?:%(?:(?:2[0b])|(?:0[acd9]))))*(?:=|%3d).*(?:\/|%2f)?(?:>|%3e)]]></value>
+                    </item>
+                </customPatterns>
+            </regex-config>
+            <metadata>
+                <enabled>
+                    <endpoints>false</endpoints>
+                    <parameters>true</parameters>
+                    <headers>false</headers>
+                    <cookies>false</cookies>
+                </enabled>
+                <caseSensitive>
+                    <parameters>false</parameters>
+                </caseSensitive>
+                <secured>
+                    <parameters>
+                        <item>
+                            <name>p1:::p2:::p3</name>
+                            <type>r{ElementEvent}</type>
+                            <match>fail</match>
+                            <msg>The text is not valid because events are not allowed in HTML element tags. Add a space before and after special characters, for example: <span style="color:blue; font-family: monospace; font-weight: bolder; font-size: 20px;">&nbsp;<&nbsp;>&nbsp;:</span>"</msg>
+                        </item>
+                    </parameters>
+                </secured>
+            </metadata>
+        </shield>
+
 	</shields>
 </sanwaf>
 

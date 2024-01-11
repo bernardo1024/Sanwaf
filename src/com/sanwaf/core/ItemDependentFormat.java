@@ -44,7 +44,7 @@ final class ItemDependentFormat extends Item {
     ItemFormat format = getFormatForValue(elementValue);
     
     if(format != null && format.inError(req, shield, value, doAllBlocks, log)){
-      return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, log), doAllBlocks);
+      return true;
     }
     return false;
   }

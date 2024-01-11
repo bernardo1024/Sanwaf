@@ -67,12 +67,13 @@ final class ItemAlphanumericAndMore extends ItemAlphanumeric {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
+      //return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
+      return true;
     }
     for (int i = 0; i < value.length(); i++) {
       char c = value.charAt(i);
       if (isNotAlphanumeric(c) && !isInMoreChars(c)) {
-        return returnBasedOnDoAllBlocks(handleMode(true, value, req, mode, log), doAllBlocks);
+        return true;
       }
     }
     return false;

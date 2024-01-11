@@ -32,7 +32,7 @@ public class GetAllErrorsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addParameter("string_BLOCK", "sBLOCK");
     request.addParameter("string_NO_MODE", "sBLOCK");
-    assertTrue(sanwaf.isThreatDetected(request));
+    assertTrue(sanwaf.isThreatDetected(request, true, false));
     String b = Sanwaf.getErrors(request);
     assertTrue(b != null && b.contains("\"item\":{\"name\":\""));
     assertTrue(getItemCount(b, "\"item\":{\"name\":\"") == 2);
@@ -114,7 +114,7 @@ public class GetAllErrorsTest {
     request.addParameter("custom_BLOCK", "--------");
     request.addParameter("custom_DISABLED", "--------");
     request.addParameter("custom_NO_MODE", "--------");
-    assertTrue(sanwaf.isThreatDetected(request));
+    assertTrue(sanwaf.isThreatDetected(request, true));
     String s = sanwaf.getAllErrors(request);
     assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 2);
     assertTrue(s != null && s.contains(""));
@@ -122,7 +122,7 @@ public class GetAllErrorsTest {
     assertTrue(s != null && s.contains(""));
   }
 
-  private int getItemCount(String s, String match) {
+  static int getItemCount(String s, String match) {
     int count = 0;
     int start = 0;
     int end = 0;
@@ -169,7 +169,7 @@ public class GetAllErrorsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/detect.jsp");
     request.addParameter("estring_DETECT", "sDETECT");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertTrue(!sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT\""));
     assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);
@@ -180,10 +180,10 @@ public class GetAllErrorsTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.setRequestURI("/foo/bar/detectall.jsp");
     request.addParameter("estring_DETECT_ALL", "sDETECTALL");
-    assertTrue(!sanwaf.isThreatDetected(request));
+    assertTrue(!sanwaf.isThreatDetected(request, true, true));
     String s = Sanwaf.getDetects(request);
     assertTrue(s != null && s.contains("\"item\":{\"name\":\"estring_DETECT_ALL\""));
-    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);//hits detect & detectall string regex patterns
+    assertTrue(getItemCount(s, "\"item\":{\"name\":\"") == 1);
   }
 
 }

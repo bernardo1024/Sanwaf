@@ -14,7 +14,7 @@ class ItemOpen extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return handleMode(me.error, value, req, mode, log);
+      return true;
     }
     return false;
   }

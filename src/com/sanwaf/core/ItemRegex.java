@@ -29,7 +29,7 @@ final class ItemRegex extends Item {
       rule = shield.customRulePatterns.get(patternName);
     }
     Matcher m = rule.pattern.matcher(value);
-    if (!m.find()) {
+    if ((m.find() && rule.failOnMatch) || (!m.find() && !rule.failOnMatch)) {
       points.add(new Point(0, value.length()));
     }
     return points;
@@ -39,7 +39,7 @@ final class ItemRegex extends Item {
   boolean inError(final ServletRequest req, final Shield shield, final String value, boolean doAllBlocks, boolean log) {
     ModeError me = isModeError(req, value);
     if (me != null) {
-      return returnBasedOnDoAllBlocks(handleMode(me.error, value, req, mode, log), doAllBlocks);
+      return true;
     }
     if (rule == null) {
       if (shield == null) {
@@ -53,14 +53,14 @@ final class ItemRegex extends Item {
     if (rule.mode == Modes.DISABLED) {
       return false;
     }
+    if(value.length() == 0) {
+      return false;
+    }
     boolean match = rule.pattern.matcher(value).find();
     if ((rule.failOnMatch && match) || (!rule.failOnMatch && !match)) {
-      if (rule.mode == Modes.DETECT || rule.mode == Modes.DETECT_ALL) {
-        handleMode(true, value, req, rule.mode, log);
-      }
+      handleMode(true, value, req, rule.mode, log);
       if (rule.mode == Modes.BLOCK && mode == Modes.BLOCK) {
-        handleMode(true, value, req, rule.mode, log);
-        return !doAllBlocks;
+        return true;
       }
     }
     return false;
