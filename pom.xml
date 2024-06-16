@@ -15,7 +15,7 @@
 
 	<properties>
 		<!-- only 1 dependency used directy by sanwaf -->
-		<jakarta.version>6.0.0</jakarta.version>
+		<jakarta.version>6.1.0</jakarta.version>
 
 		<maven.version>3.5</maven.version>
 		<compiler.source>1.8</compiler.source>
